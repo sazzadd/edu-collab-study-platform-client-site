@@ -22,7 +22,7 @@ const Login = () => {
           </h2>
           <p className="text-gray-600 mb-6">
             Don't have an account?{" "}
-            <a href="/register" className="text-[#10b981] font-semibold underline">
+            <a href="/auth/register" className="text-[#10b981] font-semibold underline">
               Register here
             </a>
           </p>

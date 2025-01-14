@@ -1,6 +1,7 @@
 import Lottie from "lottie-react";
 import React, { useState } from "react";
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import registerAnimation from "../assets/lottie/register.json";
 const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -15,14 +16,20 @@ const Register = () => {
           </h2>
           <p className="text-gray-600 mb-6">
             Already have an account?{" "}
-            <a href="/login" className="text-[#10b981] font-semibold underline">
+            <Link
+              className="text-[#10b981] font-semibold underline"
+              to="/auth/login"
+            >
+              {" "}
               Login here
-            </a>
+            </Link>
           </p>
           <form className="space-y-4">
             {/* Name */}
             <div>
-              <label className="block text-gray-700 text-sm font-medium">Name</label>
+              <label className="block text-gray-700 text-sm font-medium">
+                Name
+              </label>
               <input
                 type="text"
                 placeholder="Your full name"
@@ -31,7 +38,9 @@ const Register = () => {
             </div>
             {/* Photo */}
             <div>
-              <label className="block text-gray-700 text-sm font-medium">Photo</label>
+              <label className="block text-gray-700 text-sm font-medium">
+                Photo
+              </label>
               <input
                 type="text"
                 placeholder="Your photo URL"
@@ -40,7 +49,9 @@ const Register = () => {
             </div>
             {/* Email */}
             <div>
-              <label className="block text-gray-700 text-sm font-medium">Email</label>
+              <label className="block text-gray-700 text-sm font-medium">
+                Email
+              </label>
               <input
                 type="email"
                 placeholder="Your email"
@@ -49,7 +60,9 @@ const Register = () => {
             </div>
             {/* Password */}
             <div>
-              <label className="block text-gray-700 text-sm font-medium">Password</label>
+              <label className="block text-gray-700 text-sm font-medium">
+                Password
+              </label>
               <div className="relative">
                 <input
                   type={passwordVisible ? "text" : "password"}
@@ -67,7 +80,9 @@ const Register = () => {
             </div>
             {/* Role */}
             <div>
-              <label className="block text-gray-700 text-sm font-medium">Role</label>
+              <label className="block text-gray-700 text-sm font-medium">
+                Role
+              </label>
               <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#10b981] transition text-sm">
                 <option>Select Role</option>
                 <option>Student</option>
@@ -85,7 +100,9 @@ const Register = () => {
           </form>
           {/* Social Media Buttons */}
           <div className="mt-6 text-center">
-            <p className="text-gray-600 mb-2 text-sm">Sign Up with Social Media</p>
+            <p className="text-gray-600 mb-2 text-sm">
+              Sign Up with Social Media
+            </p>
             <div className="flex justify-center space-x-4">
               <button className="bg-[#10b981] text-white p-2 rounded-full hover:bg-[#0e9b76] transition">
                 <FaFacebook size={16} />
