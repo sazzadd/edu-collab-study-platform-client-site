@@ -1,10 +1,21 @@
 import Lottie from "lottie-react";
 import React, { useState } from "react";
-import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import registerAnimation from "../assets/lottie/register.json";
+
 const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-white">
@@ -24,28 +35,42 @@ const Register = () => {
               Login here
             </Link>
           </p>
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Name */}
             <div>
               <label className="block text-gray-700 text-sm font-medium">
                 Name
               </label>
               <input
+                {...register("name", { required: "Name is required" })}
+                name="name"
                 type="text"
                 placeholder="Your full name"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#10b981] transition text-sm"
               />
+              {errors.name && (
+                <p className="text-red-400 text-xs mt-1">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
             {/* Photo */}
             <div>
               <label className="block text-gray-700 text-sm font-medium">
-                Photo
+                Photo URL
               </label>
               <input
+                {...register("photoURL", { required: "Photo URL is required" })}
+                name="photoURL"
                 type="text"
                 placeholder="Your photo URL"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#10b981] transition text-sm"
               />
+              {errors.photoURL && (
+                <p className="text-red-400 text-xs mt-1">
+                  {errors.photoURL.message}
+                </p>
+              )}
             </div>
             {/* Email */}
             <div>
@@ -53,10 +78,17 @@ const Register = () => {
                 Email
               </label>
               <input
+                {...register("email", { required: "Email is required" })}
+                name="email"
                 type="email"
                 placeholder="Your email"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#10b981] transition text-sm"
               />
+              {errors.email && (
+                <p className="text-red-400 text-xs mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
             {/* Password */}
             <div>
@@ -65,6 +97,22 @@ const Register = () => {
               </label>
               <div className="relative">
                 <input
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                    validate: {
+                      hasUppercase: (value) =>
+                        /[A-Z]/.test(value) ||
+                        "Password must contain at least one uppercase letter",
+                      hasLowercase: (value) =>
+                        /[a-z]/.test(value) ||
+                        "Password must contain at least one lowercase letter",
+                    },
+                  })}
+                  name="password"
                   type={passwordVisible ? "text" : "password"}
                   placeholder="Your password"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#10b981] transition text-sm"
@@ -77,18 +125,32 @@ const Register = () => {
                   {passwordVisible ? "🙈" : "👁️"}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-red-400 text-xs mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
             {/* Role */}
             <div>
               <label className="block text-gray-700 text-sm font-medium">
                 Role
               </label>
-              <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#10b981] transition text-sm">
-                <option>Select Role</option>
-                <option>Student</option>
-                <option>Instructor</option>
-                <option>Admin</option>
+              <select
+                {...register("role", { required: "Role is required" })}
+                name="role"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#10b981] transition text-sm"
+              >
+                <option value="">Select Role</option>
+                <option value="Student">Student</option>
+                <option value="Instructor">Instructor</option>
+                <option value="Admin">Admin</option>
               </select>
+              {errors.role && (
+                <p className="text-red-400 text-xs mt-1">
+                  {errors.role.message}
+                </p>
+              )}
             </div>
             {/* Submit Button */}
             <button
@@ -98,31 +160,9 @@ const Register = () => {
               Sign Up
             </button>
           </form>
-          {/* Social Media Buttons */}
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 mb-2 text-sm">
-              Sign Up with Social Media
-            </p>
-            <div className="flex justify-center space-x-4">
-              <button className="bg-[#10b981] text-white p-2 rounded-full hover:bg-[#0e9b76] transition">
-                <FaFacebook size={16} />
-              </button>
-              <button className="bg-[#10b981] text-white p-2 rounded-full hover:bg-[#0e9b76] transition">
-                <FaGoogle size={16} />
-              </button>
-              <button className="bg-[#10b981] text-white p-2 rounded-full hover:bg-[#0e9b76] transition">
-                <FaGithub size={16} />
-              </button>
-            </div>
-          </div>
         </div>
         {/* Image Section */}
         <div className="hidden md:flex flex-1 items-center justify-center bg-[#a7f3d075]">
-          {/* <img
-            src="https://i.ibb.co/rGtLQvZ/Computer-login-pana.png"
-            alt="Register"
-            className="max-w-full rounded-r-lg"
-          /> */}
           <Lottie animationData={registerAnimation}></Lottie>
         </div>
       </div>
