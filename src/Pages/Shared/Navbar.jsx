@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 
 const Navbar = () => {
   // or: #10b981
+//   #a7f3d075
   const list = (
     <>
       <li className="mx-2">
@@ -77,7 +78,7 @@ const Navbar = () => {
           <Link className="btn" to="/auth/login">
             login
           </Link>
-          <Link className="btn" to="/auth/register">
+          <Link className="btn bg-[#10b981]" to="/auth/register">
             Rgister
           </Link>
         </div>
