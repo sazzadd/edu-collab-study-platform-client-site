@@ -1,6 +1,7 @@
+import Lottie from "lottie-react";
 import React, { useState } from "react";
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
-
+import registerAnimation from "../assets/lottie/register.json";
 const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -100,11 +101,12 @@ const Register = () => {
         </div>
         {/* Image Section */}
         <div className="hidden md:flex flex-1 items-center justify-center bg-[#a7f3d075]">
-          <img
+          {/* <img
             src="https://i.ibb.co/rGtLQvZ/Computer-login-pana.png"
             alt="Register"
             className="max-w-full rounded-r-lg"
-          />
+          /> */}
+          <Lottie animationData={registerAnimation}></Lottie>
         </div>
       </div>
     </div>
