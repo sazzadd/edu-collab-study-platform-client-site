@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { AuthContext } from "../../provider/AuthProvider";
 
 const Navbar = () => {
   // or: #10b981
   //   #a7f3d075
+  const { user, logOut } = useContext(AuthContext);
   const list = (
     <>
       <li className="mx-2">
@@ -75,12 +77,24 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1">{list}</ul>
         </div>
         <div className="navbar-end space-x-2">
-          <Link
-            className=" bg-transparent border py-2  border-[#10b981] text-[#10b981] hover:bg-[#10b981] hover:text-white hover:shadow-lg  px-4 text-sm rounded-md transition-all duration-300"
-            to="/auth/login"
-          >
-            Login
-          </Link>
+          {/* <>{user ? <p>{user.displayName}</p>:null} */}
+        {  user ? <p> {user.displayName}</p> : null}
+          {user ? (
+            <button
+              onClick={logOut}
+              className=" bg-transparent border py-2  border-[#10b981] text-[#10b981] hover:bg-[#10b981] hover:text-white hover:shadow-lg  px-4 text-sm rounded-md transition-all duration-300"
+              to="/auth/login"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              className=" bg-transparent border py-2  border-[#10b981] text-[#10b981] hover:bg-[#10b981] hover:text-white hover:shadow-lg  px-4 text-sm rounded-md transition-all duration-300"
+              to="/auth/login"
+            >
+              Login
+            </Link>
+          )}
           <Link
             className=" bg-[#10b981] text-white hover:bg-[#0f9c73] hover:shadow-lg py-2 px-4 text-sm rounded-md transition-all duration-300"
             to="/auth/register"

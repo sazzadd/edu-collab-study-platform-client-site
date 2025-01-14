@@ -1,11 +1,20 @@
+import axios from "axios";
 import Lottie from "lottie-react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import registerAnimation from "../assets/lottie/register.json";
+import { AuthContext } from "../provider/AuthProvider";
+import { FiUpload } from "react-icons/fi";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const { setUser, updateUserProfile, createNewUser } = useContext(AuthContext);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
+  const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
   const {
     register,
@@ -13,14 +22,37 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const imageFile = { image: data.photoURL[0] };
+    console.log(data, imageFile, image_hosting_api);
+    const res = await axios.post(image_hosting_api, imageFile, {
+      headers: {
+        " content-type": "multipart/form-data",
+      },
+    });
+    console.log(res.data);
+    createNewUser(data.email, data.password).then((result) => {
+      // const user = ;
+      console.log(result.user);
+
+      updateUserProfile({
+        displayName: data.name,
+        photoURL: res.data.data.display_url,
+      });
+
+      toast.success("register succefully");
+
+      navigate("/");
+    });
   };
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-white">
       <div className="bg-white pt-16 pb-10 shadow-lg rounded-lg flex flex-col md:flex-row w-[90%] max-w-4xl">
         {/* Form Section */}
+        <Helmet>
+          <title>Edu Platform | Sign Up</title>
+        </Helmet>
         <div className="flex-1 py-8 px-6 md:px-10">
           <h2 className="text-2xl font-semibold text-[#10b981] mb-6">
             Sign Up to Your Account
@@ -59,13 +91,18 @@ const Register = () => {
               <label className="block text-gray-700 text-sm font-medium">
                 Photo URL
               </label>
-              <input
-                {...register("photoURL", { required: "Photo URL is required" })}
-                name="photoURL"
-                type="text"
-                placeholder="Your photo URL"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#10b981] transition text-sm"
-              />
+              <div className="flex items-center gap-2 border border-gray-300 rounded-md py-1 bg-gray-50 hover:bg-gray-100">
+                <FiUpload className="text-gray-600 text-lg" />
+                <input
+                  {...register("photoURL", {
+                    required: "Photo URL is required",
+                  })}
+                  name="photoURL"
+                  type="file"
+                  accept="image/*"
+                  className="w-full text-sm text-gray-500 file:mr-4  file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300"
+                />
+              </div>
               {errors.photoURL && (
                 <p className="text-red-400 text-xs mt-1">
                   {errors.photoURL.message}
