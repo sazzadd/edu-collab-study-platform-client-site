@@ -27,51 +27,76 @@ const Register = () => {
   const onSubmit = async (data) => {
     const imageFile = { image: data.photoURL[0] };
     console.log(data, imageFile, image_hosting_api);
-    const res = await axios.post(image_hosting_api, imageFile, {
-      headers: {
-        " content-type": "multipart/form-data",
-      },
-    });
-    console.log(res.data);
-    createNewUser(data.email, data.password).then((result) => {
-      const user = result.user;
-      setUser(user);
-      updateUserProfile({
-        displayName: data.name,
-        photoURL: res.data.data.display_url,
-      })
-        .then(() => {
-          console.log("user profile info ");
-          // create user entrty in databaser
-          const userInfo = {
-            name: data.name,
-            email: data.email,
-            userImg: res.data.data.display_url,
-            role: data.role,
-          };
-          axiosPublic
-            .post("/users", userInfo)
-            .then((res) => {
-              if (res.data.insertedId) {
-                console.log("User added to database");
-                // reset();
-                toast.success("Registered successfully");
-                navigate("/");
-              } else {
-                console.error("User not added, response:", res.data);
-                toast.error("Failed to add user.");
-              }
+
+    try {
+      const res = await axios.post(image_hosting_api, imageFile, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      });
+
+      console.log(res.data);
+
+      // Try to create a new user in Firebase
+      createNewUser(data.email, data.password)
+        .then((result) => {
+          const user = result.user;
+          setUser(user);
+
+          // Update Firebase user profile
+          updateUserProfile({
+            displayName: data.name,
+            photoURL: res.data.data.display_url,
+          })
+            .then(() => {
+              const userInfo = {
+                name: data.name,
+                email: data.email,
+                userImg: res.data.data.display_url,
+                role: data.role,
+              };
+
+              // Add user information to your database
+              axiosPublic
+                .post("/users", userInfo)
+                .then((res) => {
+                  if (res.data.insertedId) {
+                    toast.success("Registered successfully");
+                    navigate("/");
+                  } else {
+                    console.error("User not added, response:", res.data);
+                    toast.error("Failed to add user.");
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                  toast.error("Failed to add user to the database.");
+                });
             })
             .catch((error) => {
-              console.error("Error:", error);
-              toast.error("Failed to add user to the database.");
+              console.error("Error updating profile:", error);
+              toast.error("An error occurred while updating user profile.");
             });
         })
         .catch((error) => {
-          const errorMessage = error.message;
-          toast.error(errorMessage || "An error occurred during registration.");
+          // Handle Firebase specific errors
+          if (error.code === "auth/email-already-in-use") {
+            toast.error(
+              "This email is already registered. Please try logging in."
+            );
+          } else if (error.code === "auth/weak-password") {
+            toast.error(
+              "Password is too weak. Please choose a stronger password."
+            );
+          } else {
+            console.error("Error during Firebase registration:", error);
+            toast.error("An error occurred during registration.");
+          }
         });
-    });
+    } catch (error) {
+      console.error("Image upload error:", error);
+      toast.error("An error occurred during image upload.");
+    }
   };
 
   return (
