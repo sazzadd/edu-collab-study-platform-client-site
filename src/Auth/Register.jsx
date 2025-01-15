@@ -3,11 +3,13 @@ import Lottie from "lottie-react";
 import React, { useContext, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
+import { FaEyeSlash } from "react-icons/fa";
+import { FiUpload } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import registerAnimation from "../assets/lottie/register.json";
+import useAxiosPublic from "../hook/useAxiosPublic";
 import { AuthContext } from "../provider/AuthProvider";
-import { FiUpload } from "react-icons/fi";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -15,7 +17,7 @@ const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
   const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
-
+  const axiosPublic = useAxiosPublic();
   const {
     register,
     handleSubmit,
@@ -32,17 +34,43 @@ const Register = () => {
     });
     console.log(res.data);
     createNewUser(data.email, data.password).then((result) => {
-      // const user = ;
-      console.log(result.user);
-
+      const user = result.user;
+      setUser(user);
       updateUserProfile({
         displayName: data.name,
         photoURL: res.data.data.display_url,
-      });
-
-      toast.success("register succefully");
-
-      navigate("/");
+      })
+        .then(() => {
+          console.log("user profile info ");
+          // create user entrty in databaser
+          const userInfo = {
+            name: data.name,
+            email: data.email,
+            userImg: res.data.data.display_url,
+            role: data.role,
+          };
+          axiosPublic
+            .post("/users", userInfo)
+            .then((res) => {
+              if (res.data.insertedId) {
+                console.log("User added to database");
+                // reset();
+                toast.success("Registered successfully");
+                navigate("/");
+              } else {
+                console.error("User not added, response:", res.data);
+                toast.error("Failed to add user.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              toast.error("Failed to add user to the database.");
+            });
+        })
+        .catch((error) => {
+          const errorMessage = error.message;
+          toast.error(errorMessage || "An error occurred during registration.");
+        });
     });
   };
 
@@ -159,7 +187,7 @@ const Register = () => {
                   onClick={() => setPasswordVisible(!passwordVisible)}
                   className="absolute inset-y-0 right-4 text-gray-500"
                 >
-                  {passwordVisible ? "🙈" : "👁️"}
+                  {passwordVisible ? <FaEyeSlash /> : "👁️"}
                 </button>
               </div>
               {errors.password && (
@@ -180,8 +208,7 @@ const Register = () => {
               >
                 <option value="">Select Role</option>
                 <option value="Student">Student</option>
-                <option value="Instructor">Instructor</option>
-                <option value="Admin">Admin</option>
+                <option value="Instructor">Tutor</option>
               </select>
               {errors.role && (
                 <p className="text-red-400 text-xs mt-1">

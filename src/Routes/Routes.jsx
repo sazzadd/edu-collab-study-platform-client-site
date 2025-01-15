@@ -1,9 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
+import Register from "../Auth/Register";
 import MainLayout from "../Layouts/MainLayout";
 import Home from "../Pages/Home/Home";
-import AuthLayout from './../Auth/AuthLayout';
-import Login from './../Auth/Login';
-import Register from "../Auth/Register";
+import SessionDetails from "../Pages/SessionDetails/SessionDetails";
+import AuthLayout from "./../Auth/AuthLayout";
+import Login from "./../Auth/Login";
 
 export const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home></Home>,
+      },
+      {
+        path: "/SessionDetails/:id",
+        element: <SessionDetails></SessionDetails>,
       },
     ],
   },

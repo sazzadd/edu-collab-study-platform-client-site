@@ -18,10 +18,11 @@ const SessionSec = () => {
 
   return (
     <div>
+      <h1>sessions</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        <h1>Session Cards</h1>
         {session.map((item) => {
-          return (  // Return JSX from map
+          return (
+            // Return JSX from map
             <SessionCard key={item._id} item={item} />
           );
         })}

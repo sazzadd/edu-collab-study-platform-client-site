@@ -78,8 +78,8 @@ const Navbar = () => {
         </div>
         <div className="navbar-end space-x-2">
           {/* <>{user ? <p>{user.displayName}</p>:null} */}
-        {  user ? <p> {user.displayName}</p> : null}
-          {user ? (
+          {user ? <p> {user.displayName}</p> : null}
+          {/* {user ? (
             <button
               onClick={logOut}
               className=" bg-transparent border py-2  border-[#10b981] text-[#10b981] hover:bg-[#10b981] hover:text-white hover:shadow-lg  px-4 text-sm rounded-md transition-all duration-300"
@@ -94,13 +94,72 @@ const Navbar = () => {
             >
               Login
             </Link>
-          )}
-          <Link
+          )} */}
+          {/* <Link
             className=" bg-[#10b981] text-white hover:bg-[#0f9c73] hover:shadow-lg py-2 px-4 text-sm rounded-md transition-all duration-300"
             to="/auth/register"
           >
             Register
-          </Link>
+
+          </Link> */}
+
+          {user ? (
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex="0"
+                role="button"
+                className="btn btn-ghost btn-circle avatar hover:scale-110 transition-all duration-300"
+              >
+                <div className="w-13 rounded-full border-2 border-yellow-400">
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt="Profile" />
+                  ) : (
+                    <img
+                      alt="Default Profile"
+                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    />
+                  )}
+                </div>
+              </div>
+              <div
+                className="tooltip tooltip-bottom"
+                data-tip={user.displayName || "User"}
+              ></div>
+              <ul
+                tabIndex="0"
+                className="menu menu-sm z-[1000] absolute dropdown-content bg-white rounded-lg mt-3 w-48 p-2 shadow-lg transition-all duration-300"
+              >
+                <li className="font-semibold text-gray-900">
+                  {user.displayName}
+                </li>
+                <li className="font-semibold text-gray-500">{user.email}</li>
+                {/* <>{navLinks}</> */}
+                <li className="font-semibold">
+                  <button
+                    onClick={logOut}
+                    className="w-full py-2 px-4 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <div className="space-x-3 flex">
+              <Link
+                to="/auth/login"
+                className="py-2 px-4 text-sm font-medium text-gray-800 bg-[#10b981] rounded-lg shadow-md border  hover:bg-yellow-500 hover:text-white transition-all duration-200"
+              >
+                Login
+              </Link>
+              <Link
+                to="/auth/register"
+                className="py-2 px-4 text-sm font-medium text-white bg-gray-800 rounded-lg shadow-md border border-gray-700 hover:bg-gray-700 hover:border-gray-600 transition-all duration-200"
+              >
+                Register
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

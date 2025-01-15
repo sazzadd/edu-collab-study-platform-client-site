@@ -1,9 +1,11 @@
-import React from "react";
+
 import { BiCalendar } from "react-icons/bi";
+import { Link } from "react-router-dom";
 
 const SessionCard = ({ item }) => {
   // Destructure the session data
   const {
+    _id,
     sessionTitle,
     sessionDescription,
     tutorName,
@@ -58,9 +60,12 @@ const SessionCard = ({ item }) => {
         <span className="rounded-full bg-gray-200 px-3 py-1 text-sm font-medium text-gray-700">
           Closed
         </span>
+        <Link to={`/SessionDetails/${_id}`}>
         <button className="rounded-md bg-[#10b981] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0ea371] focus:outline-none focus:ring-2 focus:ring-[#10b981] focus:ring-offset-2">
           Read More
         </button>
+        </Link>
+        
       </div>
     </div>
   );
