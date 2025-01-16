@@ -4,7 +4,8 @@ import {
   IconButton,
   Typography,
 } from "@material-tailwind/react";
-import React, { useContext, useState } from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { BiCalendarEdit } from "react-icons/bi";
 import { FiBook, FiMenu, FiX } from "react-icons/fi";
 import { GiNotebook } from "react-icons/gi";
@@ -13,28 +14,47 @@ import { TbShoppingCartHeart } from "react-icons/tb";
 import { NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 
-const sidebarItems = [
-  //student
-  { icon: TbShoppingCartHeart, text: "View booked session", path: "/" },
-  { icon: GiNotebook, text: "Create note", path: "/auth/lo" },
-  { icon: BiCalendarEdit, text: "Manage personal notes", path: "/analytics" },
-  { icon: FiBook, text: "View all study materials ", path: "/messages" },
-  // Tutor
-  { icon: GiNotebook, text: "Tutor", path: "/tutor" },
-
-  //   all user and all role (common )
-  { icon: MdOutlineHome, text: "Home", path: "/" },
-];
+const sidebarItems = {
+  student: [
+    { icon: TbShoppingCartHeart, text: "View booked session", path: "/" },
+    { icon: GiNotebook, text: "Create note", path: "/auth/lo" },
+    { icon: BiCalendarEdit, text: "Manage personal notes", path: "/analytics" },
+    { icon: FiBook, text: "View all study materials ", path: "/messages" },
+  ],
+  tutor: [
+    { icon: GiNotebook, text: "item-1", path: "/tutor" },
+    { icon: GiNotebook, text: "item-2", path: "/tutor" },
+    { icon: GiNotebook, text: "item-3", path: "/tutor" },
+    { icon: GiNotebook, text: "item-4", path: "/tutor" },
+  ],
+  common: [{ icon: MdOutlineHome, text: "Home", path: "/" }],
+};
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [userRole, setUserRole] = useState(null);
   const { user, logOut } = useContext(AuthContext);
+
+  // Fetch user data based on logged-in email
+  useEffect(() => {
+    if (user?.email) {
+      axios
+        .get(`http://localhost:5000/users/${user.email}`)
+        .then((response) => {
+          setUserRole(response.data.role);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, [user]);
+
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const Sidebar = () => (
     <div className="h-full bg-[#003e53] text-white p-4 flex flex-col">
       <div className="flex items-center justify-between mb-8">
-        <Typography variant="h5" color="white">
+        <Typography variant="h4" color="white">
           Dashboard
         </Typography>
         <IconButton
@@ -48,23 +68,33 @@ const Dashboard = () => {
         </IconButton>
       </div>
       <div className="flex items-center space-x-4 mb-6">
-        <Avatar
-          // src={user.PhotoUrl}
-          alt="user avatar"
-          size="md"
-          className="cursor-pointer"
-        />
         <div>
-          <Typography variant="small" color="white">
-            Welcome,
-          </Typography>
-          <Typography variant="small" color="white" className="font-semibold">
-            {user?.displayName}
-          </Typography>
+          <h1 className="text-xl">
+            You are <span className="font-bold">{userRole}</span>{" "}
+          </h1>
         </div>
       </div>
       <nav className="flex flex-col space-y-2 flex-grow">
-        {sidebarItems.map((item, index) => (
+        {/* Display items based on user role */}
+        {sidebarItems[userRole]?.map((item, index) => (
+          <NavLink
+            key={index}
+            to={item.path}
+            className={({ isActive }) =>
+              `flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 ${
+                isActive
+                  ? "bg-white bg-opacity-10 text-white"
+                  : "text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white"
+              }`
+            }
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <item.icon className="h-5 w-5" />
+            <span>{item.text}</span>
+          </NavLink>
+        ))}
+        {/* Display common items */}
+        {sidebarItems.common.map((item, index) => (
           <NavLink
             key={index}
             to={item.path}
@@ -123,13 +153,6 @@ const Dashboard = () => {
               </Typography>
             </div>
             <div className="flex items-center space-x-4">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="hidden md:block"
-              >
-                {/* {user.name} */}
-              </Typography>
               <Avatar
                 src={user?.photoURL}
                 alt="user avatar"
