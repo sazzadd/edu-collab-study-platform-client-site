@@ -10,6 +10,7 @@ import {
 } from "react-simple-captcha";
 import { toast } from "react-toastify";
 import { AuthContext } from "../provider/AuthProvider";
+import SocialLogin from "../component/SocialLogin/SocialLogin";
 const Login = () => {
     const { setUser, userLogin } = useContext(AuthContext);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -171,21 +172,8 @@ const Login = () => {
             />
           </form>
           {/* Social Media Buttons */}
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 mb-2 text-sm">
-              Login with Social Media
-            </p>
-            <div className="flex justify-center space-x-4">
-              <button className="bg-[#10b981] text-white p-2 rounded-full hover:bg-[#0e9b76] transition">
-                <FaFacebook size={16} />
-              </button>
-              <button className="bg-[#10b981] text-white p-2 rounded-full hover:bg-[#0e9b76] transition">
-                <FaGoogle size={16} />
-              </button>
-              <button className="bg-[#10b981] text-white p-2 rounded-full hover:bg-[#0e9b76] transition">
-                <FaGithub size={16} />
-              </button>
-            </div>
+          <div>
+            <SocialLogin></SocialLogin>
           </div>
         </div>
       </div>

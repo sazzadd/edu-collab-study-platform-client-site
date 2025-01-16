@@ -1,3 +1,4 @@
+import { Button } from "@material-tailwind/react";
 import React from "react";
 import { FaReact } from "react-icons/fa";
 
@@ -18,6 +19,7 @@ const Banner = () => {
           <FaReact size={20} />
           Get Started
         </button>
+        <Button>hellow</Button>
       </div>
 
       {/* Right Illustration */}

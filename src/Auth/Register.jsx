@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import registerAnimation from "../assets/lottie/register.json";
 import useAxiosPublic from "../hook/useAxiosPublic";
 import { AuthContext } from "../provider/AuthProvider";
+import SocialLogin from "../component/SocialLogin/SocialLogin";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -232,8 +233,8 @@ const Register = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#10b981] transition text-sm"
               >
                 <option value="">Select Role</option>
-                <option value="Student">Student</option>
-                <option value="Instructor">Tutor</option>
+                <option value="student">Student</option>
+                <option value="tutor">Tutor</option>
               </select>
               {errors.role && (
                 <p className="text-red-400 text-xs mt-1">
@@ -248,7 +249,9 @@ const Register = () => {
             >
               Sign Up
             </button>
+            
           </form>
+          <SocialLogin></SocialLogin>
         </div>
         {/* Image Section */}
         <div className="hidden md:flex flex-1 items-center justify-center bg-[#a7f3d075]">

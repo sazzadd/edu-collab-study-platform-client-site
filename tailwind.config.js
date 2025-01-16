@@ -1,18 +1,16 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+import withMT from "@material-tailwind/react/utils/withMT";
+// eslint-disable-next-line no-undef
+const withMT = require("@material-tailwind/react/utils/withMT");
+module.exports =withMT ({
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        body: ["Inter", "sans-serif"], // For body text
-        heading: ["Poppins", "sans-serif"], // For headings
-      },
-    },
+    extend: {},
   },
   plugins: [
     require('daisyui'),
   ],
-}
+})
