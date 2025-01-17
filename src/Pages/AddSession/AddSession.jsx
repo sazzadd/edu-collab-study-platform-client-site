@@ -12,10 +12,14 @@ import {
   FaEnvelope,
   FaUser,
 } from "react-icons/fa";
+import useAxiosPublic from "../../hook/useAxiosPublic";
 import { AuthContext } from "../../provider/AuthProvider";
-
+import Swal from "sweetalert2";
+// imgg bb
+const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 const AddSession = () => {
-  const {user} =useContext(AuthContext)
+  const { user } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -23,19 +27,22 @@ const AddSession = () => {
     clearErrors,
     formState: { errors },
   } = useForm();
-
+  const axiosPublic = useAxiosPublic();
   const [classStartDate, setClassStartDate] = useState(null);
   const [classEndDate, setClassEndDate] = useState(null);
   const [registrationStartDate, setRegistrationStartDate] = useState(null);
   const [registrationEndDate, setRegistrationEndDate] = useState(null);
 
-  const fakeUser = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-  };
+  // const fakeUser = { name: "John Doe", email: "john.doe@example.com" };
 
-  const onSubmit = (data) => {
-    // Log the form data if everything is valid
+  const onSubmit = async (data) => {
+    const imageFile = { image: data.image[0] };
+    const res = await axiosPublic.post(image_hosting_api, imageFile, {
+      headers: {
+        " content-type": "multipart/form-data",
+      },
+    });
+    console.log(res.data);
     console.log({
       ...data,
       classStartDate: classStartDate
@@ -49,16 +56,46 @@ const AddSession = () => {
         ? format(registrationEndDate, "dd-MM-yyyy")
         : null,
     });
+    if (res.data.success) {
+      const sessions = {
+        sessionTitle: data.sessionTitle,
+        sessionDescription: data.sessionDescription,
+        sessionDuration: data.sessionDuration,
+        image:res.data.data.display_url,
+        registrationStartDate:data.registrationStartDate,
+        registrationEndDate:data.registrationEndDate,
+        classStartDate:data.classStartDate,
+        classEndDate:data.classEndDate,
+        registrationFee:0,
+        status:"pending",
+        tutorName:user?.displayName,
+        tutorEmail:user?.email,
+
+
+      };
+      const sessionsRes = await axiosPublic.post('/session', sessions);
+      console.log(sessionsRes.data)
+      if(sessionsRes.data.insertedId){
+        // reset()
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title:  `session added succesfully`,
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    }
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto">
+    <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl mx-auto">
       <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800">
         Create a New Study Session
       </h2>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-6"
       >
         {/* Session Title */}
         <div className="col-span-1">
@@ -86,17 +123,7 @@ const AddSession = () => {
           )}
         </div>
 
-        {/* Tutor Name */}
-        <div className="col-span-1">
-          <Input
-            label="Tutor Name"
-            icon={<FaUser />}
-            value={user?.name}
-            disabled
-          />
-        </div>
-
-        {/* Tutor Email */}
+        {/* Tutor Info */}
         <div className="col-span-1">
           <Input
             label="Tutor Email"
@@ -105,9 +132,35 @@ const AddSession = () => {
             disabled
           />
         </div>
+        <div className="col-span-1">
+          <Input
+            label="Tutor Name"
+            icon={<FaUser />}
+            value={user?.displayName}
+            disabled
+          />
+        </div>
+
+        {/* Image upload*/}
+        <div className="col-span-1">
+          <label className="block text-sm font-medium text-gray-700">
+            Upload Image
+          </label>
+          <input
+            {...register("image", { required: "Image file is required." })}
+            type="file"
+            accept="image/*"
+            className="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          />
+          {errors.imageFile && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.imageFile.message}
+            </p>
+          )}
+        </div>
 
         {/* Session Description */}
-        <div className="col-span-3">
+        <div className="col-span-2">
           <Textarea
             {...register("sessionDescription", {
               required: "Session description is required.",
@@ -133,7 +186,7 @@ const AddSession = () => {
           )}
         </div>
 
-        {/* Registration Dates */}
+        {/* Dates */}
         <div className="col-span-1">
           <label className="text-sm font-medium text-gray-700 flex items-center">
             <FaCalendarAlt className="mr-2" /> Registration Start Date
@@ -172,7 +225,6 @@ const AddSession = () => {
           )}
         </div>
 
-        {/* Class Dates */}
         <div className="col-span-1">
           <label className="text-sm font-medium text-gray-700 flex items-center">
             <FaCalendarAlt className="mr-2" /> Class Start Date
@@ -247,7 +299,7 @@ const AddSession = () => {
         </div>
 
         {/* Submit Button */}
-        <div className="col-span-3 flex justify-end mt-4">
+        <div className="col-span-2 flex justify-end mt-4">
           <Button type="submit" color="indigo">
             Submit
           </Button>

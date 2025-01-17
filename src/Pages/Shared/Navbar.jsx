@@ -3,8 +3,6 @@ import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 
 const Navbar = () => {
-  // or: #10b981
-  //   #a7f3d075
   const { user, logOut } = useContext(AuthContext);
   const list = (
     <>
@@ -13,8 +11,8 @@ const Navbar = () => {
           to="/"
           className={({ isActive }) =>
             isActive
-              ? "border border-[#10b981] text-[#10b981] scale-105 transition-all duration-200"
-              : "text-[#10b981] hover:text-[#059669] hover:scale-105 transition-all duration-200"
+              ? "border border-green-500 text-green-500 scale-105 transition-all duration-200"
+              : "text-green-500 hover:text-green-600 hover:scale-105 transition-all duration-200"
           }
         >
           Home
@@ -25,8 +23,8 @@ const Navbar = () => {
           to="/dashboard"
           className={({ isActive }) =>
             isActive
-              ? "border border-[#10b981] text-[#10b981] scale-105 transition-all duration-200"
-              : "text-[#10b981] hover:text-[#059669] hover:scale-105 transition-all duration-200"
+              ? "border border-green-500 text-green-500 scale-105 transition-all duration-200"
+              : "text-green-500 hover:text-green-600 hover:scale-105 transition-all duration-200"
           }
         >
           Dashboard
@@ -34,127 +32,85 @@ const Navbar = () => {
       </li>
     </>
   );
+
   return (
     <div>
-      <div className="navbar bg-base-100 w-11/12 mx-auto">
-        <div className="navbar-start">
-          <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
-            </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+      <div className="flex items-center justify-between bg-white px-4 py-2 shadow-md w-11/12 mx-auto">
+        <div className="flex items-center">
+          <button
+            className="lg:hidden flex items-center justify-center p-2 border rounded-md focus:outline-none"
+            aria-label="Open menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              <li>
-                <a>Item 3</a>
-              </li>
-            </ul>
-          </div>
-          <a className="btn btn-ghost text-xl">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />
+            </svg>
+          </button>
+          <Link to="/" className="flex items-center space-x-2">
             <img
               className="h-12 w-12"
               src="https://i.ibb.co.com/fQJVGy6/1490820801-12-82409.png"
-              alt=""
-            />{" "}
-            <span className="text-[#0f766e] font-bold"> Edu </span> Platform
-          </a>
+              alt="Logo"
+            />
+            <span className="text-teal-700 font-bold text-xl">Edu Platform</span>
+          </Link>
         </div>
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">{list}</ul>
-        </div>
-        <div className="navbar-end space-x-2">
-          {/* <>{user ? <p>{user.displayName}</p>:null} */}
-          {user ? <p> {user.displayName}</p> : null}
-          {/* {user ? (
-            <button
-              onClick={logOut}
-              className=" bg-transparent border py-2  border-[#10b981] text-[#10b981] hover:bg-[#10b981] hover:text-white hover:shadow-lg  px-4 text-sm rounded-md transition-all duration-300"
-              to="/auth/login"
-            >
-              Logout
-            </button>
-          ) : (
-            <Link
-              className=" bg-transparent border py-2  border-[#10b981] text-[#10b981] hover:bg-[#10b981] hover:text-white hover:shadow-lg  px-4 text-sm rounded-md transition-all duration-300"
-              to="/auth/login"
-            >
-              Login
-            </Link>
-          )} */}
-          {/* <Link
-            className=" bg-[#10b981] text-white hover:bg-[#0f9c73] hover:shadow-lg py-2 px-4 text-sm rounded-md transition-all duration-300"
-            to="/auth/register"
-          >
-            Register
 
-          </Link> */}
+        <div className="hidden lg:flex">
+          <ul className="flex items-center space-x-4">{list}</ul>
+        </div>
+
+        <div className="flex items-center space-x-4">
+          {user ? <p>{user.displayName}</p> : null}
 
           {user ? (
-            <div className="dropdown dropdown-end">
-              <div
-                tabIndex="0"
-                role="button"
-                className="btn btn-ghost btn-circle avatar hover:scale-110 transition-all duration-300"
+            <div className="relative">
+              <button
+                className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-yellow-400 overflow-hidden"
               >
-                <div className="w-13 rounded-full border-2 border-yellow-400">
-                  {user.photoURL ? (
-                    <img src={user.photoURL} alt="Profile" />
-                  ) : (
-                    <img
-                      alt="Default Profile"
-                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                    />
-                  )}
-                </div>
-              </div>
-              <div
-                className="tooltip tooltip-bottom"
-                data-tip={user.displayName || "User"}
-              ></div>
-              <ul
-                tabIndex="0"
-                className="menu menu-sm z-[1000] absolute dropdown-content bg-white rounded-lg mt-3 w-48 p-2 shadow-lg transition-all duration-300"
-              >
-                <li className="font-semibold text-gray-900">
+                <img
+                  className="object-cover w-full h-full"
+                  src={
+                    user.photoURL ||
+                    "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  }
+                  alt="Profile"
+                />
+              </button>
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg">
+                <div className="px-4 py-2 text-gray-900 font-semibold">
                   {user.displayName}
-                </li>
-                <li className="font-semibold text-gray-500">{user.email}</li>
-                {/* <>{navLinks}</> */}
-                <li className="font-semibold">
-                  <button
-                    onClick={logOut}
-                    className="w-full py-2 px-4 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200"
-                  >
-                    Logout
-                  </button>
-                </li>
-              </ul>
+                </div>
+                <div className="px-4 py-2 text-gray-500 text-sm">{user.email}</div>
+                <button
+                  onClick={logOut}
+                  className="block w-full px-4 py-2 text-left text-sm text-white bg-red-500 rounded-b-lg hover:bg-red-600 transition duration-200"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           ) : (
-            <div className="space-x-3 flex">
+            <div className="flex space-x-3">
               <Link
                 to="/auth/login"
-                className="py-2 px-4 text-sm font-medium text-gray-800 bg-[#10b981] rounded-lg shadow-md border  hover:bg-yellow-500 hover:text-white transition-all duration-200"
+                className="px-4 py-2 text-sm font-medium text-gray-800 bg-green-500 rounded-lg hover:bg-green-600 hover:text-white transition duration-200"
               >
                 Login
               </Link>
               <Link
                 to="/auth/register"
-                className="py-2 px-4 text-sm font-medium text-white bg-gray-800 rounded-lg shadow-md border border-gray-700 hover:bg-gray-700 hover:border-gray-600 transition-all duration-200"
+                className="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-lg hover:bg-gray-700 transition duration-200"
               >
                 Register
               </Link>
