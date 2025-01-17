@@ -22,10 +22,10 @@ const sidebarItems = {
     { icon: FiBook, text: "View all study materials ", path: "/messages" },
   ],
   tutor: [
-    { icon: GiNotebook, text: "item-1", path: "/tutor" },
-    { icon: GiNotebook, text: "item-2", path: "/tutor" },
-    { icon: GiNotebook, text: "item-3", path: "/tutor" },
-    { icon: GiNotebook, text: "item-4", path: "/tutor" },
+    { icon: GiNotebook, text: "Create study session", path: "/dashboard/addSession" },
+    { icon: GiNotebook, text: "View all sessions", path: "/dashboard/allSessions" },
+    { icon: GiNotebook, text: "Upload materials ", path: "/dashboard/UploadMaterials" },
+    { icon: GiNotebook, text: "View all Upload materials", path: "/dashboard/allMaterials" },
   ],
   common: [{ icon: MdOutlineHome, text: "Home", path: "/" }],
 };
@@ -93,6 +93,8 @@ const Dashboard = () => {
             <span>{item.text}</span>
           </NavLink>
         ))}
+        {/* Divider */}
+        <hr className="my-4 border-gray-500" />
         {/* Display common items */}
         {sidebarItems.common.map((item, index) => (
           <NavLink
