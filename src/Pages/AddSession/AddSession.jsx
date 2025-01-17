@@ -1,6 +1,6 @@
 import { Button, Input, Textarea } from "@material-tailwind/react";
 import { format } from "date-fns";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
@@ -12,8 +12,10 @@ import {
   FaEnvelope,
   FaUser,
 } from "react-icons/fa";
+import { AuthContext } from "../../provider/AuthProvider";
 
 const AddSession = () => {
+  const {user} =useContext(AuthContext)
   const {
     register,
     handleSubmit,
@@ -36,10 +38,16 @@ const AddSession = () => {
     // Log the form data if everything is valid
     console.log({
       ...data,
-      classStartDate: classStartDate ? format(classStartDate, "dd-MM-yyyy") : null,
+      classStartDate: classStartDate
+        ? format(classStartDate, "dd-MM-yyyy")
+        : null,
       classEndDate: classEndDate ? format(classEndDate, "dd-MM-yyyy") : null,
-      registrationStartDate: registrationStartDate ? format(registrationStartDate, "dd-MM-yyyy") : null,
-      registrationEndDate: registrationEndDate ? format(registrationEndDate, "dd-MM-yyyy") : null,
+      registrationStartDate: registrationStartDate
+        ? format(registrationStartDate, "dd-MM-yyyy")
+        : null,
+      registrationEndDate: registrationEndDate
+        ? format(registrationEndDate, "dd-MM-yyyy")
+        : null,
     });
   };
 
@@ -50,7 +58,7 @@ const AddSession = () => {
       </h2>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
       >
         {/* Session Title */}
         <div className="col-span-1">
@@ -83,7 +91,7 @@ const AddSession = () => {
           <Input
             label="Tutor Name"
             icon={<FaUser />}
-            value={fakeUser.name}
+            value={user?.name}
             disabled
           />
         </div>
@@ -93,7 +101,7 @@ const AddSession = () => {
           <Input
             label="Tutor Email"
             icon={<FaEnvelope />}
-            value={fakeUser.email}
+            value={user?.email}
             disabled
           />
         </div>
@@ -121,45 +129,6 @@ const AddSession = () => {
           {errors.sessionDescription && (
             <p className="text-red-500 text-sm mt-1">
               {errors.sessionDescription.message}
-            </p>
-          )}
-        </div>
-
-        {/* Class Dates */}
-        <div className="col-span-1">
-          <label className="text-sm font-medium text-gray-700 flex items-center">
-            <FaCalendarAlt className="mr-2" /> Class Start Date
-          </label>
-          <DatePicker
-            selected={classStartDate}
-            onChange={(date) => setClassStartDate(date)}
-            dateFormat="dd-MM-yyyy"
-            className="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            placeholderText="Select class start date"
-            required
-          />
-          {errors.classStartDate && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.classStartDate.message}
-            </p>
-          )}
-        </div>
-
-        <div className="col-span-1">
-          <label className="text-sm font-medium text-gray-700 flex items-center">
-            <FaCalendarAlt className="mr-2" /> Class End Date
-          </label>
-          <DatePicker
-            selected={classEndDate}
-            onChange={(date) => setClassEndDate(date)}
-            dateFormat="dd-MM-yyyy"
-            className="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            placeholderText="Select class end date"
-            required
-          />
-          {errors.classEndDate && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.classEndDate.message}
             </p>
           )}
         </div>
@@ -203,15 +172,62 @@ const AddSession = () => {
           )}
         </div>
 
+        {/* Class Dates */}
+        <div className="col-span-1">
+          <label className="text-sm font-medium text-gray-700 flex items-center">
+            <FaCalendarAlt className="mr-2" /> Class Start Date
+          </label>
+          <DatePicker
+            selected={classStartDate}
+            onChange={(date) => setClassStartDate(date)}
+            dateFormat="dd-MM-yyyy"
+            className="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            placeholderText="Select class start date"
+            required
+          />
+          {errors.classStartDate && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.classStartDate.message}
+            </p>
+          )}
+        </div>
+
+        <div className="col-span-1">
+          <label className="text-sm font-medium text-gray-700 flex items-center">
+            <FaCalendarAlt className="mr-2" /> Class End Date
+          </label>
+          <DatePicker
+            selected={classEndDate}
+            onChange={(date) => setClassEndDate(date)}
+            dateFormat="dd-MM-yyyy"
+            className="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            placeholderText="Select class end date"
+            required
+          />
+          {errors.classEndDate && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.classEndDate.message}
+            </p>
+          )}
+        </div>
+
         {/* Session Duration */}
         <div className="col-span-1">
-          <Input
+          <label className="text-sm font-medium text-gray-700 flex items-center">
+            <FaClock className="mr-2" /> Session Duration (Minutes)
+          </label>
+          <input
             {...register("sessionDuration", {
               required: "Session duration is required.",
+              valueAsNumber: true,
+              min: {
+                value: 1,
+                message: "Session duration must be at least 1 minute.",
+              },
             })}
-            label="Session Duration"
-            icon={<FaClock />}
-            error={errors.sessionDuration ? true : false}
+            type="number"
+            className="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="Enter session duration in minutes"
           />
           {errors.sessionDuration && (
             <p className="text-red-500 text-sm mt-1">
