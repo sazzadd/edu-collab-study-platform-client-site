@@ -26,13 +26,15 @@ import { AuthContext } from "../../../provider/AuthProvider";
 export default function CreateNote() {
   const [notes, setNotes] = useState([]);
   const [open, setOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [currentNote, setCurrentNote] = useState({});
   const [newNote, setNewNote] = useState({ title: "", description: "" });
   const { user } = useContext(AuthContext);
   const email = user?.email;
-  const name = user?.displayName;
+
   const handleOpen = () => setOpen(!open);
 
-  // Fetch the notes for the logged-in user
+  // Fetch notes for the logged-in user
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -46,56 +48,92 @@ export default function CreateNote() {
     };
 
     if (email) fetchNotes();
-  }, [email,notes]);
+  }, [email]);
 
   const handleSubmit = async () => {
     const date = format(new Date(), "dd-MM-yyyy");
 
-    const noteData = {
-      title: newNote.title,
-      description: newNote.description,
-      date,
-      email: email || "anonymous@example.com",
-      name: name || "Anonymous",
-    };
-
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/notes",
-        noteData
-      );
-
-      if (response.data.insertedId) {
-        setNotes([
+    if (isEdit) {
+      // Update note
+      try {
+        const response = await axios.put(
+          `http://localhost:5000/notes/${currentNote._id}`,
           {
-            id: notes.length + 1,
-            ...noteData,
-          },
-          ...notes,
-        ]);
-        setNewNote({ title: "", description: "" });
-        handleOpen();
+            ...currentNote,
+            title: newNote.title,
+            description: newNote.description,
+            date,
+          }
+        );
 
-        Swal.fire({
-          title: "Success!",
-          text: "Your note has been successfully added.",
-          icon: "success",
-          timer: 2000,
-          showConfirmButton: false,
-        });
+        if (response.status === 200) {
+          setNotes((prevNotes) =>
+            prevNotes.map((note) =>
+              note._id === currentNote._id
+                ? {
+                    ...note,
+                    title: newNote.title,
+                    description: newNote.description,
+                    date,
+                  }
+                : note
+            )
+          );
+          Swal.fire({
+            title: "Success!",
+            text: "Note updated successfully.",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        }
+      } catch (error) {
+        console.error("Error updating note:", error);
+        Swal.fire("Error!", "Failed to update the note.", "error");
       }
-    } catch (error) {
-      console.error("Error adding note:", error);
-      Swal.fire({
-        title: "Error!",
-        text: "Failed to add the note. Please try again later.",
-        icon: "error",
-      });
+    } else {
+      // Create new note
+      try {
+        const noteData = {
+          title: newNote.title,
+          description: newNote.description,
+          date,
+          email,
+        };
+
+        const response = await axios.post(
+          "http://localhost:5000/notes",
+          noteData
+        );
+        if (response.data.insertedId) {
+          setNotes([{ ...noteData, _id: response.data.insertedId }, ...notes]);
+          Swal.fire({
+            title: "Success!",
+            text: "Note added successfully.",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        }
+      } catch (error) {
+        console.error("Error adding note:", error);
+        Swal.fire("Error!", "Failed to add the note.", "error");
+      }
     }
+
+    setNewNote({ title: "", description: "" });
+    setOpen(false);
+    setIsEdit(false);
+  };
+
+  const handleEdit = (note) => {
+    setIsEdit(true);
+    setCurrentNote(note);
+    setNewNote({ title: note.title, description: note.description });
+    setOpen(true);
   };
 
   const handleDelete = async (id) => {
-    // SweetAlert2 confirmation for deleting
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -107,22 +145,13 @@ export default function CreateNote() {
 
     if (result.isConfirmed) {
       try {
-        // Sending delete request to backend using the MongoDB _id
         const response = await axios.delete(
           `http://localhost:5000/notes/${id}`
         );
 
         if (response.status === 200) {
-          // After successful deletion, remove the note from state
           setNotes((prevNotes) => prevNotes.filter((note) => note._id !== id));
-
           Swal.fire("Deleted!", "Your note has been deleted.", "success");
-        } else {
-          Swal.fire(
-            "Error!",
-            "There was a problem deleting the note.",
-            "error"
-          );
         }
       } catch (error) {
         console.error("Error deleting note:", error);
@@ -130,7 +159,7 @@ export default function CreateNote() {
       }
     }
   };
-  
+
   return (
     <div className="container mx-auto p-4">
       <Typography variant="h3" className="text-center mb-8">
@@ -138,10 +167,12 @@ export default function CreateNote() {
       </Typography>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Create Note Card */}
         <Card
           className="border-2 border-dashed border-blue-gray-100 hover:border-blue-gray-200 transition-all cursor-pointer hover:shadow-lg"
-          onClick={handleOpen}
+          onClick={() => {
+            setIsEdit(false);
+            handleOpen();
+          }}
         >
           <CardBody className="flex flex-col items-center justify-center h-[200px] text-blue-gray-500">
             <AiOutlinePlus className="w-12 h-12 mb-3" />
@@ -149,7 +180,6 @@ export default function CreateNote() {
           </CardBody>
         </Card>
 
-        {/* Notes Cards */}
         {notes.map((note) => (
           <Card key={note._id} className="hover:shadow-lg transition-shadow">
             <CardBody className="relative">
@@ -157,7 +187,12 @@ export default function CreateNote() {
                 <IconButton variant="text" size="sm" className="rounded-full">
                   <AiOutlineEye className="w-5 h-5" />
                 </IconButton>
-                <IconButton variant="text" size="sm" className="rounded-full">
+                <IconButton
+                  variant="text"
+                  size="sm"
+                  className="rounded-full"
+                  onClick={() => handleEdit(note)}
+                >
                   <AiOutlineEdit className="w-5 h-5" />
                 </IconButton>
                 <IconButton
@@ -170,38 +205,28 @@ export default function CreateNote() {
                   <AiOutlineDelete className="w-5 h-5" />
                 </IconButton>
               </div>
-              <div className="mt-8">
-                <Typography variant="h5" color="blue-gray" className="mb-3">
-                  {note.title}
-                </Typography>
-                <Typography className="mb-4 font-normal">
-                  {note.description}
-                </Typography>
-                <Typography
-                  variant="small"
-                  color="gray"
-                  className="font-normal"
-                >
-                  {note.date}
-                </Typography>
-              </div>
+              <Typography variant="h5" className="mb-3">
+                {note.title}
+              </Typography>
+              <Typography className="mb-4">{note.description}</Typography>
+              <Typography variant="small" color="gray">
+                {note.date}
+              </Typography>
             </CardBody>
           </Card>
         ))}
       </div>
 
-      {/* Create Note Modal */}
-      <Dialog open={open} handler={handleOpen} size="sm" className="rounded-lg">
-        <DialogHeader className="text-lg font-semibold text-gray-800">
-          Create a New Note
+      <Dialog open={open} handler={handleOpen} size="sm">
+        <DialogHeader>
+          {isEdit ? "Edit Note" : "Create a New Note"}
         </DialogHeader>
-        <DialogBody divider className="space-y-4">
+        <DialogBody className="space-y-6">
           <Input
             label="Title"
             value={newNote.title}
             onChange={(e) => setNewNote({ ...newNote, title: e.target.value })}
-            placeholder="Enter the title here"
-            className="focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+            className="focus:ring-blue-500 focus:outline-none"
           />
           <Textarea
             label="Description"
@@ -209,29 +234,17 @@ export default function CreateNote() {
             onChange={(e) =>
               setNewNote({ ...newNote, description: e.target.value })
             }
-            placeholder="Enter a detailed description"
             rows={4}
-            className="focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+            className="focus:ring-blue-500 focus:outline-none"
           />
         </DialogBody>
-        <DialogFooter className="flex justify-end gap-3">
-          <Button
-            variant="outlined"
-            color="gray"
-            onClick={handleOpen}
-            className="border-gray-300 text-gray-700 hover:bg-gray-100"
-          >
+        <DialogFooter className="flex justify-end gap-4">
+          <Button variant="outlined" onClick={handleOpen}>
             Cancel
           </Button>
-          <Button
-            onClick={handleSubmit}
-            className="bg-blue-500 text-white hover:shadow-lg"
-          >
-            Save Note
-          </Button>
+          <Button onClick={handleSubmit}>{isEdit ? "Update" : "Save"}</Button>
         </DialogFooter>
       </Dialog>
     </div>
   );
 }
-

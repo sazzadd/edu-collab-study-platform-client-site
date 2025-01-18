@@ -15,6 +15,11 @@ import { NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 
 const sidebarItems = {
+  admin: [
+    { icon: TbShoppingCartHeart, text: "View all users", path: "/viewAllUsers" },
+    { icon: GiNotebook, text: "View all study session", path: "/dashboard/viewAllSession" },
+   
+  ],
   student: [
     { icon: TbShoppingCartHeart, text: "View booked session", path: "/" },
     { icon: GiNotebook, text: "Create note", path: "/dashboard/CreateNote" },
@@ -43,6 +48,28 @@ const sidebarItems = {
       path: "/dashboard/allMaterials",
     },
   ],
+  // tutor: [
+  //   {
+  //     icon: GiNotebook,
+  //     text: "Create study session",
+  //     path: "/dashboard/addSession",
+  //   },
+  //   {
+  //     icon: GiNotebook,
+  //     text: "View all sessions",
+  //     path: "/dashboard/allSessions",
+  //   },
+  //   {
+  //     icon: GiNotebook,
+  //     text: "Upload materials ",
+  //     path: "/dashboard/UploadMaterials",
+  //   },
+  //   {
+  //     icon: GiNotebook,
+  //     text: "View all Upload materials",
+  //     path: "/dashboard/allMaterials",
+  //   },
+  // ],
   common: [{ icon: MdOutlineHome, text: "Home", path: "/" }],
 };
 

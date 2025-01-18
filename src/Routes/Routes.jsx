@@ -51,6 +51,13 @@ export const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      // admin routes
+
+ {
+        path: "viewAllUsers",
+        element: <AddSession></AddSession>,
+      },
+
       // Tutor Routes
 
       {
