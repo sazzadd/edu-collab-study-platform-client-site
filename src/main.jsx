@@ -24,7 +24,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             draggable
             pauseOnHover
             theme="light"
-            // transition={Bounce}
           />
           <RouterProvider router={router} />
         </HelmetProvider>

@@ -19,13 +19,13 @@ const Banner = () => {
           <FaReact size={20} />
           Get Started
         </button>
-        <Button>hellow</Button>
       </div>
+    
 
       {/* Right Illustration */}
       <div className="md:w-1/2 flex justify-center">
         <img
-          src="https://i.ibb.co/hDbvFS2/Learning-bro.png" // Replace with your illustration URL
+          src="https://i.ibb.co/hDbvFS2/Learning-bro.png"
           alt="Learning Illustration"
           className="w-3/4 md:w-full "
         />

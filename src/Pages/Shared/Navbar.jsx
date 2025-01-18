@@ -1,135 +1,174 @@
+import {
+  Avatar,
+  Button,
+  IconButton,
+  Menu,
+  MenuHandler,
+  MenuItem,
+  MenuList,
+  Navbar as MTNavbar,
+  Typography,
+} from "@material-tailwind/react";
 import React, { useContext, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { FaBars } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
+  const [openMobileMenu, setOpenMobileMenu] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+  const handleLogout = () => {
+    logOut();
+    setOpenMenu(false);
   };
 
-  const list = (
-    <>
-      <li>
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            isActive
-              ? "text-blue-600 font-semibold border-b-2 border-blue-600"
-              : "text-gray-700 hover:text-blue-600 hover:border-blue-600 border-b-2 transition-all"
-          }
-        >
-          Home
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to="/dashboard"
-          className={({ isActive }) =>
-            isActive
-              ? "text-blue-600 font-semibold border-b-2 border-blue-600"
-              : "text-gray-700 hover:text-blue-600 hover:border-blue-600 border-b-2 transition-all"
-          }
-        >
-          Dashboard
-        </NavLink>
-      </li>
-    </>
-  );
-
   return (
-    <nav className="bg-white shadow-md">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2">
-          <img
-            src="https://i.ibb.co.com/fQJVGy6/1490820801-12-82409.png"
-            alt="Logo"
-            className="h-10 w-10"
-          />
-          <span className="text-xl font-bold text-gray-800">Edu Platform</span>
-        </Link>
+    <MTNavbar className="bg-white fixed top-0 left-1/2 transform -translate-x-1/2 z-50 shadow-md w-full px-6 py-4">
+  {/* Navbar container with full-width and center-aligned content */}
+  <div className="w-full max-w-screen-xl mx-auto flex items-center justify-between">
+    {/* Left: Logo and Company Name */}
+    <div className="flex items-center gap-3">
+      <img src="/logo.png" alt="Company Logo" className="w-10 h-10" />
+      <Typography
+        variant="h6"
+        className="text-gray-900 font-bold hover:text-green-600 transition"
+      >
+        CompanyName
+      </Typography>
+    </div>
 
-        {/* Desktop Menu */}
-        <ul className="hidden lg:flex items-center space-x-6">{list}</ul>
+    {/* Center: Navigation Items */}
+    <div className="hidden md:flex gap-8 mx-auto">
+      <Link
+        to="/"
+        className="text-gray-700 hover:text-green-600 transition font-medium"
+      >
+        Home
+      </Link>
+      <Link
+        to="/dashboard"
+        className="text-gray-700 hover:text-green-600 transition font-medium"
+      >
+        Dashboard
+      </Link>
+    </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={toggleMobileMenu}
-          className="lg:hidden flex items-center p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          aria-label="Toggle Menu"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 text-gray-700"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h16"
+    {/* Right: User Avatar or Login/Register */}
+    <div className="hidden md:flex items-center gap-4">
+      {user ? (
+        <Menu open={openMenu} handler={setOpenMenu} placement="bottom-end">
+          <MenuHandler>
+            <Avatar
+              src={user.photoURL || "/default-avatar.png"}
+              alt="User Avatar"
+              className="cursor-pointer w-10 h-10 border-2 border-green-600"
             />
-          </svg>
-        </button>
-
-        {/* User Profile or Auth Buttons */}
-        <div className="flex items-center space-x-4">
-          {user ? (
-            <div className="relative">
-              <button className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 overflow-hidden">
-                <img
-                  src={
-                    user.photoURL ||
-                    "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  }
-                  alt="Profile"
-                  className="object-cover w-full h-full"
-                />
-              </button>
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg">
-                <div className="px-4 py-2 text-gray-900 font-semibold">
-                  {user.displayName}
-                </div>
-                <div className="px-4 py-2 text-gray-500 text-sm">{user.email}</div>
-                <button
-                  onClick={logOut}
-                  className="block w-full px-4 py-2 text-left text-sm text-white bg-red-500 hover:bg-red-600 rounded-b-lg transition duration-200"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="flex space-x-3">
-              <Link
-                to="/auth/login"
-                className="px-4 py-2 text-sm font-medium text-gray-800 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition duration-200"
-              >
-                Login
-              </Link>
-              <Link
-                to="/auth/register"
-                className="px-4 py-2 text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 rounded-lg transition duration-200"
-              >
-                Register
-              </Link>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-200">
-          <ul className="flex flex-col space-y-2 px-4 py-3">{list}</ul>
+          </MenuHandler>
+          <MenuList className="p-2 shadow-lg">
+            <Typography
+              variant="small"
+              className="px-3 py-1 font-medium text-gray-700"
+            >
+              {user.displayName || "User"}
+            </Typography>
+            <MenuItem
+              onClick={handleLogout}
+              className="text-red-500 hover:bg-red-100"
+            >
+              Logout
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      ) : (
+        <div className="flex gap-4">
+          <Link to="/auth/login">
+            <Button className="bg-green-200 text-gray-800 hover:bg-green-300 transition">
+              Login
+            </Button>
+          </Link>
+          <Link to="/register">
+            <Button className="bg-yellow-300 text-gray-800 hover:bg-yellow-400 transition">
+              Register
+            </Button>
+          </Link>
         </div>
       )}
-    </nav>
+    </div>
+
+    {/* Mobile Menu Button */}
+    <div className="md:hidden">
+      <IconButton
+        variant="text"
+        onClick={() => setOpenMobileMenu(!openMobileMenu)}
+        className="text-gray-700 focus:outline-none"
+      >
+        <FaBars size={24} />
+      </IconButton>
+    </div>
+  </div>
+
+  {/* Mobile Menu */}
+  {openMobileMenu && (
+    <div className="absolute top-16 left-0 w-full bg-white shadow-lg rounded-lg p-4 md:hidden">
+      <Link
+        to="/"
+        className="block text-gray-700 hover:text-green-600 py-2 transition"
+        onClick={() => setOpenMobileMenu(false)}
+      >
+        Home
+      </Link>
+      <Link
+        to="/dashboard"
+        className="block text-gray-700 hover:text-green-600 py-2 transition"
+        onClick={() => setOpenMobileMenu(false)}
+      >
+        Dashboard
+      </Link>
+      <hr className="my-4 border-gray-300" />
+      {user ? (
+        <div>
+          <Typography
+            variant="small"
+            className="block text-gray-700 font-medium py-1"
+          >
+            {user.displayName || "User"}
+          </Typography>
+          <Button
+            onClick={() => {
+              handleLogout();
+              setOpenMobileMenu(false);
+            }}
+            className="mt-2 w-full bg-red-500 hover:bg-red-600 text-white"
+          >
+            Logout
+          </Button>
+        </div>
+      ) : (
+        <div className="mt-4">
+          <Link to="/auth/login">
+            <Button
+              className="w-full bg-green-200 text-gray-800 hover:bg-green-300 transition"
+              onClick={() => setOpenMobileMenu(false)}
+            >
+              Login
+            </Button>
+          </Link>
+          <Link to="/register">
+            <Button
+              className="mt-2 w-full bg-yellow-300 text-gray-800 hover:bg-yellow-400 transition"
+              onClick={() => setOpenMobileMenu(false)}
+            >
+              Register
+            </Button>
+          </Link>
+        </div>
+      )}
+    </div>
+  )}
+</MTNavbar>
+
   );
 };
 

@@ -9,6 +9,8 @@ import Home from "../Pages/Home/Home";
 import SessionDetails from "../Pages/SessionDetails/SessionDetails";
 import AuthLayout from "./../Auth/AuthLayout";
 import Login from "./../Auth/Login";
+
+import CreateNote from "../Pages/Dashboard/Student/CreateNote";
 import AllSession from "./../Pages/Dashboard/Tutor/AllSession/AllSession";
 import PrivateRoute from "./PrivateRoute";
 
@@ -43,7 +45,6 @@ export const router = createBrowserRouter([
   },
   {
     path: "dashboard",
-
     element: (
       <PrivateRoute>
         <Dashboard></Dashboard>
@@ -51,6 +52,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       // Tutor Routes
+
       {
         path: "addSession",
         element: <AddSession></AddSession>,
@@ -62,6 +64,11 @@ export const router = createBrowserRouter([
       {
         path: "UploadMaterials",
         element: <UploadMeterials></UploadMeterials>,
+      },
+      // student
+      {
+        path: "CreateNote",
+        element: <CreateNote></CreateNote>,
       },
     ],
   },

@@ -39,7 +39,7 @@ const SessionCard = ({ item }) => {
         <div className="space-y-3">
           {/* Registration Date */}
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <BiCalendar className="h-4 w-4 text-[#10b981]" />
+            <BiCalendar className="h-4 w-4 text-[#10b9815c]" />
             <span>Registration Start: {registrationStartDate}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-600">

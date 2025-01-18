@@ -5,7 +5,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BiCalendarEdit } from "react-icons/bi";
 import { FiBook, FiMenu, FiX } from "react-icons/fi";
 import { GiNotebook } from "react-icons/gi";
@@ -17,15 +17,31 @@ import { AuthContext } from "../../provider/AuthProvider";
 const sidebarItems = {
   student: [
     { icon: TbShoppingCartHeart, text: "View booked session", path: "/" },
-    { icon: GiNotebook, text: "Create note", path: "/auth/lo" },
+    { icon: GiNotebook, text: "Create note", path: "/dashboard/CreateNote" },
     { icon: BiCalendarEdit, text: "Manage personal notes", path: "/analytics" },
     { icon: FiBook, text: "View all study materials ", path: "/messages" },
   ],
   tutor: [
-    { icon: GiNotebook, text: "Create study session", path: "/dashboard/addSession" },
-    { icon: GiNotebook, text: "View all sessions", path: "/dashboard/allSessions" },
-    { icon: GiNotebook, text: "Upload materials ", path: "/dashboard/UploadMaterials" },
-    { icon: GiNotebook, text: "View all Upload materials", path: "/dashboard/allMaterials" },
+    {
+      icon: GiNotebook,
+      text: "Create study session",
+      path: "/dashboard/addSession",
+    },
+    {
+      icon: GiNotebook,
+      text: "View all sessions",
+      path: "/dashboard/allSessions",
+    },
+    {
+      icon: GiNotebook,
+      text: "Upload materials ",
+      path: "/dashboard/UploadMaterials",
+    },
+    {
+      icon: GiNotebook,
+      text: "View all Upload materials",
+      path: "/dashboard/allMaterials",
+    },
   ],
   common: [{ icon: MdOutlineHome, text: "Home", path: "/" }],
 };
