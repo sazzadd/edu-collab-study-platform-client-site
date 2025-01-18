@@ -1,13 +1,21 @@
+import {
+  Card,
+  CardBody,
+  Tab,
+  TabPanel,
+  Tabs,
+  TabsBody,
+  TabsHeader,
+} from "@material-tailwind/react";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import { FaClock, FaDollarSign, FaReact, FaUser } from "react-icons/fa";
 import { AuthContext } from "../../../../provider/AuthProvider";
 
 const AllSession = () => {
   const { user } = useContext(AuthContext);
   const tutorEmail = user.email; // Optional filtering by tutor email
   const [sessions, setSessions] = useState([]);
-  const [filteredSessions, setFilteredSessions] = useState([]);
-  const [activeTab, setActiveTab] = useState("pending"); // Default active tab
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,12 +37,6 @@ const AllSession = () => {
     fetchSessions();
   }, [tutorEmail]);
 
-  // Filter sessions based on the active tab
-  useEffect(() => {
-    const filtered = sessions.filter((session) => session.status === activeTab);
-    setFilteredSessions(filtered);
-  }, [activeTab, sessions]);
-
   if (loading) {
     return <p className="text-center text-lg font-semibold">Loading...</p>;
   }
@@ -42,8 +44,35 @@ const AllSession = () => {
   // Calculate counts for each status
   const statusCounts = {
     pending: sessions.filter((session) => session.status === "pending").length,
-    approved: sessions.filter((session) => session.status === "approved").length,
-    rejected: sessions.filter((session) => session.status === "rejected").length,
+    approved: sessions.filter((session) => session.status === "approved")
+      .length,
+    rejected: sessions.filter((session) => session.status === "rejected")
+      .length,
+  };
+
+  const tabsData = [
+    { label: `Pending (${statusCounts.pending})`, value: "pending" },
+    { label: `Approved (${statusCounts.approved})`, value: "approved" },
+    { label: `Rejected (${statusCounts.rejected})`, value: "rejected" },
+  ];
+
+  const handleStatusChange = (sessionId) => {
+    // Make an API request to change the status to 'approved'
+    axios
+      .put(`http://localhost:5000/session/${sessionId}`, { status: "approved" })
+      .then((response) => {
+        // Update the sessions state with the new status
+        setSessions((prevSessions) =>
+          prevSessions.map((session) =>
+            session._id === sessionId
+              ? { ...session, status: "approved" }
+              : session
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error updating status:", error);
+      });
   };
 
   return (
@@ -53,55 +82,72 @@ const AllSession = () => {
       </h2>
 
       {/* Tabs for filtering by status */}
-      <div className="flex justify-center space-x-4 mb-8">
-        {Object.keys(statusCounts).map((status) => (
-          <button
-            key={status}
-            className={`px-4 py-2 rounded ${
-              activeTab === status ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
-            onClick={() => setActiveTab(status)}
-          >
-            {status.charAt(0).toUpperCase() + status.slice(1)} ({statusCounts[status]})
-          </button>
-        ))}
-      </div>
-
-      {/* Display filtered sessions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredSessions.map((session) => (
-          <div
-            key={session._id}
-            className={`p-6 border rounded shadow-md ${
-              session.status === "pending"
-                ? "bg-yellow-100"
-                : session.status === "approved"
-                ? "bg-green-100"
-                : "bg-red-100"
-            }`}
-          >
-            <img
-              src={session.image}
-              alt={session.sessionTitle}
-              className="w-full h-40 object-cover rounded mb-4"
-            />
-            <h3 className="text-xl font-semibold mb-2">{session.sessionTitle}</h3>
-            <p className="text-sm text-gray-600 mb-2">{session.sessionDescription}</p>
-            <p className="font-medium">
-              <strong>Duration:</strong> {session.sessionDuration} hours
-            </p>
-            <p className="font-medium">
-              <strong>Fee:</strong> ${session.registrationFee}
-            </p>
-            <p className={`font-semibold mt-4 ${getStatusColor(session.status)}`}>
-              <strong>Status:</strong> {session.status}
-            </p>
-            <p className="text-gray-600">
-              <strong>Tutor:</strong> {session.tutorName} ({session.tutorEmail})
-            </p>
-          </div>
-        ))}
-      </div>
+      <Tabs value="pending" className="max-w-full mx-auto mb-8">
+        <TabsHeader className="max-w-2xl mx-auto">
+          {tabsData.map(({ label, value }) => (
+            <Tab key={value} value={value}>
+              {label}
+            </Tab>
+          ))}
+        </TabsHeader>
+        <TabsBody className="overflow-x-auto">
+          {tabsData.map(({ value }) => (
+            <TabPanel key={value} value={value}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+                {sessions
+                  .filter((session) => session.status === value)
+                  .map((session) => (
+                    <Card
+                      key={session._id}
+                      className="shadow-lg border rounded-lg min-w-0"
+                    >
+                      <img
+                        src={session.image}
+                        alt={session.sessionTitle}
+                        className="w-full h-40 object-cover rounded-t-lg"
+                      />
+                      <CardBody className="p-4">
+                        <h3 className="text-lg font-semibold mb-2">
+                          {session.sessionTitle}
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-2">
+                          {session.sessionDescription}
+                        </p>
+                        <div className="flex items-center gap-2 text-gray-600 mb-2">
+                          <FaClock /> {session.sessionDuration} hours
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600 mb-2">
+                          <FaDollarSign /> ${session.registrationFee}
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600 mb-2">
+                          <FaUser /> {session.tutorName}
+                        </div>
+                      </CardBody>
+                      <div className="p-4">
+                        <strong>Status:</strong>{" "}
+                        <span
+                          className={`text-center ${getStatusColor(
+                            session.status
+                          )} p-1 rounded-lg`}
+                        >
+                          {session.status}
+                        </span>
+                        {session.status === "rejected" && (
+                          <button
+                            onClick={() => handleStatusChange(session._id)}
+                            className="mt-4 flex items-center justify-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg transition duration-300"
+                          >
+                            <FaReact className="mr-2" /> Reactivate
+                          </button>
+                        )}
+                      </div>
+                    </Card>
+                  ))}
+              </div>
+            </TabPanel>
+          ))}
+        </TabsBody>
+      </Tabs>
     </div>
   );
 };
@@ -109,13 +155,13 @@ const AllSession = () => {
 const getStatusColor = (status) => {
   switch (status) {
     case "pending":
-      return "text-yellow-600";
+      return "border-2 border-rounded border-yellow-100 text-yellow-700";
     case "approved":
-      return "text-green-600";
+      return "bg-green-100 text-green-600";
     case "rejected":
-      return "text-red-600";
+      return "bg-red-100 text-red-600";
     default:
-      return "text-gray-600";
+      return "bg-gray-100 text-gray-600";
   }
 };
 
