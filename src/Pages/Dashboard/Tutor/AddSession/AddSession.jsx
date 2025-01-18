@@ -12,9 +12,9 @@ import {
   FaEnvelope,
   FaUser,
 } from "react-icons/fa";
-import useAxiosPublic from "../../hook/useAxiosPublic";
-import { AuthContext } from "../../provider/AuthProvider";
 import Swal from "sweetalert2";
+import useAxiosPublic from "../../../../hook/useAxiosPublic";
+import { AuthContext } from "../../../../provider/AuthProvider";
 // imgg bb
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
@@ -61,28 +61,26 @@ const AddSession = () => {
         sessionTitle: data.sessionTitle,
         sessionDescription: data.sessionDescription,
         sessionDuration: data.sessionDuration,
-        image:res.data.data.display_url,
-        registrationStartDate:data.registrationStartDate,
-        registrationEndDate:data.registrationEndDate,
-        classStartDate:data.classStartDate,
-        classEndDate:data.classEndDate,
-        registrationFee:0,
-        status:"pending",
-        tutorName:user?.displayName,
-        tutorEmail:user?.email,
-
-
+        image: res.data.data.display_url,
+        registrationStartDate: data.registrationStartDate,
+        registrationEndDate: data.registrationEndDate,
+        classStartDate: data.classStartDate,
+        classEndDate: data.classEndDate,
+        registrationFee: 0,
+        status: "pending",
+        tutorName: user?.displayName,
+        tutorEmail: user?.email,
       };
-      const sessionsRes = await axiosPublic.post('/session', sessions);
-      console.log(sessionsRes.data)
-      if(sessionsRes.data.insertedId){
+      const sessionsRes = await axiosPublic.post("/session", sessions);
+      console.log(sessionsRes.data);
+      if (sessionsRes.data.insertedId) {
         // reset()
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title:  `session added succesfully`,
+          title: `session added succesfully`,
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
       }
     }
