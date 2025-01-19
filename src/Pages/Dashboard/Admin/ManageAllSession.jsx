@@ -21,6 +21,7 @@ import {
 } from "react-icons/ai";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hook/useAxiosSecure";
 const ManageAllSession = () => {
   const [sessions, setSessions] = useState([]);
@@ -122,6 +123,35 @@ const ManageAllSession = () => {
       toast.warning("session is rejected");
     } catch (error) {
       console.error("Error rejecting session:", error);
+    }
+  };
+
+  //   delete approved seesion
+  const handleDeleteSession = (sessionId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteSession(sessionId);
+      }
+    });
+  };
+
+  const deleteSession = async (sessionId) => {
+    try {
+      await axiosSecure.delete(`/session/${sessionId}`);
+      setSessions((prevSessions) =>
+        prevSessions.filter((session) => session._id !== sessionId)
+      );
+      Swal.fire("Deleted!", "Your session has been deleted.", "success");
+    } catch (error) {
+      Swal.fire("Error!", "There was an issue deleting the session.", "error");
     }
   };
 
@@ -230,7 +260,10 @@ const ManageAllSession = () => {
                           <button className="text-yellow-500 hover:bg-yellow-200 rounded-md p-3">
                             <AiOutlineEdit className="text-xl" />
                           </button>
-                          <button className="text-red-500 hover:bg-red-200 rounded-md p-3">
+                          <button
+                            onClick={() => handleDeleteSession(session._id)}
+                            className="text-red-500 hover:bg-red-200 rounded-md p-3"
+                          >
                             <AiOutlineDelete className="text-xl" />
                           </button>
                         </div>
