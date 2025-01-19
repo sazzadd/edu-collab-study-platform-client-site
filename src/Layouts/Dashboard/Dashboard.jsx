@@ -16,7 +16,7 @@ import { AuthContext } from "../../provider/AuthProvider";
 
 const sidebarItems = {
   admin: [
-    { icon: TbShoppingCartHeart, text: "View all users", path: "/viewAllUsers" },
+    { icon: TbShoppingCartHeart, text: "View all users", path: "/dashboard/viewAllUsers" },
     { icon: GiNotebook, text: "View all study session", path: "/dashboard/viewAllSession" },
    
   ],
