@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   LoadCanvasTemplate,
@@ -9,10 +8,10 @@ import {
   validateCaptcha,
 } from "react-simple-captcha";
 import { toast } from "react-toastify";
-import { AuthContext } from "../provider/AuthProvider";
 import SocialLogin from "../component/SocialLogin/SocialLogin";
+import { AuthContext } from "../provider/AuthProvider";
 const Login = () => {
-    const { setUser, userLogin } = useContext(AuthContext);
+  const { setUser, userLogin } = useContext(AuthContext);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState({});
   const captchaRef = useRef(null);
@@ -23,7 +22,7 @@ const Login = () => {
   const [captchaValidated, setCaptchaValidated] = useState(false);
   useEffect(() => {
     try {
-      loadCaptchaEnginge(6);
+      loadCaptchaEnginge(3);
     } catch (err) {
       console.error("Captcha Engine Error:", err);
     }
@@ -60,7 +59,6 @@ const Login = () => {
         setError({ ...error, login: err.code });
         toast.error(err.message);
       });
-      
   };
   return (
     <div className="min-h-screen flex justify-center items-center bg-white">

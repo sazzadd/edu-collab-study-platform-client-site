@@ -11,6 +11,9 @@ import AuthLayout from "./../Auth/AuthLayout";
 import Login from "./../Auth/Login";
 
 import CreateNote from "../Pages/Dashboard/Student/CreateNote";
+import ManageAllSession from "./../Pages/Dashboard/Admin/ManageAllSession";
+import ViewAllMaterials from "./../Pages/Dashboard/Admin/ViewAllMaterials";
+import ViewAllUsers from "./../Pages/Dashboard/Admin/ViewAllUsers";
 import AllSession from "./../Pages/Dashboard/Tutor/AllSession/AllSession";
 import PrivateRoute from "./PrivateRoute";
 
@@ -53,11 +56,18 @@ export const router = createBrowserRouter([
     children: [
       // admin routes
 
- {
+      {
         path: "viewAllUsers",
-        element: <AddSession></AddSession>,
+        element: <ViewAllUsers></ViewAllUsers>,
       },
-
+      {
+        path: "viewAllSession",
+        element: <ManageAllSession></ManageAllSession>,
+      },
+      {
+        path: "viewAllMaterials",
+        element: <ViewAllMaterials></ViewAllMaterials>,
+      },
       // Tutor Routes
 
       {

@@ -18,6 +18,7 @@ const sidebarItems = {
   admin: [
     { icon: TbShoppingCartHeart, text: "View all users", path: "/dashboard/viewAllUsers" },
     { icon: GiNotebook, text: "View all study session", path: "/dashboard/viewAllSession" },
+    { icon: GiNotebook, text: "View all materials", path: "/dashboard/viewAllMaterials" },
    
   ],
   student: [
