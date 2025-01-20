@@ -19,7 +19,6 @@ import {
   AiOutlineEdit,
   AiOutlineEye,
 } from "react-icons/ai";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
@@ -33,6 +32,11 @@ const ManageAllSession = () => {
   const [registrationFee, setRegistrationFee] = useState(""); // State to hold the updated registrationFee
   const [feedback, setFeedback] = useState(""); // State to hold the feedback for rejection
   const axiosSecure = useAxiosSecure();
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editSession, setEditSession] = useState({
+    title: "",
+    description: "",
+  });
 
   useEffect(() => {
     const fetchSessions = async () => {
@@ -70,8 +74,43 @@ const ManageAllSession = () => {
     setShowRejectModal(true); // Open the reject modal
   };
 
+  // const handleApproveSession = async () => {
+  //   if (registrationFee) {
+  //     toast.error("Please enter a valid registration fee.");
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await axiosSecure.patch(
+  //       `/session/${selectedSession._id}`,
+  //       {
+  //         registrationFee: parseFloat(registrationFee), // Ensure it's a number
+  //         status: "approved",
+  //       }
+  //     );
+
+  //     if (response.data.modifiedCount > 0) {
+  //       setSessions((prevSessions) =>
+  //         prevSessions.map((session) =>
+  //           session._id === selectedSession._id
+  //             ? { ...session, registrationFee, status: "approved" }
+  //             : session
+  //         )
+  //       );
+  //       setShowApproveModal(false);
+  //       toast.success("Session approved successfully!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error approving session:", error);
+  //     toast.error("Failed to approve the session. Please try again.");
+  //   }
+  // };
   const handleApproveSession = async () => {
-    if (!registrationFee) {
+    // Check if registrationFee is valid for paid type
+    if (
+      registrationFee === "" ||
+      (registrationFee !== "0" && isNaN(parseFloat(registrationFee)))
+    ) {
       toast.error("Please enter a valid registration fee.");
       return;
     }
@@ -153,6 +192,43 @@ const ManageAllSession = () => {
       Swal.fire("Deleted!", "Your session has been deleted.", "success");
     } catch (error) {
       Swal.fire("Error!", "There was an issue deleting the session.", "error");
+    }
+  };
+  const handleEditClick = (session) => {
+    setEditSession({
+      title: session.sessionTitle,
+      description: session.description,
+    });
+    setShowEditModal(true);
+  };
+  const handleUpdateSession = async () => {
+    try {
+      const response = await axiosSecure.patch(
+        `/session/${selectedSession._id}`,
+        {
+          sessionTitle: editSession.title,
+          description: editSession.description,
+        }
+      );
+
+      if (response.data.modifiedCount > 0) {
+        setSessions((prevSessions) =>
+          prevSessions.map((session) =>
+            session._id === selectedSession._id
+              ? {
+                  ...session,
+                  sessionTitle: editSession.title,
+                  description: editSession.description,
+                }
+              : session
+          )
+        );
+        toast.success("Session updated successfully!");
+        setShowEditModal(false);
+      }
+    } catch (error) {
+      console.error("Error updating session:", error);
+      toast.error("Failed to update the session. Please try again.");
     }
   };
 
@@ -258,12 +334,12 @@ const ManageAllSession = () => {
                       </td>
                       <td className="px-6 py-3 border-b">
                         <div className="flex items-center gap-3">
-                          <Link to={`/dashboard/updateSession/${session._id}`}>
-                            <button className="text-yellow-500 hover:bg-yellow-200 rounded-md p-3">
-                              <AiOutlineEdit className="text-xl" />
-                            </button>
-                          </Link>
-
+                          <button
+                            onClick={() => handleEditClick(session)}
+                            className="text-yellow-500 hover:bg-yellow-200 rounded-md p-3"
+                          >
+                            <AiOutlineEdit className="text-xl" />
+                          </button>
                           <button
                             onClick={() => handleDeleteSession(session._id)}
                             className="text-red-500 hover:bg-red-200 rounded-md p-3"
@@ -312,7 +388,7 @@ const ManageAllSession = () => {
       </Dialog>
 
       {/* Modal for updating registrationFee */}
-      {showApproveModal && (
+      {/* {showApproveModal && (
         <Dialog
           open={showApproveModal}
           handler={() => setShowApproveModal(false)}
@@ -338,6 +414,109 @@ const ManageAllSession = () => {
               Approve
             </Button>
             <Button onClick={() => setShowApproveModal(false)} color="red">
+              Cancel
+            </Button>
+          </DialogFooter>
+        </Dialog>
+      )} */}
+      {showApproveModal && (
+        <Dialog
+          open={showApproveModal}
+          handler={() => setShowApproveModal(false)}
+          size="sm"
+        >
+          <DialogHeader>Update Registration Fee</DialogHeader>
+          <DialogBody>
+            <div className="flex flex-col gap-4">
+              <div>
+                <p className="mb-2 font-medium">Select Registration Type:</p>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="registrationType"
+                      value="free"
+                      checked={registrationFee === "0"}
+                      onChange={() => setRegistrationFee("0")}
+                    />
+                    Free
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="registrationType"
+                      value="paid"
+                      checked={registrationFee !== "0"}
+                      onChange={() => setRegistrationFee("")}
+                    />
+                    Paid
+                  </label>
+                </div>
+              </div>
+              {registrationFee !== "0" && (
+                <Input
+                  label="Registration Fee"
+                  type="number"
+                  value={registrationFee}
+                  onChange={(e) => setRegistrationFee(e.target.value)}
+                />
+              )}
+            </div>
+          </DialogBody>
+          <DialogFooter>
+            <Button
+              onClick={handleApproveSession}
+              color="indigo"
+              className="mr-2"
+              disabled={registrationFee === ""}
+            >
+              Approve
+            </Button>
+            <Button onClick={() => setShowApproveModal(false)} color="red">
+              Cancel
+            </Button>
+          </DialogFooter>
+        </Dialog>
+      )}
+
+      {/* modal for upadte title and des*/}
+      {showEditModal && (
+        <Dialog
+          open={showEditModal}
+          handler={() => setShowEditModal(false)}
+          size="sm"
+        >
+          <DialogHeader>Edit Session</DialogHeader>
+          <DialogBody>
+            <div className="flex flex-col gap-4">
+              <Input
+                label="Title"
+                value={editSession.title}
+                onChange={(e) =>
+                  setEditSession({ ...editSession, title: e.target.value })
+                }
+              />
+              <Input
+                label="Description"
+                value={editSession.description}
+                onChange={(e) =>
+                  setEditSession({
+                    ...editSession,
+                    description: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </DialogBody>
+          <DialogFooter>
+            <Button
+              color="indigo"
+              onClick={handleUpdateSession}
+              className="mr-2"
+            >
+              Update
+            </Button>
+            <Button onClick={() => setShowEditModal(false)} color="red">
               Cancel
             </Button>
           </DialogFooter>
