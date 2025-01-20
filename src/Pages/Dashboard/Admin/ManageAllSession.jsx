@@ -19,6 +19,7 @@ import {
   AiOutlineEdit,
   AiOutlineEye,
 } from "react-icons/ai";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
@@ -257,9 +258,12 @@ const ManageAllSession = () => {
                       </td>
                       <td className="px-6 py-3 border-b">
                         <div className="flex items-center gap-3">
-                          <button className="text-yellow-500 hover:bg-yellow-200 rounded-md p-3">
-                            <AiOutlineEdit className="text-xl" />
-                          </button>
+                          <Link to={`/dashboard/updateSession/${session._id}`}>
+                            <button className="text-yellow-500 hover:bg-yellow-200 rounded-md p-3">
+                              <AiOutlineEdit className="text-xl" />
+                            </button>
+                          </Link>
+
                           <button
                             onClick={() => handleDeleteSession(session._id)}
                             className="text-red-500 hover:bg-red-200 rounded-md p-3"

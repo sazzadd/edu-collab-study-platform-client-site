@@ -9,17 +9,28 @@ import { useContext, useEffect, useState } from "react";
 import { BiCalendarEdit } from "react-icons/bi";
 import { FiBook, FiMenu, FiX } from "react-icons/fi";
 import { GiNotebook } from "react-icons/gi";
-import { MdOutlineHome } from "react-icons/md";
+import { MdOutlineHome, MdOutlineLogout } from "react-icons/md";
 import { TbShoppingCartHeart } from "react-icons/tb";
 import { NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 
 const sidebarItems = {
   admin: [
-    { icon: TbShoppingCartHeart, text: "View all users", path: "/dashboard/viewAllUsers" },
-    { icon: GiNotebook, text: "View all study session", path: "/dashboard/viewAllSession" },
-    { icon: GiNotebook, text: "View all materials", path: "/dashboard/viewAllMaterials" },
-   
+    {
+      icon: TbShoppingCartHeart,
+      text: "View all users",
+      path: "/dashboard/viewAllUsers",
+    },
+    {
+      icon: GiNotebook,
+      text: "View all study session",
+      path: "/dashboard/viewAllSession",
+    },
+    {
+      icon: GiNotebook,
+      text: "View all materials",
+      path: "/dashboard/viewAllMaterials",
+    },
   ],
   student: [
     { icon: TbShoppingCartHeart, text: "View booked session", path: "/" },
@@ -157,6 +168,14 @@ const Dashboard = () => {
             <span>{item.text}</span>
           </NavLink>
         ))}
+        <button
+          onClick={logOut}
+          className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white"
+        >
+          <MdOutlineLogout />
+          {/* <FiX className="h-5 w-5" /> */}
+          <span>LogOut</span>
+        </button>
       </nav>
     </div>
   );

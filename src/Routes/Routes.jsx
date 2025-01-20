@@ -16,6 +16,7 @@ import ViewAllMaterials from "./../Pages/Dashboard/Admin/ViewAllMaterials";
 import ViewAllUsers from "./../Pages/Dashboard/Admin/ViewAllUsers";
 import AllSession from "./../Pages/Dashboard/Tutor/AllSession/AllSession";
 import PrivateRoute from "./PrivateRoute";
+import UpdateSession from './../Pages/Dashboard/Admin/UpdateSession';
 
 export const router = createBrowserRouter([
   {
@@ -65,9 +66,16 @@ export const router = createBrowserRouter([
         element: <ManageAllSession></ManageAllSession>,
       },
       {
+        path: "updateSession/:id",
+        element: <UpdateSession></UpdateSession>,
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/session/${params.id}`),
+      },
+      {
         path: "viewAllMaterials",
         element: <ViewAllMaterials></ViewAllMaterials>,
       },
+    
       // Tutor Routes
 
       {
