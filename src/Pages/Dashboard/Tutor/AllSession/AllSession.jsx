@@ -15,7 +15,7 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { FaClock, FaDollarSign, FaEllipsisH, FaReact, FaUser } from "react-icons/fa";
+import { FaClock, FaDollarSign, FaReact, FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../../provider/AuthProvider";
 const AllSession = () => {
@@ -181,13 +181,15 @@ const AllSession = () => {
                                     placement="top"
                                   >
                                     <p
-                                      className="text-sm text-red-600 mt-4 cursor-pointer"
+                                      className="text-sm text-red-500 mt-4 cursor-pointer"
                                       onClick={() =>
                                         handleDialogOpen(session.adminFeedback)
                                       }
                                     >
-                                      <Button className="px-2 py-1 bg-indigo-100 text-black rounded-full hover:bg-indigo-200 transition duration-300 flex items-center gap-2"> See Admin Feedback:</Button>{" "}
-                                      {session.adminFeedback}
+                                      <Button className="px-2 py-1 bg-indigo-100 text-black rounded-full hover:bg-indigo-200 transition duration-300 flex items-center gap-2">
+                                        {" "}
+                                        See Admin Feedback:
+                                      </Button>{" "}
                                     </p>
                                   </Tooltip>
 
@@ -204,7 +206,7 @@ const AllSession = () => {
                                         onClick={() => setOpenDialog(false)}
                                         className="px-2 py-1 bg-indigo-100 text-black rounded-full hover:bg-indigo-200 transition duration-300 flex items-center gap-2"
                                       >
-                                        <FaEllipsisH /> See More
+                                        Close
                                       </Button>
                                     </DialogFooter>
                                   </Dialog>
@@ -217,7 +219,7 @@ const AllSession = () => {
                             onClick={() =>
                               handleStatusChange(session._id, "pending")
                             }
-                            className="mt-4 flex items-center justify-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg transition duration-300"
+                            className="mt-4 flex items-center justify-center px-4 py-1 text-white bg-indigo-400 hover:bg-blue-700 rounded-md shadow-lg transition duration-300"
                           >
                             <FaReact className="mr-2" /> Reactivate
                           </button>
