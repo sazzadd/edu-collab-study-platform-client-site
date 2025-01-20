@@ -8,82 +8,108 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { BiCalendarEdit } from "react-icons/bi";
 import { FiBook, FiMenu, FiX } from "react-icons/fi";
-import { GiNotebook } from "react-icons/gi";
-import { MdOutlineHome, MdOutlineLogout } from "react-icons/md";
-import { TbShoppingCartHeart } from "react-icons/tb";
+import { GiBookshelf, GiNotebook } from "react-icons/gi";
+import {
+  MdFileUpload,
+  MdLibraryBooks,
+  MdOutlineHome,
+  MdOutlineLogout,
+} from "react-icons/md";
+import { TbShoppingCartHeart, TbUsers } from "react-icons/tb";
 import { NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
+// const sidebarItems = {
+//   admin: [
+//     {
+//       icon: TbShoppingCartHeart,
+//       text: "View all users",
+//       path: "/dashboard/viewAllUsers",
+//     },
+//     {
+//       icon: GiNotebook,
+//       text: "View all study session",
+//       path: "/dashboard/viewAllSession",
+//     },
+//     {
+//       icon: GiNotebook,
+//       text: "View all materials",
+//       path: "/dashboard/viewAllMaterials",
+//     },
+//   ],
+//   student: [
+//     { icon: TbShoppingCartHeart, text: "View booked session", path: "/" },
+//     { icon: GiNotebook, text: "Create note", path: "/dashboard/CreateNote" },
+//     { icon: BiCalendarEdit, text: "Manage personal notes", path: "/analytics" },
+//     { icon: FiBook, text: "View all study materials ", path: "/messages" },
+//   ],
+//   tutor: [
+//     {
+//       icon: GiNotebook,
+//       text: "Create study session",
+//       path: "/dashboard/addSession",
+//     },
+//     {
+//       icon: GiNotebook,
+//       text: "View all sessions",
+//       path: "/dashboard/allSessions",
+//     },
+//     {
+//       icon: GiNotebook,
+//       text: "Upload materials ",
+//       path: "/dashboard/UploadMaterials",
+//     },
+//     {
+//       icon: GiNotebook,
+//       text: "View all Upload materials",
+//       path: "/dashboard/allMaterials",
+//     },
+//   ],
+//   // tutor: [
+//   //   {
+//   //     icon: GiNotebook,
+//   //     text: "Create study session",
+//   //     path: "/dashboard/addSession",
+//   //   },
+//   //   {
+//   //     icon: GiNotebook,
+//   //     text: "View all sessions",
+//   //     path: "/dashboard/allSessions",
+//   //   },
+//   //   {
+//   //     icon: GiNotebook,
+//   //     text: "Upload materials ",
+//   //     path: "/dashboard/UploadMaterials",
+//   //   },
+//   //   {
+//   //     icon: GiNotebook,
+//   //     text: "View all Upload materials",
+//   //     path: "/dashboard/allMaterials",
+//   //   },
+//   // ],
+//   common: [{ icon: MdOutlineHome, text: "Home", path: "/" }],
+// };
 
 const sidebarItems = {
   admin: [
-    {
-      icon: TbShoppingCartHeart,
-      text: "View all users",
-      path: "/dashboard/viewAllUsers",
-    },
-    {
-      icon: GiNotebook,
-      text: "View all study session",
-      path: "/dashboard/viewAllSession",
-    },
-    {
-      icon: GiNotebook,
-      text: "View all materials",
-      path: "/dashboard/viewAllMaterials",
-    },
+    { icon: TbUsers, text: "View all users", path: "/dashboard/viewAllUsers" },
+    { icon: GiNotebook, text: "View all study session", path: "/dashboard/viewAllSession" },
+    { icon: MdLibraryBooks, text: "View all materials", path: "/dashboard/viewAllMaterials" },
   ],
   student: [
-    { icon: TbShoppingCartHeart, text: "View booked session", path: "/" },
+    { icon: TbShoppingCartHeart, text: "View booked session", path: "/dashboard/viewBookedSession" },
     { icon: GiNotebook, text: "Create note", path: "/dashboard/CreateNote" },
-    { icon: BiCalendarEdit, text: "Manage personal notes", path: "/analytics" },
-    { icon: FiBook, text: "View all study materials ", path: "/messages" },
+    { icon: BiCalendarEdit, text: "Manage personal notes", path: "/manageNote" },
+    { icon: FiBook, text: "View all study materials", path: "/viewMeterialStudent" },
   ],
   tutor: [
-    {
-      icon: GiNotebook,
-      text: "Create study session",
-      path: "/dashboard/addSession",
-    },
-    {
-      icon: GiNotebook,
-      text: "View all sessions",
-      path: "/dashboard/allSessions",
-    },
-    {
-      icon: GiNotebook,
-      text: "Upload materials ",
-      path: "/dashboard/UploadMaterials",
-    },
-    {
-      icon: GiNotebook,
-      text: "View all Upload materials",
-      path: "/dashboard/allMaterials",
-    },
+    { icon: GiNotebook, text: "Create study session", path: "/dashboard/addSession" },
+    { icon: GiNotebook, text: "View all sessions", path: "/dashboard/allSessions" },
+    { icon: MdFileUpload, text: "Upload materials", path: "/dashboard/UploadMaterials" },
+    { icon: GiBookshelf, text: "View all Upload materials", path: "/dashboard/allMaterials" },
   ],
-  // tutor: [
-  //   {
-  //     icon: GiNotebook,
-  //     text: "Create study session",
-  //     path: "/dashboard/addSession",
-  //   },
-  //   {
-  //     icon: GiNotebook,
-  //     text: "View all sessions",
-  //     path: "/dashboard/allSessions",
-  //   },
-  //   {
-  //     icon: GiNotebook,
-  //     text: "Upload materials ",
-  //     path: "/dashboard/UploadMaterials",
-  //   },
-  //   {
-  //     icon: GiNotebook,
-  //     text: "View all Upload materials",
-  //     path: "/dashboard/allMaterials",
-  //   },
-  // ],
   common: [{ icon: MdOutlineHome, text: "Home", path: "/" }],
 };
+
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

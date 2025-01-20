@@ -27,7 +27,12 @@ const AllSession = () => {
           : "http://localhost:5000/session";
 
         const { data } = await axios.get(url);
-        setSessions(data);
+        if (Array.isArray(data)) {
+          setSessions(data);
+        } else {
+          console.error("Unexpected data format:", data);
+          toast.error("Invalid data format received.");
+        }
       } catch (error) {
         console.error("Error fetching sessions:", error);
         toast.error("Failed to fetch sessions.");

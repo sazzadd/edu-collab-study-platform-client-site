@@ -14,14 +14,20 @@ const SessionCard = ({ item }) => {
     classStartDate,
     classEndDate,
     status,
+    image,
   } = item;
+
+  // Only show the card if the session status is "approved"
+  if (status !== "approved") {
+    return null; // Don't render anything if status is not approved
+  }
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
       {/* Image Header */}
       <div className="w-full">
         <img
-          src="https://i.ibb.co/XZ1DTVB/1702962448246.jpg"
+          src={image}
           alt="Session Illustration"
           className="h-56 w-full object-cover rounded-t-xl"
         />
@@ -58,10 +64,16 @@ const SessionCard = ({ item }) => {
       {/* Card Footer */}
       <div className="flex items-center justify-between bg-[#f3faf9] p-4 rounded-b-xl">
         {/* Status */}
-        <span className={`px-3 py-1 text-sm font-medium rounded-full ${status === 'Closed' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+        <span
+          className={`px-3 py-1 text-sm font-medium rounded-full ${
+            status === "Closed"
+              ? "bg-red-100 text-red-600"
+              : "bg-green-100 text-green-600"
+          }`}
+        >
           {status}
         </span>
-        
+
         {/* Read More Button */}
         <Link to={`/SessionDetails/${_id}`}>
           <button className="rounded-md bg-[#10b981] text-white px-6 py-2 text-sm font-semibold hover:bg-[#0ea371] transition-all duration-300">

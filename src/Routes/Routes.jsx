@@ -12,11 +12,13 @@ import Login from "./../Auth/Login";
 
 import CreateNote from "../Pages/Dashboard/Student/CreateNote";
 import ManageAllSession from "./../Pages/Dashboard/Admin/ManageAllSession";
+import UpdateSession from "./../Pages/Dashboard/Admin/UpdateSession";
 import ViewAllMaterials from "./../Pages/Dashboard/Admin/ViewAllMaterials";
 import ViewAllUsers from "./../Pages/Dashboard/Admin/ViewAllUsers";
+import ManageNote from "./../Pages/Dashboard/Student/ManageNote";
+import ViewBookedSession from "./../Pages/Dashboard/Student/ViewBookedSession";
 import AllSession from "./../Pages/Dashboard/Tutor/AllSession/AllSession";
 import PrivateRoute from "./PrivateRoute";
-import UpdateSession from './../Pages/Dashboard/Admin/UpdateSession';
 
 export const router = createBrowserRouter([
   {
@@ -75,7 +77,7 @@ export const router = createBrowserRouter([
         path: "viewAllMaterials",
         element: <ViewAllMaterials></ViewAllMaterials>,
       },
-    
+
       // Tutor Routes
 
       {
@@ -94,6 +96,14 @@ export const router = createBrowserRouter([
       {
         path: "CreateNote",
         element: <CreateNote></CreateNote>,
+      },
+      {
+        path: "viewBookedSession",
+        element: <ViewBookedSession></ViewBookedSession>,
+      },
+      {
+        path: "manageNote",
+        element: <ManageNote></ManageNote>,
       },
     ],
   },

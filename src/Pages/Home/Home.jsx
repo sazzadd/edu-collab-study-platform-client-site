@@ -1,3 +1,4 @@
+import Sessions from "../../component/Sessions";
 import SessionSec from "../../component/SessionSec";
 import Banner from "../Shared/Banner";
 
@@ -7,6 +8,7 @@ const Home = () => {
       <Banner></Banner>
       {/* session section */}
       <SessionSec></SessionSec>
+      {/* <Sessions></Sessions> */}
     </div>
   );
 };

@@ -12,16 +12,16 @@ import {
   FaEnvelope,
   FaUser,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../../../hook/useAxiosPublic";
 import { AuthContext } from "../../../../provider/AuthProvider";
-import { useNavigate } from "react-router-dom";
-// imgg bb api and key 
+// imgg bb api and key
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 const AddSession = () => {
   const { user } = useContext(AuthContext);
-  const navigete = useNavigate()
+  const navigete = useNavigate();
   const {
     register,
     handleSubmit,
@@ -39,52 +39,52 @@ const AddSession = () => {
 
   const onSubmit = async (data) => {
     const imageFile = { image: data.image[0] };
+
+    // Upload the image to imgBB
     const res = await axiosPublic.post(image_hosting_api, imageFile, {
       headers: {
-        " content-type": "multipart/form-data",
+        "content-type": "multipart/form-data",
       },
     });
-    console.log(res.data);
-    console.log({
-      ...data,
-      classStartDate: classStartDate
-        ? format(classStartDate, "dd-MM-yyyy")
-        : null,
-      classEndDate: classEndDate ? format(classEndDate, "dd-MM-yyyy") : null,
-      registrationStartDate: registrationStartDate
-        ? format(registrationStartDate, "dd-MM-yyyy")
-        : null,
-      registrationEndDate: registrationEndDate
-        ? format(registrationEndDate, "dd-MM-yyyy")
-        : null,
-    });
+
     if (res.data.success) {
       const sessions = {
         sessionTitle: data.sessionTitle,
         sessionDescription: data.sessionDescription,
         sessionDuration: data.sessionDuration,
         image: res.data.data.display_url,
-        registrationStartDate: data.registrationStartDate,
-        registrationEndDate: data.registrationEndDate,
-        classStartDate: data.classStartDate,
-        classEndDate: data.classEndDate,
+
+        // Ensure correct date format for registration and class dates
+        registrationStartDate: registrationStartDate
+          ? format(registrationStartDate, "yyyy-MM-dd") // Storing as ISO format
+          : null,
+        registrationEndDate: registrationEndDate
+          ? format(registrationEndDate, "yyyy-MM-dd") // Storing as ISO format
+          : null,
+        classStartDate: classStartDate
+          ? format(classStartDate, "yyyy-MM-dd") // Storing as ISO format
+          : null,
+        classEndDate: classEndDate
+          ? format(classEndDate, "yyyy-MM-dd") // Storing as ISO format
+          : null,
+
         registrationFee: 0,
         status: "pending",
         tutorName: user?.displayName,
         tutorEmail: user?.email,
       };
+
+      // Sending the session object to the backend
       const sessionsRes = await axiosPublic.post("/session", sessions);
-      console.log(sessionsRes.data);
       if (sessionsRes.data.insertedId) {
-        // reset()
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: `session added succesfully`,
+          title: `Session added successfully`,
           showConfirmButton: false,
           timer: 1500,
         });
-        navigete('/dashboard/allSessions')
+        navigete("/dashboard/allSessions");
       }
     }
   };
@@ -104,7 +104,7 @@ const AddSession = () => {
             {...register("sessionTitle", {
               required: "Session title is required.",
               minLength: {
-                value: 15,
+                value: 10,
                 message: "Session title must be at least 15 characters long.",
               },
             })}
@@ -112,7 +112,7 @@ const AddSession = () => {
             icon={<FaEdit />}
             error={errors.sessionTitle ? true : false}
             onChange={(e) => {
-              if (e.target.value.length >= 15) {
+              if (e.target.value.length >= 10) {
                 clearErrors("sessionTitle");
               }
             }}
@@ -148,15 +148,16 @@ const AddSession = () => {
             Upload Image
           </label>
           <input
-            {...register("image", { required: "Image file is required." })}
+            {...register("image", {
+              required:
+                "Please upload an image for the session. This is mandatory.",
+            })}
             type="file"
             accept="image/*"
             className="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           />
-          {errors.imageFile && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.imageFile.message}
-            </p>
+          {errors.image && (
+            <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
           )}
         </div>
 

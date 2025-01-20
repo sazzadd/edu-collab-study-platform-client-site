@@ -73,6 +73,7 @@ const ManageAllSession = () => {
     setSelectedSession(session);
     setShowRejectModal(true); // Open the reject modal
   };
+  
 
   // const handleApproveSession = async () => {
   //   if (registrationFee) {
