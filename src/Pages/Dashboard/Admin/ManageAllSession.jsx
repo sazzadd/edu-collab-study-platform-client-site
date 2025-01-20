@@ -119,7 +119,7 @@ const ManageAllSession = () => {
       const response = await axiosSecure.patch(
         `/session/${selectedSession._id}`,
         {
-          registrationFee: parseFloat(registrationFee), // Ensure it's a number
+    // Ensure it's a number
           status: "approved",
         }
       );

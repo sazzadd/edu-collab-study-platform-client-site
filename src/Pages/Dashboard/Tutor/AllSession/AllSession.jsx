@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { FaClock, FaDollarSign, FaReact, FaUser } from "react-icons/fa";
+import { toast } from "react-toastify";
 import { AuthContext } from "../../../../provider/AuthProvider";
 
 const AllSession = () => {
@@ -29,6 +30,7 @@ const AllSession = () => {
         setSessions(data);
       } catch (error) {
         console.error("Error fetching sessions:", error);
+        toast.error("Failed to fetch sessions.");
       } finally {
         setLoading(false);
       }
@@ -37,11 +39,31 @@ const AllSession = () => {
     fetchSessions();
   }, [tutorEmail]);
 
+  const handleStatusChange = async (sessionId, status) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:5000/session/${sessionId}`,
+        { status }
+      );
+
+      if (response.data.modifiedCount > 0) {
+        setSessions((prevSessions) =>
+          prevSessions.map((session) =>
+            session._id === sessionId ? { ...session, status } : session
+          )
+        );
+        toast.success("Session status updated successfully!");
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      toast.error("Failed to update session status.");
+    }
+  };
+
   if (loading) {
     return <p className="text-center text-lg font-semibold">Loading...</p>;
   }
 
-  // Calculate counts for each status
   const statusCounts = {
     pending: sessions.filter((session) => session.status === "pending").length,
     approved: sessions.filter((session) => session.status === "approved")
@@ -56,23 +78,17 @@ const AllSession = () => {
     { label: `Rejected (${statusCounts.rejected})`, value: "rejected" },
   ];
 
-  const handleStatusChange = (sessionId) => {
-    // Make an API request to change the status to 'approved'
-    axios
-      .put(`http://localhost:5000/session/${sessionId}`, { status: "approved" })
-      .then((response) => {
-        // Update the sessions state with the new status
-        setSessions((prevSessions) =>
-          prevSessions.map((session) =>
-            session._id === sessionId
-              ? { ...session, status: "approved" }
-              : session
-          )
-        );
-      })
-      .catch((error) => {
-        console.error("Error updating status:", error);
-      });
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "pending":
+        return "border-2 border-rounded border-yellow-100 text-yellow-700";
+      case "approved":
+        return "bg-green-100 text-green-600";
+      case "rejected":
+        return "bg-red-100 text-red-600";
+      default:
+        return "bg-gray-100 text-gray-600";
+    }
   };
 
   return (
@@ -81,7 +97,6 @@ const AllSession = () => {
         {tutorEmail ? "My Sessions" : "All Sessions"}
       </h2>
 
-      {/* Tabs for filtering by status */}
       <Tabs value="pending" className="max-w-full mx-auto mb-8">
         <TabsHeader className="max-w-2xl mx-auto">
           {tabsData.map(({ label, value }) => (
@@ -132,9 +147,19 @@ const AllSession = () => {
                         >
                           {session.status}
                         </span>
+                        <div>
+                          {session.status === "rejected" &&
+                            session.adminFeedback && (
+                              <p className="text-sm text-red-600 mt-4">
+                                Admin Feedback: {session.adminFeedback}
+                              </p>
+                            )}
+                        </div>
                         {session.status === "rejected" && (
                           <button
-                            onClick={() => handleStatusChange(session._id)}
+                            onClick={() =>
+                              handleStatusChange(session._id, "pending")
+                            }
                             className="mt-4 flex items-center justify-center px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-full shadow-lg transition duration-300"
                           >
                             <FaReact className="mr-2" /> Reactivate
@@ -150,19 +175,6 @@ const AllSession = () => {
       </Tabs>
     </div>
   );
-};
-
-const getStatusColor = (status) => {
-  switch (status) {
-    case "pending":
-      return "border-2 border-rounded border-yellow-100 text-yellow-700";
-    case "approved":
-      return "bg-green-100 text-green-600";
-    case "rejected":
-      return "bg-red-100 text-red-600";
-    default:
-      return "bg-gray-100 text-gray-600";
-  }
 };
 
 export default AllSession;
