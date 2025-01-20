@@ -1,24 +1,30 @@
 import {
+  Button,
   Card,
   CardBody,
+  Dialog,
+  DialogBody,
+  DialogFooter,
+  DialogHeader,
   Tab,
   TabPanel,
   Tabs,
   TabsBody,
   TabsHeader,
+  Tooltip,
 } from "@material-tailwind/react";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { FaClock, FaDollarSign, FaReact, FaUser } from "react-icons/fa";
+import { FaClock, FaDollarSign, FaEllipsisH, FaReact, FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../../provider/AuthProvider";
-
 const AllSession = () => {
   const { user } = useContext(AuthContext);
   const tutorEmail = user.email; // Optional filtering by tutor email
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [openDialog, setOpenDialog] = useState(false);
+  const [feedback, setFeedback] = useState("");
   useEffect(() => {
     const fetchSessions = async () => {
       try {
@@ -64,9 +70,16 @@ const AllSession = () => {
       toast.error("Failed to update session status.");
     }
   };
-
+  const handleDialogOpen = (feedbackText) => {
+    setFeedback(feedbackText);
+    setOpenDialog(!openDialog);
+  };
   if (loading) {
-    return <p className="text-center text-lg font-semibold">Loading...</p>;
+    return (
+      <div className="flex justify-center items-center">
+        <div className="w-12 h-12 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   const statusCounts = {
@@ -153,12 +166,51 @@ const AllSession = () => {
                           {session.status}
                         </span>
                         <div>
-                          {session.status === "rejected" &&
+                          {/* {session.status === "rejected" &&
                             session.adminFeedback && (
                               <p className="text-sm text-red-600 mt-4">
                                 Admin Feedback: {session.adminFeedback}
                               </p>
-                            )}
+                            )} */}
+                          <div>
+                            {session.status === "rejected" &&
+                              session.adminFeedback && (
+                                <>
+                                  <Tooltip
+                                    content={session.adminFeedback}
+                                    placement="top"
+                                  >
+                                    <p
+                                      className="text-sm text-red-600 mt-4 cursor-pointer"
+                                      onClick={() =>
+                                        handleDialogOpen(session.adminFeedback)
+                                      }
+                                    >
+                                      <Button className="px-2 py-1 bg-indigo-100 text-black rounded-full hover:bg-indigo-200 transition duration-300 flex items-center gap-2"> See Admin Feedback:</Button>{" "}
+                                      {session.adminFeedback}
+                                    </p>
+                                  </Tooltip>
+
+                                  <Dialog
+                                    open={openDialog}
+                                    handler={handleDialogOpen}
+                                  >
+                                    <DialogHeader>Admin Feedback</DialogHeader>
+                                    <DialogBody divider>
+                                      <p>{feedback}</p>
+                                    </DialogBody>
+                                    <DialogFooter>
+                                      <Button
+                                        onClick={() => setOpenDialog(false)}
+                                        className="px-2 py-1 bg-indigo-100 text-black rounded-full hover:bg-indigo-200 transition duration-300 flex items-center gap-2"
+                                      >
+                                        <FaEllipsisH /> See More
+                                      </Button>
+                                    </DialogFooter>
+                                  </Dialog>
+                                </>
+                              )}
+                          </div>
                         </div>
                         {session.status === "rejected" && (
                           <button

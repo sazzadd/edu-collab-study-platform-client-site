@@ -7,14 +7,11 @@ const SessionCard = ({ item }) => {
     sessionTitle,
     sessionDescription,
     tutorName,
-    tutorEmail,
-    sessionDuration,
     registrationStartDate,
     registrationEndDate,
-    classStartDate,
-    classEndDate,
     status,
     image,
+    registrationFee,
   } = item;
 
   // Only show the card if the session status is "approved"
@@ -36,14 +33,25 @@ const SessionCard = ({ item }) => {
       {/* Card Content */}
       <div className="p-6 space-y-4">
         <div className="flex items-start justify-between">
-          <h2 className="text-2xl font-semibold text-gray-800">{sessionTitle}</h2>
-          <span className="text-lg font-bold text-[#10b981]">${5000}</span>
+          <h2 className="text-2xl font-semibold text-gray-800">
+            {sessionTitle}
+          </h2>
+
+          {registrationFee === 0 ? (
+            <span className="px-3 py-1 bg-green-100 text-green-600 text-sm font-bold rounded-lg shadow animate-pulseColor">
+              Free
+            </span>
+          ) : (
+            <span className="text-lg font-bold text-[#10b981]">
+              ${registrationFee}
+            </span>
+          )}
         </div>
 
         <p className="text-sm text-gray-600">{sessionDescription}</p>
 
         <div className="space-y-3">
-          {/* Registration Date */}
+          {/* Registration Dates */}
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <BiCalendar className="h-4 w-4 text-[#10b9815c]" />
             <span>Registration Start: {registrationStartDate}</span>
@@ -64,15 +72,6 @@ const SessionCard = ({ item }) => {
       {/* Card Footer */}
       <div className="flex items-center justify-between bg-[#f3faf9] p-4 rounded-b-xl">
         {/* Status */}
-        <span
-          className={`px-3 py-1 text-sm font-medium rounded-full ${
-            status === "Closed"
-              ? "bg-red-100 text-red-600"
-              : "bg-green-100 text-green-600"
-          }`}
-        >
-          {status}
-        </span>
 
         {/* Read More Button */}
         <Link to={`/SessionDetails/${_id}`}>

@@ -11,6 +11,7 @@ import AuthLayout from "./../Auth/AuthLayout";
 import Login from "./../Auth/Login";
 
 import CreateNote from "../Pages/Dashboard/Student/CreateNote";
+import ViewAll from "./../component/ViewAll";
 import ManageAllSession from "./../Pages/Dashboard/Admin/ManageAllSession";
 import UpdateSession from "./../Pages/Dashboard/Admin/UpdateSession";
 import ViewAllMaterials from "./../Pages/Dashboard/Admin/ViewAllMaterials";
@@ -105,7 +106,13 @@ export const router = createBrowserRouter([
         path: "manageNote",
         element: <ManageNote></ManageNote>,
       },
+      // common can visit all user
+      
     ],
+  },
+  {
+    path: "sessions",
+    element: <ViewAll></ViewAll>,
   },
   {
     path: "*",
