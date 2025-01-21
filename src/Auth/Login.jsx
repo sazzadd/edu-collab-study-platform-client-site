@@ -18,11 +18,13 @@ const Login = () => {
   const [disabled, setDisabled] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const pathaname = location.state?.form?.pathname || "/";
+  const from = location.state?.from || "/";
+
+  console.log("state location",location.state)
   const [captchaValidated, setCaptchaValidated] = useState(false);
   useEffect(() => {
     try {
-      loadCaptchaEnginge(3);
+      loadCaptchaEnginge(2);
     } catch (err) {
       console.error("Captcha Engine Error:", err);
     }
@@ -50,9 +52,10 @@ const Login = () => {
         const user = result.user;
         if (user) {
           toast.success("Login successful!");
-          setTimeout(() => {
-            navigate("/");
-          }, 2000);
+          // setTimeout(() => {
+
+          // }, 2000);
+          navigate(from, { replace: true });
         }
       })
       .catch((err) => {

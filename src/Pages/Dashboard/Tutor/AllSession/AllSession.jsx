@@ -146,12 +146,8 @@ const AllSession = () => {
                         <p className="text-sm text-gray-600 mb-2">
                           {session.sessionDescription}
                         </p>
-                        <div className="flex items-center gap-2 text-gray-600 mb-2">
-                          <FaClock /> {session.sessionDuration} hours
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-600 mb-2">
-                          <FaDollarSign /> ${session.registrationFee}
-                        </div>
+                        
+                        
                         <div className="flex items-center gap-2 text-gray-600 mb-2">
                           <FaUser /> {session.tutorName}
                         </div>
@@ -186,7 +182,7 @@ const AllSession = () => {
                                         handleDialogOpen(session.adminFeedback)
                                       }
                                     >
-                                      <Button className="px-2 py-1 bg-indigo-100 text-black rounded-full hover:bg-indigo-200 transition duration-300 flex items-center gap-2">
+                                      <Button className=" py-1 bg-indigo-100 text-black rounded-full hover:bg-indigo-200 transition duration-300 flex items-center gap-2">
                                         {" "}
                                         See Admin Feedback:
                                       </Button>{" "}
@@ -219,9 +215,9 @@ const AllSession = () => {
                             onClick={() =>
                               handleStatusChange(session._id, "pending")
                             }
-                            className="mt-4 flex items-center justify-center px-4 py-1 text-white bg-indigo-400 hover:bg-blue-700 rounded-md shadow-lg transition duration-300"
+                            className="mt-4 flex items-center justify-center px-4 py-1 text-white bg-indigo-400 hover:bg-indigo-600 rounded shadow-lg transition duration-300"
                           >
-                            <FaReact className="mr-2" /> Reactivate
+                            <FaReact className="mr-2" /> Re Request
                           </button>
                         )}
                       </div>

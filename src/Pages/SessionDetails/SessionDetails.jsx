@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FaCalendarAlt,
   FaClock,
@@ -8,13 +8,17 @@ import {
   FaShoppingCart,
   FaUserAlt,
 } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { AuthContext } from "../../provider/AuthProvider";
 
 const SessionDetails = () => {
   const { id } = useParams();
   const [sessionData, setSessionData] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const { user } = useContext(AuthContext);
+  const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate(); // To navigate to login page
+  const location = useLocation();
   useEffect(() => {
     const fetchSessionDetails = async () => {
       try {
@@ -29,6 +33,57 @@ const SessionDetails = () => {
 
     fetchSessionDetails();
   }, [id]);
+  const {
+    sessionTitle,
+    sessionDescription,
+    tutorName,
+    image,
+    tutorEmail,
+    sessionDuration,
+    registrationStartDate,
+    registrationEndDate,
+    classStartDate,
+    classEndDate,
+    status,
+    _id,
+  } = sessionData || {};
+  console.log( sessionTitle,
+    sessionDescription,
+    tutorName,
+    image,
+    tutorEmail,
+    sessionDuration,
+    registrationStartDate,
+    registrationEndDate,
+    classStartDate,
+    classEndDate,
+    status,
+    _id)
+  const handleAddToBook = (session) => {
+    if (user && user.email) {
+      console.log(sessionTitle);
+      const sessionItem ={
+        sessionId:_id,
+        bookedEmail:user.email,
+        tutorName,
+        tutorEmail,
+        status,
+        sessionTitle,
+        sessionDescription
+      }
+    } else {
+      setShowPopup(true); // Show the popup
+    }
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
+  const redirectToLogin = () => {
+    closePopup();
+    navigate("/auth/login", { state: { from: location.pathname } }); // Redirect to the login page
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -38,30 +93,18 @@ const SessionDetails = () => {
     return <div>Session not found!</div>;
   }
 
-  const {
-    sessionTitle,
-    sessionDescription,
-    tutorName,
-    tutorEmail,
-    sessionDuration,
-    registrationStartDate,
-    registrationEndDate,
-    classStartDate,
-    classEndDate,
-    status,
-  } = sessionData;
-
+  
+  console.log(image)
   return (
     <div>
       {/* Background Section */}
       <div
         className="h-[50vh] w-full bg-cover bg-center bg-no-repeat relative"
         style={{
-          backgroundImage:
-            'url("https://i.ibb.co/XZ1DTVB/1702962448246.jpg")',
+          backgroundImage: `url(${sessionData.image})`,
         }}
       >
-        <div className="absolute inset-0 bg-indigo-600/60 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 bg-indigo-600/500 backdrop-blur-sm"></div>
       </div>
 
       {/* Card Section */}
@@ -129,13 +172,40 @@ const SessionDetails = () => {
 
           <div className="flex justify-between items-center">
             <div className="text-4xl font-bold">$28</div>
-            <button className="bg-[#10B981] text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-[#059669] transition-colors transform hover:scale-105 flex items-center gap-2">
+            <button
+              onClick={() => handleAddToBook(sessionData)}
+              className="bg-[#10B981] text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-[#059669] transition-colors transform hover:scale-105 flex items-center gap-2"
+            >
               <FaShoppingCart />
-              Add to Cart
+              Book Now
             </button>
           </div>
         </div>
       </div>
+
+      {/* Confirmation Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+          <h3 className="text-xl font-semibold mb-4">Are you sure?</h3>
+          <p className="mb-6">You need to login to confirm your booking!</p>
+          <div className="flex justify-end gap-4">
+            <button
+                  onClick={closePopup}
+              className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
+            >
+              Cancel
+            </button>
+            <button
+               onClick={redirectToLogin}
+              className="bg-[#10B981] text-white px-4 py-2 rounded"
+            >
+              Login
+            </button>
+          </div>
+        </div>
+      </div>
+      )}
     </div>
   );
 };

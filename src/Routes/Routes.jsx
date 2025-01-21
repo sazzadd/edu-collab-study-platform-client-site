@@ -30,9 +30,14 @@ export const router = createBrowserRouter([
         path: "/",
         element: <Home></Home>,
       },
+
       {
         path: "/SessionDetails/:id",
-        element: <SessionDetails></SessionDetails>,
+        element: (
+ 
+            <SessionDetails></SessionDetails>
+       
+        ),
       },
     ],
   },
@@ -107,7 +112,6 @@ export const router = createBrowserRouter([
         element: <ManageNote></ManageNote>,
       },
       // common can visit all user
-      
     ],
   },
   {

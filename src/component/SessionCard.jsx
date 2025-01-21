@@ -1,7 +1,10 @@
+import { useContext } from "react";
 import { BiCalendar } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../provider/AuthProvider";
 
 const SessionCard = ({ item }) => {
+
   const {
     _id,
     sessionTitle,
@@ -34,7 +37,7 @@ const SessionCard = ({ item }) => {
       <div className="p-6 space-y-4">
         <div className="flex items-start justify-between">
           <h2 className="text-2xl font-semibold text-gray-800">
-            {sessionTitle}
+            {sessionTitle} khaice amare
           </h2>
 
           {registrationFee === 0 ? (
