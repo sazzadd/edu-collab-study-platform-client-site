@@ -68,11 +68,51 @@ const ManageAllSession = () => {
     setRegistrationFee(session.registrationFee);
     setShowApproveModal(true);
   };
-
+// 3
   const handleRejectClick = (session) => {
     setSelectedSession(session);
     setShowRejectModal(true); // Open the reject modal
   };
+  const handleApproveSession = async () => {
+    // Validate registrationFee input
+    if (registrationFee === "" || isNaN(parseFloat(registrationFee))) {
+      toast.error("Please enter a valid registration fee.");
+      return;
+    }
+  
+    try {
+      // Update session in the database
+      const response = await axiosSecure.patch(
+        `/session/${selectedSession._id}`,
+        {
+          registrationFee: parseFloat(registrationFee), // Convert to a number
+          status: "approved",
+        }
+      );
+  
+      // Check if the database update was successful
+      if (response.data.modifiedCount > 0) {
+        // Update state with the approved session
+        setSessions((prevSessions) =>
+          prevSessions.map((session) =>
+            session._id === selectedSession._id
+              ? { ...session, registrationFee: parseFloat(registrationFee), status: "approved" }
+              : session
+          )
+        );
+  
+        setShowApproveModal(false); // Close the modal
+        toast.success("Session approved successfully!");
+      }
+    } catch (error) {
+      console.error("Error approving session:", error);
+      toast.error("Failed to approve the session. Please try again.");
+    }
+  };
+  
+
+
+// 2
 
   // const handleApproveSession = async () => {
   //   if (registrationFee) {
@@ -105,41 +145,43 @@ const ManageAllSession = () => {
   //     toast.error("Failed to approve the session. Please try again.");
   //   }
   // };
-  const handleApproveSession = async () => {
-    // Check if registrationFee is valid for paid type
-    if (
-      registrationFee === "" ||
-      (registrationFee !== "0" && isNaN(parseFloat(registrationFee)))
-    ) {
-      toast.error("Please enter a valid registration fee.");
-      return;
-    }
 
-    try {
-      const response = await axiosSecure.patch(
-        `/session/${selectedSession._id}`,
-        {
-          // Ensure it's a number
-          status: "approved",
-        }
-      );
+  // 1
+  // const handleApproveSession = async () => {
+  //   // Check if registrationFee is valid for paid type
+  //   if (
+  //     registrationFee === "" ||
+  //     (registrationFee !== "0" && isNaN(parseFloat(registrationFee)))
+  //   ) {
+  //     toast.error("Please enter a valid registration fee.");
+  //     return;
+  //   }
 
-      if (response.data.modifiedCount > 0) {
-        setSessions((prevSessions) =>
-          prevSessions.map((session) =>
-            session._id === selectedSession._id
-              ? { ...session, registrationFee, status: "approved" }
-              : session
-          )
-        );
-        setShowApproveModal(false);
-        toast.success("Session approved successfully!");
-      }
-    } catch (error) {
-      console.error("Error approving session:", error);
-      toast.error("Failed to approve the session. Please try again.");
-    }
-  };
+  //   try {
+  //     const response = await axiosSecure.patch(
+  //       `/session/${selectedSession._id}`,
+  //       {
+  //         // Ensure it's a number
+  //         status: "approved",
+  //       }
+  //     );
+
+  //     if (response.data.modifiedCount > 0) {
+  //       setSessions((prevSessions) =>
+  //         prevSessions.map((session) =>
+  //           session._id === selectedSession._id
+  //             ? { ...session, registrationFee, status: "approved" }
+  //             : session
+  //         )
+  //       );
+  //       setShowApproveModal(false);
+  //       toast.success("Session approved successfully!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error approving session:", error);
+  //     toast.error("Failed to approve the session. Please try again.");
+  //   }
+  // };
 
   const handleRejectSession = async () => {
     if (!feedback) {

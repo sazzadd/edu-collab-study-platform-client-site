@@ -30,12 +30,16 @@ const Navbar = () => {
       <div className="w-full max-w-screen-xl mx-auto flex items-center justify-between">
         {/* Left: Logo and Company Name */}
         <div className="flex items-center gap-3">
-          <img src="/logo.png" alt="Company Logo" className="w-10 h-10" />
+          <img
+            src="https://i.ibb.co.com/McPGBp5/10321676-removebg-preview-1.png"
+            alt="Company Logo"
+            className="w-10 h-10"
+          />
           <Typography
-            variant="h6"
+            variant="h5"
             className="text-gray-900 font-bold hover:text-green-600 transition"
           >
-            CompanyName
+            <span className="text-[#0f766e] font-bold">Edu</span>Collab
           </Typography>
         </div>
 

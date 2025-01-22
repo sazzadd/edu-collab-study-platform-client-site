@@ -27,12 +27,24 @@ const SessionSec = () => {
   };
 
   return (
-    <div>
-      <h1>Sessions</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        {session.slice(0, 6).map((item) => (
-          <SessionCard key={item._id} item={item} />
-        ))}
+    <div className="py-9">
+      {/* Stylish Heading */}
+      <div className="relative w-full mb-8">
+        <h1 className="text-4xl font-bold text-center text-gray-900 relative z-10">
+          <span className="text-[#0f766e]">Tredding</span> Sessions
+        </h1>
+        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-2 h-full bg-[#0f766e]"></div>
+        <p className="text-center text-gray-600 mt-2">
+          Discover the most popular and trending sessions tailored just for you.
+        </p>
+      </div>
+
+      <div className="w-11/12 mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+          {session.slice(0, 6).map((item) => (
+            <SessionCard key={item._id} item={item} />
+          ))}
+        </div>
       </div>
 
       {session.length > 6 && (

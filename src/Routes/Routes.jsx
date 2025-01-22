@@ -39,6 +39,10 @@ export const router = createBrowserRouter([
        
         ),
       },
+      {
+        path: "sessions",
+        element: <ViewAll></ViewAll>,
+      },
     ],
   },
   {
@@ -114,10 +118,7 @@ export const router = createBrowserRouter([
       // common can visit all user
     ],
   },
-  {
-    path: "sessions",
-    element: <ViewAll></ViewAll>,
-  },
+
   {
     path: "*",
     element: <ErrorPage></ErrorPage>,

@@ -41,7 +41,7 @@ const ViewAll = () => {
       <h1 className="text-center text-2xl font-semibold mb-6">
         View All Sessions
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 p-6">
         {currentItems.map((item) => (
           <SessionCard key={item._id} item={item} />
         ))}

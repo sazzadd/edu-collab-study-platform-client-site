@@ -1,29 +1,37 @@
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Chip,
+  Input,
+  Typography,
+} from "@material-tailwind/react";
 import React, { useContext, useEffect, useState } from "react";
-import Swal from "sweetalert2"; 
-import { Button, Card, CardBody, CardHeader, Chip, Input, Typography } from "@material-tailwind/react";
-import { FaSearch, FaUserShield, FaUserSlash } from "react-icons/fa"; 
-import useAxiosSecure from "../../../hook/useAxiosSecure"; 
-import { AuthContext } from './../../../provider/AuthProvider';
+import { FaSearch, FaUserShield, FaUserSlash } from "react-icons/fa";
+import Swal from "sweetalert2";
+import useAxiosSecure from "../../../hook/useAxiosSecure";
+import { AuthContext } from "./../../../provider/AuthProvider";
 
 const ViewAllUsers = () => {
-  const [users, setUsers] = useState([]); 
-  const [searchTerm, setSearchTerm] = useState(""); 
-  const axiosSecure = useAxiosSecure(); 
+  const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const axiosSecure = useAxiosSecure();
   const { user } = useContext(AuthContext);
-  const userEmail = user.email; 
+  const userEmail = user.email;
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axiosSecure.get("/users"); 
-        setUsers(response.data)
+        const response = await axiosSecure.get("/users");
+        setUsers(response.data);
       } catch (error) {
-        console.error("Error fetching users:", error); 
+        console.error("Error fetching users:", error);
       }
     };
 
-    fetchUsers(); 
-  }, [axiosSecure]); 
+    fetchUsers();
+  }, [axiosSecure]);
 
   const handleRoleUpdate = async (userId, currentRole) => {
     const actionMessage =
@@ -71,16 +79,26 @@ const ViewAllUsers = () => {
     }
   };
 
+  // const filteredUsers = users.filter(
+  //   (user) =>
+  //     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
   const filteredUsers = users.filter(
     (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      "" ||
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ""
   );
-
   return (
     <div className="px-6 py-4 bg-gray-50 min-h-screen">
       <Card className="h-full w-full shadow-lg">
-        <CardHeader floated={false} shadow={false} className="bg-white rounded-none">
+        <CardHeader
+          floated={false}
+          shadow={false}
+          className="bg-white rounded-none"
+        >
           <div className="mb-4 flex justify-between items-center">
             <div>
               <Typography variant="h5" color="blue-gray">
@@ -115,22 +133,25 @@ const ViewAllUsers = () => {
             </thead>
             <tbody className="text-sm">
               {filteredUsers.map((user, index) => (
-                <tr key={user.id || index} className="border-b hover:bg-gray-100">
+                <tr
+                  key={user.id || index}
+                  className="border-b hover:bg-gray-100"
+                >
                   <td className="px-4 py-2">{index + 1}</td>
                   <td className="px-4 py-2">
                     <img
-                      src={user.userImg}
-                      alt={user.name}
+                      src={user.userImg || "/default-avatar.png"}
+                      alt={user.name || "User"}
                       className="h-10 w-10 rounded-full object-cover"
                     />
                   </td>
-                  <td className="px-4 py-2">{user.name}</td>
-                  <td className="px-4 py-2">{user.email}</td>
+                  <td className="px-4 py-2">{user.name || "No Name"}</td>
+                  <td className="px-4 py-2">{user.email || "No Email"}</td>
                   <td className="px-4 py-2">
                     <Chip
                       size="sm"
                       variant="ghost"
-                      value={user.role}
+                      value={user.role || "No Role"}
                       color={
                         user.role === "admin"
                           ? "red"
@@ -149,7 +170,7 @@ const ViewAllUsers = () => {
                           : "bg-indigo-500 hover:bg-indigo-600"
                       } text-white shadow-md`}
                       onClick={() => handleRoleUpdate(user._id, user.role)}
-                      disabled={user.email === userEmail} // Disable button if user's email matches logged-in user's email
+                      disabled={user.email === userEmail}
                     >
                       {user.role === "admin" ? (
                         <FaUserSlash />
