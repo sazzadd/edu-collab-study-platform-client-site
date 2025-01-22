@@ -6,7 +6,7 @@ import SessionCard from "./SessionCard";
 
 const SessionSec = () => {
   const [session, loading] = useSession();
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate(); 
 
   if (loading) {
     return (
@@ -16,7 +16,7 @@ const SessionSec = () => {
     );
   }
 
-  // If session array is empty, display a message
+ 
   if (session.length === 0) {
     return <div className="text-center text-lg">No sessions available.</div>;
   }

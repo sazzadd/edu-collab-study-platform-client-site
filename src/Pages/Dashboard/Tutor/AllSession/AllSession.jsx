@@ -18,6 +18,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { FaInfo, FaReact, FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
+import useAxiosSecure from "../../../../hook/useAxiosSecure";
 import { AuthContext } from "../../../../provider/AuthProvider";
 const AllSession = () => {
   const { user } = useContext(AuthContext);
@@ -26,15 +27,13 @@ const AllSession = () => {
   const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
   const [feedback, setFeedback] = useState("");
-
+  const axiosSecure = useAxiosSecure();
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        const url = tutorEmail
-          ? `http://localhost:5000/session?tutorEmail=${tutorEmail}`
-          : "http://localhost:5000/session";
+        const url = `/session?tutorEmail=${tutorEmail}`;
 
-        const { data } = await axios.get(url);
+        const { data } = await axiosSecure.get(url);
         if (Array.isArray(data)) {
           setSessions(data);
         } else {

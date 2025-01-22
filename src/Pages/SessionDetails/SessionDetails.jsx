@@ -12,8 +12,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../hook/useAxiosSecure";
 import { AuthContext } from "../../provider/AuthProvider";
-import UserEmail from './../../hook/UserEmail';
-import UserEmail from "./../../hook/UserEmail";
 
 const SessionDetails = () => {
   const { id } = useParams();
@@ -23,14 +21,14 @@ const SessionDetails = () => {
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const axiosSecure = useAxiosSecure( );
+  const axiosSecure = useAxiosSecure();
   // Updated formatSessionDuration function
   const formatSessionDuration = (minutes) => {
     const days = Math.floor(minutes / 1440); // 1 day = 1440 minutes
-    const hours = Math.floor((minutes % 1440) / 60); 
+    const hours = Math.floor((minutes % 1440) / 60);
     const remainingMinutes = minutes % 60;
-    const UserEmail = UserEmail
-   
+    const UserEmail = user?.email;
+
     if (minutes >= 525600) {
       // 1 year = 525600 minutes
       const years = Math.floor(minutes / 525600);
@@ -90,11 +88,11 @@ const SessionDetails = () => {
   } = sessionData || {};
 
   const handleAddToBook = (session) => {
-    if (user && user.email) {
+    if (user && user?.email) {
       console.log(sessionTitle);
       const sessionItem = {
         sessionId: _id,
-        bookedEmail: user.email,
+        bookedEmail: user?.email,
         tutorName,
         tutorEmail,
         status,
