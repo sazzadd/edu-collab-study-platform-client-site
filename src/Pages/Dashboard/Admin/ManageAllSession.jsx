@@ -73,7 +73,6 @@ const ManageAllSession = () => {
     setSelectedSession(session);
     setShowRejectModal(true); // Open the reject modal
   };
-  
 
   // const handleApproveSession = async () => {
   //   if (registrationFee) {
@@ -120,7 +119,7 @@ const ManageAllSession = () => {
       const response = await axiosSecure.patch(
         `/session/${selectedSession._id}`,
         {
-    // Ensure it's a number
+          // Ensure it's a number
           status: "approved",
         }
       );
@@ -426,7 +425,7 @@ const ManageAllSession = () => {
           handler={() => setShowApproveModal(false)}
           size="sm"
         >
-          <DialogHeader>Update Registration Fee</DialogHeader>
+          <DialogHeader>Approve Session and Add Fee</DialogHeader>
           <DialogBody>
             <div className="flex flex-col gap-4">
               <div>
@@ -458,8 +457,13 @@ const ManageAllSession = () => {
                 <Input
                   label="Registration Fee"
                   type="number"
-                  value={registrationFee}
-                  onChange={(e) => setRegistrationFee(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Ensure the fee is not zero
+                    if (value > 0 || value === "") {
+                      setRegistrationFee(value);
+                    }
+                  }}
                 />
               )}
             </div>
@@ -469,7 +473,6 @@ const ManageAllSession = () => {
               onClick={handleApproveSession}
               color="indigo"
               className="mr-2"
-              disabled={registrationFee === ""}
             >
               Approve
             </Button>

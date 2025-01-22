@@ -13,9 +13,10 @@ import {
   TabsHeader,
   Tooltip,
 } from "@material-tailwind/react";
+
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { FaClock, FaDollarSign, FaReact, FaUser } from "react-icons/fa";
+import { FaInfo, FaReact, FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../../provider/AuthProvider";
 const AllSession = () => {
@@ -25,6 +26,7 @@ const AllSession = () => {
   const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
   const [feedback, setFeedback] = useState("");
+
   useEffect(() => {
     const fetchSessions = async () => {
       try {
@@ -146,8 +148,7 @@ const AllSession = () => {
                         <p className="text-sm text-gray-600 mb-2">
                           {session.sessionDescription}
                         </p>
-                        
-                        
+
                         <div className="flex items-center gap-2 text-gray-600 mb-2">
                           <FaUser /> {session.tutorName}
                         </div>
@@ -182,9 +183,9 @@ const AllSession = () => {
                                         handleDialogOpen(session.adminFeedback)
                                       }
                                     >
-                                      <Button className=" py-1 bg-indigo-100 text-black rounded-full hover:bg-indigo-200 transition duration-300 flex items-center gap-2">
-                                        {" "}
-                                        See Admin Feedback:
+                                      <Button className="bg-indigo-100 text-black hover:bg-indigo-200 transition duration-300 flex items-center gap-2 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                                        See Admin Feedback
+                                        <FaInfo className="text-lg" />
                                       </Button>{" "}
                                     </p>
                                   </Tooltip>
@@ -192,15 +193,18 @@ const AllSession = () => {
                                   <Dialog
                                     open={openDialog}
                                     handler={handleDialogOpen}
+                                    className="max-w-xs mx-auto p-3 bg-white rounded-lg shadow-md"
                                   >
-                                    <DialogHeader>Admin Feedback</DialogHeader>
-                                    <DialogBody divider>
+                                    <DialogHeader className="text-base font-medium text-gray-800 border-b pb-2">
+                                      Admin Feedback
+                                    </DialogHeader>
+                                    <DialogBody className="py-2 text-sm text-gray-700">
                                       <p>{feedback}</p>
                                     </DialogBody>
-                                    <DialogFooter>
+                                    <DialogFooter className="flex justify-end pt-2 border-t">
                                       <Button
                                         onClick={() => setOpenDialog(false)}
-                                        className="px-2 py-1 bg-indigo-100 text-black rounded-full hover:bg-indigo-200 transition duration-300 flex items-center gap-2"
+                                        className="px-3 py-1 bg-indigo-500 text-white rounded-full hover:bg-indigo-600 transition-all duration-300 text-xs flex items-center gap-2"
                                       >
                                         Close
                                       </Button>

@@ -1,13 +1,12 @@
 import { Button, Input, Textarea } from "@material-tailwind/react";
-import { format } from "date-fns";
-import React, { useContext, useState } from "react";
+import { differenceInMinutes, format } from "date-fns";
+import React, { useContext, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
 import {
   FaCalendarAlt,
   FaClock,
-  FaDollarSign,
   FaEdit,
   FaEnvelope,
   FaUser,
@@ -16,9 +15,11 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../../../hook/useAxiosPublic";
 import { AuthContext } from "../../../../provider/AuthProvider";
+
 // imgg bb api and key
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
+
 const AddSession = () => {
   const { user } = useContext(AuthContext);
   const navigete = useNavigate();
@@ -27,6 +28,8 @@ const AddSession = () => {
     handleSubmit,
     setError,
     clearErrors,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm();
   const axiosPublic = useAxiosPublic();
@@ -35,7 +38,17 @@ const AddSession = () => {
   const [registrationStartDate, setRegistrationStartDate] = useState(null);
   const [registrationEndDate, setRegistrationEndDate] = useState(null);
 
-  // const fakeUser = { name: "John Doe", email: "john.doe@example.com" };
+  useEffect(() => {
+    // Calculate session duration when both class dates are selected
+    if (classStartDate && classEndDate) {
+      const duration = differenceInMinutes(classEndDate, classStartDate);
+      if (duration > 0) {
+        setValue("sessionDuration", duration);
+      } else {
+        setValue("sessionDuration", 1440); // Default to 1 full day if the same date
+      }
+    }
+  }, [classStartDate, classEndDate, setValue]);
 
   const onSubmit = async (data) => {
     const imageFile = { image: data.image[0] };
@@ -55,18 +68,10 @@ const AddSession = () => {
         image: res.data.data.display_url,
 
         // Ensure correct date format for registration and class dates
-        registrationStartDate: registrationStartDate
-          ? format(registrationStartDate, "yyyy-MM-dd") // Storing as ISO format
-          : null,
-        registrationEndDate: registrationEndDate
-          ? format(registrationEndDate, "yyyy-MM-dd") // Storing as ISO format
-          : null,
-        classStartDate: classStartDate
-          ? format(classStartDate, "yyyy-MM-dd") // Storing as ISO format
-          : null,
-        classEndDate: classEndDate
-          ? format(classEndDate, "yyyy-MM-dd") // Storing as ISO format
-          : null,
+        registrationStartDate: registrationStartDate || null,
+        registrationEndDate: registrationEndDate || null,
+        classStartDate: classStartDate || null,
+        classEndDate: classEndDate || null,
 
         registrationFee: 0,
         status: "pending",
@@ -216,6 +221,7 @@ const AddSession = () => {
             selected={registrationEndDate}
             onChange={(date) => setRegistrationEndDate(date)}
             dateFormat="dd-MM-yyyy"
+            minDate={registrationStartDate}
             className="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             placeholderText="Select registration end date"
             required
@@ -235,6 +241,7 @@ const AddSession = () => {
             selected={classStartDate}
             onChange={(date) => setClassStartDate(date)}
             dateFormat="dd-MM-yyyy"
+            minDate={registrationEndDate} // Dynamically set to the day after Registration End Date
             className="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             placeholderText="Select class start date"
             required
@@ -254,6 +261,7 @@ const AddSession = () => {
             selected={classEndDate}
             onChange={(date) => setClassEndDate(date)}
             dateFormat="dd-MM-yyyy"
+            minDate={classStartDate}
             className="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             placeholderText="Select class end date"
             required
@@ -268,7 +276,7 @@ const AddSession = () => {
         {/* Session Duration */}
         <div className="col-span-1">
           <label className="text-sm font-medium text-gray-700 flex items-center">
-            <FaClock className="mr-2" /> Session Duration (Minutes)
+            <FaClock className="mr-2" /> Session Duration (in minutes)
           </label>
           <input
             {...register("sessionDuration", {
@@ -281,7 +289,7 @@ const AddSession = () => {
             })}
             type="number"
             className="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            placeholder="Enter session duration in minutes"
+            disabled
           />
           {errors.sessionDuration && (
             <p className="text-red-500 text-sm mt-1">
@@ -290,20 +298,10 @@ const AddSession = () => {
           )}
         </div>
 
-        {/* Registration Fee */}
-        <div className="col-span-1">
-          <Input
-            label="Registration Fee"
-            icon={<FaDollarSign />}
-            value={0}
-            disabled
-          />
-        </div>
-
-        {/* Submit Button */}
-        <div className="col-span-2 flex justify-end mt-4">
-          <Button type="submit" color="indigo">
-            Submit
+        {/* Submit */}
+        <div className="col-span-2 text-center">
+          <Button type="submit" color="indigo" className="w-full py-2">
+            Add Session
           </Button>
         </div>
       </form>
