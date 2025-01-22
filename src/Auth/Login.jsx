@@ -166,7 +166,7 @@ const Login = () => {
               className={`w-full py-2 rounded-lg text-white transition-opacity duration-300 ${
                 disabled
                   ? "bg-gray-300 cursor-not-allowed opacity-70"
-                  : "w-full bg-[#10b981] text-white py-2 px-4 rounded-md hover:bg-[#0e9b76] transition text-sm hover:bg-blue-500 cursor-pointer"
+                  : "w-full bg-[#10b981] text-white py-2 px-4 rounded-md hover:bg-[#0e9b76] transition text-sm hover:bg-[#0e9b76] cursor-pointer"
               }`}
               type="submit"
               value="Login"

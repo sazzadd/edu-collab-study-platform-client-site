@@ -39,7 +39,7 @@ const SessionSec = () => {
         <div className="flex justify-center mt-4">
           <button
             onClick={handleExploreMore}
-            className="px-6 py-3 bg-indigo-100 text-black rounded-full flex items-center justify-center gap-2 hover:bg-indigo-200 transition duration-300"
+            className="px-6 py-3 bg-green-100 text-black rounded-full flex items-center justify-center gap-2 hover:bg-green-200 transition duration-300"
           >
             Explore More
             <FaArrowRight /> {/* React Icon */}

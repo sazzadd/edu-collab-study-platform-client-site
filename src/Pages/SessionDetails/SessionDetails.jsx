@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
+import useSession from "../../hook/useSession";
 
 const SessionDetails = () => {
   const { id } = useParams();
@@ -19,6 +20,7 @@ const SessionDetails = () => {
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate(); // To navigate to login page
   const location = useLocation();
+  // const [session, loading] = useSession();
   useEffect(() => {
     const fetchSessionDetails = async () => {
       try {
