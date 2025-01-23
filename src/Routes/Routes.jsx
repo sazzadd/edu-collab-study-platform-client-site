@@ -20,6 +20,7 @@ import ManageNote from "./../Pages/Dashboard/Student/ManageNote";
 import ViewBookedSession from "./../Pages/Dashboard/Student/ViewBookedSession";
 import AllSession from "./../Pages/Dashboard/Tutor/AllSession/AllSession";
 import PrivateRoute from "./PrivateRoute";
+import ViewAllTutorMaterials from "../Pages/Dashboard/Tutor/ViewAllTutorMaterials/ViewAllTutorMaterials";
 
 export const router = createBrowserRouter([
   {
@@ -101,6 +102,10 @@ export const router = createBrowserRouter([
       {
         path: "UploadMaterials",
         element: <UploadMeterials></UploadMeterials>,
+      },
+      {
+        path: "viewAllTutorMaterials",
+        element: <ViewAllTutorMaterials></ViewAllTutorMaterials>,
       },
       // student
       {
