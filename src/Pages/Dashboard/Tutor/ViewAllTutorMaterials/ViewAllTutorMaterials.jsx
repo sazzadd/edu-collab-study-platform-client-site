@@ -3,10 +3,13 @@ import { FaEdit, FaExternalLinkAlt, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../../../provider/AuthProvider";
 import useAxiosPublic from "./../../../../hook/useAxiosPublic";
+import { Dialog, DialogHeader, DialogBody, DialogFooter, Button, Input, Typography } from "@material-tailwind/react";
 
 const ViewAllTutorMaterials = () => {
   const [materialsData, setMaterialsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
   const { user } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
   const email = user.email;
@@ -24,7 +27,7 @@ const ViewAllTutorMaterials = () => {
     };
 
     fetchSessionDetails();
-  }, [email,materialsData]);
+  }, [email, materialsData]);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -67,7 +70,44 @@ const ViewAllTutorMaterials = () => {
       }
     });
   };
+//   for Patch 
+const handleUpdate = async () => {
+    if (!selectedMaterial) return;
   
+    try {
+      const response = await axiosPublic.patch(`/material/${selectedMaterial._id}`, {
+        materialTitle: selectedMaterial.materialTitle,
+        link: selectedMaterial.link,
+      });
+      console.log("Update response:", response.data);
+  
+      if (response.data.modifiedCount > 0) {
+        Swal.fire("Success!", "Material updated successfully.", "success");
+        // Optionally update the UI
+        const updatedMaterials = materialsData.map((material) =>
+          material._id === selectedMaterial._id
+            ? { ...material, ...selectedMaterial }
+            : material
+        );
+        setMaterialsData(updatedMaterials);
+        closeModal();
+      }
+    } catch (error) {
+      console.error("Error updating material:", error);
+      Swal.fire("Error!", "Failed to update material.", "error");
+    }
+  };
+  
+
+
+  const openEditModal = (material) => {
+    setSelectedMaterial(material);
+    setOpenModal(true);
+  };
+
+  const closeModal = () => {
+    setOpenModal(false);
+  };
 
   if (loading) {
     return (
@@ -99,6 +139,9 @@ const ViewAllTutorMaterials = () => {
             <p className="text-sm text-gray-500 mb-3">
               Tutor Email: {material.tutorEmail}
             </p>
+            <p className="text-lg  text-gray-900 mb-3">
+              Material title: {material.materialTitle}
+            </p>
             <div className="flex justify-between">
               <a
                 href={material.link}
@@ -108,7 +151,10 @@ const ViewAllTutorMaterials = () => {
               >
                 <FaExternalLinkAlt size={20} />
               </a>
-              <button className="text-green-400 hover:text-green-700">
+              <button
+                onClick={() => openEditModal(material)}
+                className="text-green-400 hover:text-green-700"
+              >
                 <FaEdit size={20} />
               </button>
               <button
@@ -121,6 +167,56 @@ const ViewAllTutorMaterials = () => {
           </div>
         </div>
       ))}
+
+      {/* Modal */}
+      {openModal && (
+        <Dialog open={openModal} handler={closeModal} size="sm">
+          <DialogHeader>Edit Material</DialogHeader>
+          <DialogBody divider>
+            <form className="space-y-4">
+              <Input
+                label="Material Title"
+                value={selectedMaterial?.materialTitle || ""}
+                onChange={(e) =>
+                  setSelectedMaterial({
+                    ...selectedMaterial,
+                    materialTitle: e.target.value,
+                  })
+                }
+              />
+              <Input
+                label="Link"
+                type="url"
+                value={selectedMaterial?.link || ""}
+                onChange={(e) =>
+                  setSelectedMaterial({
+                    ...selectedMaterial,
+                    link: e.target.value,
+                  })
+                }
+              />
+            </form>
+          </DialogBody>
+          <DialogFooter>
+            <Button
+                onClick={handleUpdate }
+              variant="gradient"
+              color="indigo"
+              className="flex items-center gap-2"
+            >
+              Update
+            </Button>
+            <Button
+              variant="outlined"
+              color="red"
+              onClick={closeModal}
+              className="ml-2"
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </Dialog>
+      )}
     </div>
   );
 };
