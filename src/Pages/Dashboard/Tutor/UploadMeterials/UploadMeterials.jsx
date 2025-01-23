@@ -117,7 +117,7 @@ const UploadMaterials = () => {
           console.error("Error fetching sessions:", error);
         });
     }
-  }, [tutorEmail]);
+  }, [tutorEmail,sessions]);
 
   return (
     <>
