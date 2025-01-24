@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import React, { useContext, useEffect, useState } from "react";
-import { FaSearch, FaUserShield, FaUserSlash } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaSearch } from "react-icons/fa";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hook/useAxiosSecure";
 import { AuthContext } from "./../../../provider/AuthProvider";
@@ -16,6 +16,8 @@ import { AuthContext } from "./../../../provider/AuthProvider";
 const ViewAllUsers = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const axiosSecure = useAxiosSecure();
   const { user } = useContext(AuthContext);
   const userEmail = user.email;
@@ -79,18 +81,22 @@ const ViewAllUsers = () => {
     }
   };
 
-  // const filteredUsers = users.filter(
-  //   (user) =>
-  //     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
   const filteredUsers = users.filter(
     (user) =>
       user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      "" ||
-      user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ""
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="px-6 py-4 bg-gray-50 min-h-screen">
       <Card className="h-full w-full shadow-lg">
@@ -132,12 +138,14 @@ const ViewAllUsers = () => {
               </tr>
             </thead>
             <tbody className="text-sm">
-              {filteredUsers.map((user, index) => (
+              {paginatedUsers.map((user, index) => (
                 <tr
                   key={user.id || index}
                   className="border-b hover:bg-gray-100"
                 >
-                  <td className="px-4 py-2">{index + 1}</td>
+                  <td className="px-4 py-2">
+                    {(currentPage - 1) * itemsPerPage + index + 1}
+                  </td>
                   <td className="px-4 py-2">
                     <img
                       src={user.userImg || "/default-avatar.png"}
@@ -162,23 +170,30 @@ const ViewAllUsers = () => {
                     />
                   </td>
                   <td className="px-4 py-2">
-                    <Button
-                      size="sm"
-                      className={`flex items-center gap-2 ${
-                        user.role === "admin"
-                          ? "bg-red-500 hover:bg-red-600"
-                          : "bg-indigo-500 hover:bg-indigo-600"
-                      } text-white shadow-md`}
-                      onClick={() => handleRoleUpdate(user._id, user.role)}
-                      disabled={user.email === userEmail}
-                    >
-                      {user.role === "admin" ? (
-                        <FaUserSlash />
-                      ) : (
-                        <FaUserShield />
-                      )}
-                      {user.role === "admin" ? "Remove Admin" : "Make Admin"}
-                    </Button>
+                    {user.role === "tutor" ? (
+                      <Typography className="text-gray-500 text-[5px] text-xs">
+                        become an admin,
+                        <br /> create account as a student.
+                      </Typography>
+                    ) : (
+                      <Button
+                        size="sm"
+                        className={`flex items-center gap-2 text-white shadow-md ${
+                          user.role === "admin"
+                            ? "bg-red-500 hover:bg-red-600"
+                            : "bg-indigo-500 hover:bg-indigo-600"
+                        }`}
+                        onClick={() => handleRoleUpdate(user._id, user.role)}
+                        disabled={user.email === userEmail}
+                      >
+                        {user.role === "admin" ? (
+                          <FaArrowLeft />
+                        ) : (
+                          <FaArrowRight />
+                        )}
+                        {user.role === "admin" ? "Remove Admin" : "Make Admin"}
+                      </Button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -186,6 +201,38 @@ const ViewAllUsers = () => {
           </table>
         </CardBody>
       </Card>
+
+      <div className="flex justify-center items-center mt-4 space-x-2">
+        <button
+          className="p-2 rounded-full text-gray-700 bg-gray-200 hover:bg-gray-300"
+          onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          <FaArrowLeft />
+        </button>
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            className={`p-2 rounded-lg ${
+              currentPage === index + 1
+                ? "bg-gray-500 text-white"
+                : "bg-gray-200 text-gray-500 hover:bg-gray-300"
+            }`}
+            onClick={() => handlePageChange(index + 1)}
+          >
+            {index + 1}
+          </button>
+        ))}
+        <button
+          className="p-2 rounded-full text-gray-700 bg-gray-200 hover:bg-gray-300"
+          onClick={() =>
+            handlePageChange(Math.min(currentPage + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+        >
+          <FaArrowRight />
+        </button>
+      </div>
     </div>
   );
 };

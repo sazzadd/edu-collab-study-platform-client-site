@@ -32,7 +32,7 @@ const ViewAllMaterials = () => {
   const { user } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
   const email = user.email;
-
+  
   useEffect(() => {
     const fetchSessionDetails = async () => {
       try {
