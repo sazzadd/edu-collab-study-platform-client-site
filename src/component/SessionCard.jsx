@@ -37,7 +37,7 @@ const SessionCard = ({ item }) => {
   }
 
   return (
-    <div className="max-w-md mx-auto bg-[#f3faf9] rounded-xl shadow-lg overflow-hidden">
+    <div className="max-w-md bg-[#f3faf9] rounded-xl shadow-lg overflow-hidden">
       {/* Image Header */}
       <div className="w-full">
         <img
