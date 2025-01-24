@@ -113,7 +113,7 @@ const sidebarItems = {
     {
       icon: BiCalendarEdit,
       text: "Manage personal notes",
-      path: "/manageNote",
+      path: "/dashboard/CreateNote",
     },
     {
       icon: FiBook,

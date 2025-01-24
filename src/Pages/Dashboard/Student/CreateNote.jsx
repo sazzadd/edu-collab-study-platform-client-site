@@ -162,10 +162,12 @@ export default function CreateNote() {
 
   return (
     <div className="container mx-auto p-4">
-      <Typography variant="h3" className="text-center mb-8">
+      <Typography variant="h3" className="text-center ">
         My Notes
       </Typography>
-
+      <Typography variant="h6" className="text-center text-gray-600 mb-4">
+        Manage Your Notes Effortlessly
+      </Typography>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card
           className="border-2 border-dashed border-blue-gray-100 hover:border-blue-gray-200 transition-all cursor-pointer hover:shadow-lg"

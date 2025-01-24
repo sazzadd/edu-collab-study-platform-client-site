@@ -120,6 +120,10 @@ export const router = createBrowserRouter([
         path: "manageNote",
         element: <ManageNote></ManageNote>,
       },
+      {
+        path: "manageNote",
+        element: <ManageNote></ManageNote>,
+      },
       // common can visit all user
     ],
   },
