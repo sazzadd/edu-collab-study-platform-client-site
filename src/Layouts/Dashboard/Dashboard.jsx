@@ -118,7 +118,7 @@ const sidebarItems = {
     {
       icon: FiBook,
       text: "View all study materials",
-      path: "/viewMeterialStudent",
+      path: "/dashboard/StudentAllMaterials",
     },
   ],
   tutor: [

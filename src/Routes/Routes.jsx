@@ -11,16 +11,17 @@ import AuthLayout from "./../Auth/AuthLayout";
 import Login from "./../Auth/Login";
 
 import CreateNote from "../Pages/Dashboard/Student/CreateNote";
+import ViewAllTutorMaterials from "../Pages/Dashboard/Tutor/ViewAllTutorMaterials/ViewAllTutorMaterials";
 import ViewAll from "./../component/ViewAll";
 import ManageAllSession from "./../Pages/Dashboard/Admin/ManageAllSession";
 import UpdateSession from "./../Pages/Dashboard/Admin/UpdateSession";
 import ViewAllMaterials from "./../Pages/Dashboard/Admin/ViewAllMaterials";
 import ViewAllUsers from "./../Pages/Dashboard/Admin/ViewAllUsers";
+import AllMaterialsStudent from "./../Pages/Dashboard/Student/AllMaterialsStudent";
 import ManageNote from "./../Pages/Dashboard/Student/ManageNote";
 import ViewBookedSession from "./../Pages/Dashboard/Student/ViewBookedSession";
 import AllSession from "./../Pages/Dashboard/Tutor/AllSession/AllSession";
 import PrivateRoute from "./PrivateRoute";
-import ViewAllTutorMaterials from "../Pages/Dashboard/Tutor/ViewAllTutorMaterials/ViewAllTutorMaterials";
 
 export const router = createBrowserRouter([
   {
@@ -34,11 +35,7 @@ export const router = createBrowserRouter([
 
       {
         path: "/SessionDetails/:id",
-        element: (
- 
-            <SessionDetails></SessionDetails>
-       
-        ),
+        element: <SessionDetails></SessionDetails>,
       },
       {
         path: "sessions",
@@ -121,8 +118,8 @@ export const router = createBrowserRouter([
         element: <ManageNote></ManageNote>,
       },
       {
-        path: "manageNote",
-        element: <ManageNote></ManageNote>,
+        path: "StudentAllMaterials",
+        element: <AllMaterialsStudent></AllMaterialsStudent>,
       },
       // common can visit all user
     ],

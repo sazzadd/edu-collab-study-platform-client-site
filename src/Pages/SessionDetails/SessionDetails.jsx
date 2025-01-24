@@ -1,3 +1,5 @@
+import { Rating } from "@smastrom/react-rating";
+import "@smastrom/react-rating/style.css";
 import axios from "axios";
 import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
@@ -11,8 +13,9 @@ import {
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../hook/useAxiosSecure";
+import useRole from "../../hook/useRole";
 import { AuthContext } from "../../provider/AuthProvider";
-
+import { useForm } from "react-hook-form";
 const SessionDetails = () => {
   const { id } = useParams();
   const [sessionData, setSessionData] = useState(null);
@@ -20,8 +23,21 @@ const SessionDetails = () => {
   const { user } = useContext(AuthContext);
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
+  const [userData, userLoading] = useRole();
+  const [isBooked, setIsBooked] = useState(false);
+  console.log(userData.role);
   const location = useLocation();
   const axiosSecure = useAxiosSecure();
+
+  //check booked
+  useEffect(() => {
+    if (user && user?.email) {
+      axiosSecure
+        .get(`/booked/check?sessionId=${id}&userEmail=${user?.email}`)
+        .then((res) => setIsBooked(res.data.isBooked));
+    }
+  }, [user, id, axiosSecure, isBooked]);
+
   // Updated formatSessionDuration function
   const formatSessionDuration = (minutes) => {
     const days = Math.floor(minutes / 1440); // 1 day = 1440 minutes
@@ -86,28 +102,69 @@ const SessionDetails = () => {
     status,
     _id,
   } = sessionData || {};
-
+  console.log(registrationFee);
+  // const handleAddToBook = (session) => {
+  //   if (user && user?.email) {
+  //     console.log(sessionTitle);
+  //     const sessionItem = {
+  //       sessionId: _id,
+  //       bookedUserEmail: user?.email,
+  //       bookedUserName: user?.displayName,
+  //       bookedUserImage: user?.photoURL,
+  //       tutorName,
+  //       tutorEmail,
+  //       status,
+  //       sessionTitle,
+  //       sessionDescription,
+  //       image,
+  //     };
+  //     axiosSecure.post("/booked", sessionItem).then((res) => {
+  //       console.log(res.data);
+  //       if (res.data.insertedId) {
+  //         console.log(res.data);
+  //         Swal.fire({
+  //           position: "top-end",
+  //           icon: "success",
+  //           title: "Section has booked Successfully",
+  //           showConfirmButton: false,
+  //           timer: 1500,
+  //         });
+  //       }
+  //     });
+  //   } else {
+  //     setShowPopup(true);
+  //   }
+  // };
   const handleAddToBook = (session) => {
     if (user && user?.email) {
-      console.log(sessionTitle);
       const sessionItem = {
         sessionId: _id,
-        bookedEmail: user?.email,
+        bookedUserEmail: user?.email,
+        bookedUserName: user?.displayName,
+        bookedUserImage: user?.photoURL,
         tutorName,
         tutorEmail,
-        status,
+        PaymentStatus: registrationFee === 0 ? "incomplete" : "paid",
         sessionTitle,
         sessionDescription,
         image,
+        registrationFee,
       };
+
       axiosSecure.post("/booked", sessionItem).then((res) => {
-        console.log(res.data);
-        if (res.data.insertedId) {
-          console.log(res.data);
+        if (res.data.success) {
           Swal.fire({
             position: "top-end",
             icon: "success",
-            title: "Section has booked Successfully",
+            title: "Session has been booked successfully!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          Swal.fire({
+            position: "top-end",
+            icon: "warning",
+            title: res.data.message || "Failed to book the session!",
             showConfirmButton: false,
             timer: 1500,
           });
@@ -117,7 +174,21 @@ const SessionDetails = () => {
       setShowPopup(true);
     }
   };
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm();
 
+  const onSubmit = (data) => {
+    
+    console.log("Form Data:", data);
+  };
+
+  // Watch rating 
+  const rating = watch("rating", 0);
   const closePopup = () => {
     setShowPopup(false);
   };
@@ -223,18 +294,119 @@ const SessionDetails = () => {
           </div>
 
           <div className="flex justify-between items-center">
-            <div className="text-4xl font-bold">৳ </div>
-            <button
+            <div className="text-4xl font-bold">
+              {registrationFee === 0 ? (
+                <span className="px-3 py-2 bg-[#10b9815c] text-[#10b981] text-sm font-bold rounded-lg shadow animate-pulse">
+                  Free
+                </span>
+              ) : (
+                `৳ ${registrationFee}`
+              )}
+            </div>
+            {/* <button
               onClick={() => handleAddToBook(sessionData)}
-              className="bg-[#10B981] text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-[#059669] transition-colors transform hover:scale-105 flex items-center gap-2"
+              disabled={userData.role !== "student"}
+              className={`${
+                userData.role === "student"
+                  ? "bg-[#10B981] hover:bg-[#059669]"
+                  : "bg-gray-400 cursor-not-allowed"
+              } text-white px-6 md:px-8 py-3 rounded-full font-semibold transition-colors transform hover:scale-105 flex items-center gap-2`}
             >
               <FaShoppingCart />
               Book Now
+            </button> */}
+            <button
+              onClick={() => handleAddToBook(sessionData)}
+              disabled={isBooked || userData.role !== "student"}
+              className={`${
+                isBooked || userData.role !== "student"
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#10B981] hover:bg-[#059669]"
+              } text-white px-6 md:px-8 py-3 rounded-full font-semibold transition-colors transform hover:scale-105 flex items-center gap-2`}
+            >
+              <FaShoppingCart />
+              {isBooked ? "Already Booked" : "Book Now"}
             </button>
           </div>
         </div>
       </div>
+      {/* Review Section */}
+      {/* <Review></Review> */}
+      <div>
+        <div className="mt-12 bg-white p-6 md:p-8 rounded-lg shadow-md max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">
+            Add a Review
+          </h2>
 
+          {/* Review Form */}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Review Textarea */}
+            <div>
+              <textarea
+                {...register("review", { required: "Review is required" })}
+                className="w-full h-24 p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#10B981]"
+                placeholder="Write your review here..."
+              ></textarea>
+              {errors.review && (
+                <p className="text-red-500 text-sm">{errors.review.message}</p>
+              )}
+            </div>
+
+            {/* Rating Component */}
+            <div>
+              <label className="text-gray-600 block mb-2">
+                Rate this session:
+              </label>
+              <Rating
+                value={rating}
+                onChange={(value) => setValue("rating", value)}
+                style={{ maxWidth: 150 }}
+              />
+              {rating === 0 && (
+                <p className="text-red-500 text-sm mt-2">
+                  Please provide a rating.
+                </p>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="px-6 py-3 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-all"
+            >
+              Submit Review
+            </button>
+          </form>
+
+          {/* Review Display */}
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">Reviews</h2>
+          <div className="space-y-6">
+            {/* Single Review */}
+            <div className="flex items-start gap-4">
+              <img
+                src="https://via.placeholder.com/50"
+                alt="User"
+                className="w-12 h-12 rounded-full"
+              />
+              <div>
+                <h3 className="font-bold text-gray-800">John Doe</h3>
+                <div className="flex gap-1 text-yellow-400 mb-1">
+                  <span>⭐</span>
+                  <span>⭐</span>
+                  <span>⭐</span>
+                  <span>⭐</span>
+                  <span>⭐</span>
+                </div>
+                <p className="text-gray-600">
+                  This session was extremely insightful and engaging. Highly
+                  recommended!
+                </p>
+              </div>
+            </div>
+            {/* Add more reviews here as needed */}
+          </div>
+        </div>
+      </div>
       {/* Confirmation Popup */}
       {showPopup && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">

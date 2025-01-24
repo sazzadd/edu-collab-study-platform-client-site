@@ -43,7 +43,7 @@ const SessionCard = ({ item }) => {
         <img
           src={image}
           alt="Session Illustration"
-          className="h-56 w-full object-cover rounded-t-xl"
+          className="h-56 w-full object-cover  rounded-t-xl"
         />
       </div>
 
@@ -60,7 +60,7 @@ const SessionCard = ({ item }) => {
             </span>
           ) : (
             <span className="text-lg font-bold text-[#10b981]">
-              ${registrationFee}
+             ৳ {registrationFee}
             </span>
           )}
         </div>

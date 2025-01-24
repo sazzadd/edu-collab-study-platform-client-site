@@ -47,6 +47,7 @@ const ViewAllMaterials = () => {
 
     fetchSessionDetails();
   }, [email, materialsData]);
+  
 
   const handleDelete = (id) => {
     Swal.fire({
