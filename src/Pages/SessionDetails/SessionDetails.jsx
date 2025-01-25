@@ -1,8 +1,8 @@
-import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import axios from "axios";
 import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   FaCalendarAlt,
   FaClock,
@@ -15,7 +15,6 @@ import Swal from "sweetalert2";
 import useAxiosSecure from "../../hook/useAxiosSecure";
 import useRole from "../../hook/useRole";
 import { AuthContext } from "../../provider/AuthProvider";
-import { useForm } from "react-hook-form";
 const SessionDetails = () => {
   const { id } = useParams();
   const [sessionData, setSessionData] = useState(null);
@@ -28,6 +27,7 @@ const SessionDetails = () => {
   console.log(userData.role);
   const location = useLocation();
   const axiosSecure = useAxiosSecure();
+  const [reviews, setReviews] = useState([]);
 
   //check booked
   useEffect(() => {
@@ -85,7 +85,7 @@ const SessionDetails = () => {
     };
 
     fetchSessionDetails();
-  }, [id]);
+  }, [id, isBooked]);
 
   const {
     sessionTitle,
@@ -103,6 +103,7 @@ const SessionDetails = () => {
     _id,
   } = sessionData || {};
   console.log(registrationFee);
+
   // const handleAddToBook = (session) => {
   //   if (user && user?.email) {
   //     console.log(sessionTitle);
@@ -182,12 +183,104 @@ const SessionDetails = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    
-    console.log("Form Data:", data);
-  };
+  // const onSubmit = (data) => {
+  //   // User Data
+  //   const userData = {
+  //     ...data, // Form data (e.g., review, rating)
+  //     userEmail: user?.email,
+  //     userName: user?.displayName,
+  //     userImage: user?.photoURL,
+  //     sessionId: _id,
+  //   };
 
-  // Watch rating 
+  //   console.log("Data to send:", userData);
+
+  //   // Send data to the database
+  //   axios
+  //     .post("http://localhost:5000/review", userData)
+  //     .then((response) => {
+  //       console.log("Data sent successfully:", response.data);
+  //       alert("Review submitted successfully!");
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error sending data:", error);
+  //       alert("Failed to submit review.");
+  //     });
+  // };
+
+  const onSubmit = (data) => {
+    const userData = {
+      ...data,
+      userEmail: user?.email,
+      userName: user?.displayName,
+      userImage: user?.photoURL,
+      sessionId: _id, // Replace `_id` with the actual session ID
+    };
+
+    axios
+      .post("http://localhost:5000/review", userData)
+      .then((response) => {
+        console.log("Data sent successfully:", response.data);
+
+        // Success Alert
+        Swal.fire({
+          icon: "success",
+          title: "Review Submitted!",
+          text: "Your review has been added successfully.",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 400) {
+          // Already Reviewed Alert
+          Swal.fire({
+            icon: "info",
+            title: "Already Reviewed",
+            text: error.response.data.message,
+            confirmButtonText: "Okay",
+          });
+        } else {
+          // Error Alert
+          Swal.fire({
+            icon: "error",
+            title: "Submission Failed",
+            text: "There was an error submitting your review. Please try again.",
+            confirmButtonText: "Retry",
+          });
+        }
+      });
+  };
+  // useEffect(() => {
+  //   const fetchReviews = async () => {
+  //     try {
+  //       const response = await axios.get(`http://localhost:5000/reviews`);
+  //       setReviews(response.data); // সব রিভিউ স্টেটে সেট করুন
+  //     } catch (error) {
+  //       console.error("Error fetching reviews:", error);
+  //     }
+  //   };
+
+  //   fetchReviews();
+  // }, []);
+  useEffect(() => {
+    const fetchReviewsForSession = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/reviews?sessionId=${id}`
+        );
+        setReviews(response.data);
+      } catch (error) {
+        console.error("Error fetching reviews for session:", error);
+      }
+    };
+
+    if (id) {
+      fetchReviewsForSession();
+    }
+  }, [id]);
+  console.log(reviews);
+  // Watch rating
   const rating = watch("rating", 0);
   const closePopup = () => {
     setShowPopup(false);
@@ -317,12 +410,10 @@ const SessionDetails = () => {
             </button> */}
             <button
               onClick={() => handleAddToBook(sessionData)}
-              disabled={isBooked || userData.role !== "student"}
-              className={`${
-                isBooked || userData.role !== "student"
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-[#10B981] hover:bg-[#059669]"
-              } text-white px-6 md:px-8 py-3 rounded-full font-semibold transition-colors transform hover:scale-105 flex items-center gap-2`}
+              disabled={
+                isBooked || userData.role == "admin" || userData.role == "tutor"
+              }
+              className={`bg-[#10B981] disabled:bg-gray-500 disabled:cursor-not-allowed hover:bg-[#059669] text-white px-6 md:px-8 py-3 rounded-full font-semibold transition-colors transform hover:scale-105 flex items-center gap-2`}
             >
               <FaShoppingCart />
               {isBooked ? "Already Booked" : "Book Now"}
@@ -339,71 +430,116 @@ const SessionDetails = () => {
           </h2>
 
           {/* Review Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Review Textarea */}
-            <div>
-              <textarea
-                {...register("review", { required: "Review is required" })}
-                className="w-full h-24 p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#10B981]"
-                placeholder="Write your review here..."
-              ></textarea>
-              {errors.review && (
-                <p className="text-red-500 text-sm">{errors.review.message}</p>
-              )}
-            </div>
+          {isBooked && (
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div>
+                <textarea
+                  {...register("review", { required: "Review is required" })}
+                  className="w-full h-24 p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#10B981]"
+                  placeholder="Write your review here..."
+                ></textarea>
+                {errors.review && (
+                  <p className="text-red-500 text-sm">
+                    {errors.review.message}
+                  </p>
+                )}
+              </div>
 
-            {/* Rating Component */}
-            <div>
-              <label className="text-gray-600 block mb-2">
-                Rate this session:
-              </label>
-              <Rating
-                value={rating}
-                onChange={(value) => setValue("rating", value)}
-                style={{ maxWidth: 150 }}
-              />
-              {rating === 0 && (
-                <p className="text-red-500 text-sm mt-2">
-                  Please provide a rating.
-                </p>
-              )}
-            </div>
+              <div>
+                <label className="text-gray-600 block mb-2">
+                  Rate this session:
+                </label>
+                <div className="flex items-center space-x-1">
+                  {Array(5)
+                    .fill(0)
+                    .map((_, index) => (
+                      <span
+                        key={index}
+                        onClick={() =>
+                          setValue("rating", index + 1, {
+                            shouldValidate: true,
+                          })
+                        }
+                        className={`cursor-pointer ${
+                          rating > index ? "text-yellow-600" : "text-gray-300"
+                        }`}
+                        style={{ fontSize: "30px" }}
+                      >
+                        ★
+                      </span>
+                    ))}
+                </div>
+                {rating === 0 && (
+                  <p className="text-red-500 text-sm mt-2">
+                    Please provide a rating.
+                  </p>
+                )}
+              </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="px-6 py-3 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-all"
-            >
-              Submit Review
-            </button>
-          </form>
+              <button
+                type="submit"
+                className="px-6 py-3 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-all"
+              >
+                Submit Review
+              </button>
+            </form>
+          )}
 
           {/* Review Display */}
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Reviews</h2>
-          <div className="space-y-6">
-            {/* Single Review */}
-            <div className="flex items-start gap-4">
-              <img
-                src="https://via.placeholder.com/50"
-                alt="User"
-                className="w-12 h-12 rounded-full"
-              />
-              <div>
-                <h3 className="font-bold text-gray-800">John Doe</h3>
-                <div className="flex gap-1 text-yellow-400 mb-1">
-                  <span>⭐</span>
-                  <span>⭐</span>
-                  <span>⭐</span>
-                  <span>⭐</span>
-                  <span>⭐</span>
-                </div>
-                <p className="text-gray-600">
-                  This session was extremely insightful and engaging. Highly
-                  recommended!
-                </p>
-              </div>
+          <div className="py-10">
+            <h2 className="text-2xl font-bold mb-6 text-gray-800">Reviews</h2>
+            <div className="space-y-6">
+              {/* Single Review */}
+              {reviews.length > 0 ? (
+                reviews.map((review, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <img
+                      src={review.userImage}
+                      alt="User"
+                      className="w-12 h-12 rounded-full"
+                    />
+                    <div>
+                      <h3 className="font-bold text-gray-800">
+                        {review.userName}
+                      </h3>
+                      {/* <div className="flex gap-1 text-yellow-400 mb-1">
+                    <span>⭐</span>
+                    <span>⭐</span>
+                    <span>⭐</span>
+                    <span>⭐</span>
+                    <span>⭐</span>
+                  </div> */}
+                      <div className="flex gap-1 text-yellow-400 mb-1">
+                
+                        {/* {[
+                          ...Array(
+                            Math.min(Math.max(Number(review.rating), 0), 5)
+                          ),
+                        ].map((_, starIndex) => (
+                          <span key={starIndex}>⭐</span>
+                        ))}
+
+                    
+                        {[
+                          ...Array(
+                            5 - Math.min(Math.max(Number(review.rating), 0), 5)
+                          ),
+                        ].map((_, emptyStarIndex) => (
+                          <span key={emptyStarIndex} className="text-gray-400">
+                            ✩
+                          </span>
+                        ))} */}
+                      </div>
+                      <p className="text-gray-600">{review.review}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No reviews available for this session.</p>
+              )}
+
+              {/* Add more reviews here as needed */}
             </div>
-            {/* Add more reviews here as needed */}
           </div>
         </div>
       </div>
