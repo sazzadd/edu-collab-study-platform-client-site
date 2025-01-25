@@ -1,3 +1,4 @@
+import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import axios from "axios";
 import { format } from "date-fns";
@@ -28,7 +29,8 @@ const SessionDetails = () => {
   const location = useLocation();
   const axiosSecure = useAxiosSecure();
   const [reviews, setReviews] = useState([]);
-
+  // rating value state
+  const [ratingValue, setRatingValue] = useState(0);
   //check booked
   useEffect(() => {
     if (user && user?.email) {
@@ -104,38 +106,6 @@ const SessionDetails = () => {
   } = sessionData || {};
   console.log(registrationFee);
 
-  // const handleAddToBook = (session) => {
-  //   if (user && user?.email) {
-  //     console.log(sessionTitle);
-  //     const sessionItem = {
-  //       sessionId: _id,
-  //       bookedUserEmail: user?.email,
-  //       bookedUserName: user?.displayName,
-  //       bookedUserImage: user?.photoURL,
-  //       tutorName,
-  //       tutorEmail,
-  //       status,
-  //       sessionTitle,
-  //       sessionDescription,
-  //       image,
-  //     };
-  //     axiosSecure.post("/booked", sessionItem).then((res) => {
-  //       console.log(res.data);
-  //       if (res.data.insertedId) {
-  //         console.log(res.data);
-  //         Swal.fire({
-  //           position: "top-end",
-  //           icon: "success",
-  //           title: "Section has booked Successfully",
-  //           showConfirmButton: false,
-  //           timer: 1500,
-  //         });
-  //       }
-  //     });
-  //   } else {
-  //     setShowPopup(true);
-  //   }
-  // };
   const handleAddToBook = (session) => {
     if (user && user?.email) {
       const sessionItem = {
@@ -161,6 +131,7 @@ const SessionDetails = () => {
             showConfirmButton: false,
             timer: 1500,
           });
+          navigate()
         } else {
           Swal.fire({
             position: "top-end",
@@ -211,6 +182,7 @@ const SessionDetails = () => {
   const onSubmit = (data) => {
     const userData = {
       ...data,
+      rating: ratingValue,
       userEmail: user?.email,
       userName: user?.displayName,
       userImage: user?.photoURL,
@@ -450,24 +422,14 @@ const SessionDetails = () => {
                   Rate this session:
                 </label>
                 <div className="flex items-center space-x-1">
-                  {Array(5)
-                    .fill(0)
-                    .map((_, index) => (
-                      <span
-                        key={index}
-                        onClick={() =>
-                          setValue("rating", index + 1, {
-                            shouldValidate: true,
-                          })
-                        }
-                        className={`cursor-pointer ${
-                          rating > index ? "text-yellow-600" : "text-gray-300"
-                        }`}
-                        style={{ fontSize: "30px" }}
-                      >
-                        ★
-                      </span>
-                    ))}
+                  <span className="w-[180px] h-12 ">
+                    <Rating
+                      value={ratingValue} // রেটিং ভ্যালু প্রদর্শন করবে
+                      onChange={setRatingValue} // রেটিং পরিবর্তন হলে সেটিকে আপডেট করবে
+                      size={12} // রেটিং সাইজ
+                      color="#f8e71c" // রেটিং এর রঙ
+                    />
+                  </span>
                 </div>
                 {rating === 0 && (
                   <p className="text-red-500 text-sm mt-2">
@@ -510,25 +472,16 @@ const SessionDetails = () => {
                     <span>⭐</span>
                   </div> */}
                       <div className="flex gap-1 text-yellow-400 mb-1">
-                
-                        {/* {[
-                          ...Array(
-                            Math.min(Math.max(Number(review.rating), 0), 5)
-                          ),
-                        ].map((_, starIndex) => (
-                          <span key={starIndex}>⭐</span>
-                        ))}
-
-                    
-                        {[
-                          ...Array(
-                            5 - Math.min(Math.max(Number(review.rating), 0), 5)
-                          ),
-                        ].map((_, emptyStarIndex) => (
-                          <span key={emptyStarIndex} className="text-gray-400">
-                            ✩
+                        <div className="flex items-center">
+                          <Rating
+                            style={{ maxWidth: 120 }}
+                            value={review.rating}
+                            readOnly
+                          />
+                          <span className="ml-2 text-sm text-gray-600">
+                            {rating.toFixed(1)}
                           </span>
-                        ))} */}
+                        </div>
                       </div>
                       <p className="text-gray-600">{review.review}</p>
                     </div>
