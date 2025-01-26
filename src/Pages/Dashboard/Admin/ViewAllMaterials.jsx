@@ -23,6 +23,7 @@ import {
 } from "@material-tailwind/react";
 import useAxiosPublic from "../../../hook/useAxiosPublic";
 import { AuthContext } from "../../../provider/AuthProvider";
+import Loading from "../../../component/Loading";
 
 const ViewAllMaterials = () => {
   const [materialsData, setMaterialsData] = useState([]);
@@ -131,11 +132,7 @@ const ViewAllMaterials = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p>Loading...</p>
-      </div>
-    );
+    return <Loading></Loading>;
   }
 
   return (

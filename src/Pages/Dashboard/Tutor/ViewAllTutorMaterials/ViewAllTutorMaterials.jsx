@@ -1,9 +1,17 @@
+import {
+  Button,
+  Dialog,
+  DialogBody,
+  DialogFooter,
+  DialogHeader,
+  Input,
+} from "@material-tailwind/react";
 import React, { useContext, useEffect, useState } from "react";
 import { FaEdit, FaExternalLinkAlt, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
+import Loading from "../../../../component/Loading";
 import { AuthContext } from "../../../../provider/AuthProvider";
 import useAxiosPublic from "./../../../../hook/useAxiosPublic";
-import { Dialog, DialogHeader, DialogBody, DialogFooter, Button, Input, Typography } from "@material-tailwind/react";
 
 const ViewAllTutorMaterials = () => {
   const [materialsData, setMaterialsData] = useState([]);
@@ -70,17 +78,20 @@ const ViewAllTutorMaterials = () => {
       }
     });
   };
-//   for Patch 
-const handleUpdate = async () => {
+  //   for Patch
+  const handleUpdate = async () => {
     if (!selectedMaterial) return;
-  
+
     try {
-      const response = await axiosPublic.patch(`/material/${selectedMaterial._id}`, {
-        materialTitle: selectedMaterial.materialTitle,
-        link: selectedMaterial.link,
-      });
+      const response = await axiosPublic.patch(
+        `/material/${selectedMaterial._id}`,
+        {
+          materialTitle: selectedMaterial.materialTitle,
+          link: selectedMaterial.link,
+        }
+      );
       console.log("Update response:", response.data);
-  
+
       if (response.data.modifiedCount > 0) {
         Swal.fire("Success!", "Material updated successfully.", "success");
         // Optionally update the UI
@@ -97,8 +108,6 @@ const handleUpdate = async () => {
       Swal.fire("Error!", "Failed to update material.", "error");
     }
   };
-  
-
 
   const openEditModal = (material) => {
     setSelectedMaterial(material);
@@ -110,11 +119,7 @@ const handleUpdate = async () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p>Loading...</p>
-      </div>
-    );
+    return <Loading></Loading>;
   }
 
   return (
@@ -199,7 +204,7 @@ const handleUpdate = async () => {
           </DialogBody>
           <DialogFooter>
             <Button
-                onClick={handleUpdate }
+              onClick={handleUpdate}
               variant="gradient"
               color="indigo"
               className="flex items-center gap-2"

@@ -112,42 +112,7 @@ const ManageAllSession = () => {
   
 
 
-// 2
 
-  // const handleApproveSession = async () => {
-  //   if (registrationFee) {
-  //     toast.error("Please enter a valid registration fee.");
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await axiosSecure.patch(
-  //       `/session/${selectedSession._id}`,
-  //       {
-  //         registrationFee: parseFloat(registrationFee), // Ensure it's a number
-  //         status: "approved",
-  //       }
-  //     );
-
-  //     if (response.data.modifiedCount > 0) {
-  //       setSessions((prevSessions) =>
-  //         prevSessions.map((session) =>
-  //           session._id === selectedSession._id
-  //             ? { ...session, registrationFee, status: "approved" }
-  //             : session
-  //         )
-  //       );
-  //       setShowApproveModal(false);
-  //       toast.success("Session approved successfully!");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error approving session:", error);
-  //     toast.error("Failed to approve the session. Please try again.");
-  //   }
-  // };
-
-  // 1
-  // const handleApproveSession = async () => {
   //   // Check if registrationFee is valid for paid type
   //   if (
   //     registrationFee === "" ||

@@ -19,6 +19,7 @@ import { TbShoppingCartHeart, TbUsers } from "react-icons/tb";
 import { NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 import useAdmin from "../../hook/useAdmin";
+import useTutor from "../../hook/useTutor";
 
 const sidebarItems = {
 
@@ -79,11 +80,34 @@ const sidebarItems = {
 };
 
 const Dashboard = () => {
-  const [isAdmin] = useAdmin()
+  const [dynamicSidebarItems, setDynamicSidebarItems] = useState({
+    common: [{ icon: MdOutlineHome, text: "Home", path: "/" }],
+  });
+  const [isAdmin] = useAdmin();
+  const [isTutor] = useTutor();
+ 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const { user, logOut } = useContext(AuthContext);
-
+  useEffect(() => {
+    let updatedSidebarItems = { ...sidebarItems };
+  
+    if (isAdmin) {
+      updatedSidebarItems = {
+        ...updatedSidebarItems,
+        admin: sidebarItems.admin,
+      };
+    }
+    if (isTutor) {
+      updatedSidebarItems = {
+        ...updatedSidebarItems,
+        tutor: sidebarItems.tutor,
+      };
+    }
+  
+    setDynamicSidebarItems(updatedSidebarItems);
+  }, [isAdmin, isTutor]);
+  
   // Fetch user data based on logged-in email
   useEffect(() => {
     if (user?.email) {
@@ -125,7 +149,41 @@ const Dashboard = () => {
       </div>
       <nav className="flex flex-col space-y-2 flex-grow">
         {/* Display items based on user role */}
-        {sidebarItems[userRole]?.map((item, index) => (
+        {userRole === 'student' && sidebarItems.student?.map((item, index) => (
+          <NavLink
+            key={index}
+            to={item.path}
+            className={({ isActive }) =>
+              `flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 ${
+                isActive
+                  ? "bg-white bg-opacity-10 text-white"
+                  : "text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white"
+              }`
+            }
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <item.icon className="h-5 w-5" />
+            <span>{item.text}</span>
+          </NavLink>
+        ))}
+        {userRole === 'admin' && sidebarItems.admin?.map((item, index) => (
+          <NavLink
+            key={index}
+            to={item.path}
+            className={({ isActive }) =>
+              `flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 ${
+                isActive
+                  ? "bg-white bg-opacity-10 text-white"
+                  : "text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white"
+              }`
+            }
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <item.icon className="h-5 w-5" />
+            <span>{item.text}</span>
+          </NavLink>
+        ))}
+        {userRole === 'tutor' && sidebarItems.tutor?.map((item, index) => (
           <NavLink
             key={index}
             to={item.path}
@@ -167,7 +225,6 @@ const Dashboard = () => {
           className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white"
         >
           <MdOutlineLogout />
-          {/* <FiX className="h-5 w-5" /> */}
           <span>LogOut</span>
         </button>
       </nav>

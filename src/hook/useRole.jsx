@@ -6,7 +6,7 @@ import { AuthContext } from "../provider/AuthProvider";
 const useRole = () => {
   const { user } = useContext(AuthContext);
 
-  const { data: userData=[], isLoading: userLoading } = useQuery({
+  const { data: userData={}, isLoading: userLoading } = useQuery({
     queryKey: ["userData", user?.email],
     queryFn: async () => {
       if (!user?.email) return null;

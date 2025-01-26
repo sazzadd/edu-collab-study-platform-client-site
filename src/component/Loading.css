@@ -1,0 +1,66 @@
+:root {
+    --text: hsl(0, 0%, 89%);
+    --text_muted: hsla(0, 0%, 89%, 0.5);
+    --background: #ffffff;
+    /* সাদা ব্যাকগ্রাউন্ড */
+    --primary: hsl(243, 86%, 83%);
+    --prog: 70%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--background);
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* পুরো ভিউপোর্ট */
+    background: var(--background);
+    /* ব্যাকগ্রাউন্ড */
+}
+
+loader {
+    position: relative;
+    background: conic-gradient(var(--primary),
+            var(--background) var(--prog),
+            transparent var(--prog));
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    animation: loading 2.5s linear infinite;
+}
+
+loader::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(var(--primary), var(--background));
+    height: 8rem;
+    width: 8rem;
+    border-radius: 50%;
+}
+
+@keyframes loading {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        --prog: 100%;
+        transform: rotate(-360deg);
+    }
+
+    100% {
+        transform: rotate(-720deg);
+    }
+}

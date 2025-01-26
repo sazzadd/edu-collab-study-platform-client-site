@@ -3,17 +3,14 @@ import { FaArrowRight } from "react-icons/fa"; // React Icon import
 import { useNavigate } from "react-router-dom"; // useNavigate import
 import useSession from "../hook/useSession";
 import SessionCard from "./SessionCard";
+import Loading from "./Loading";
 
 const SessionSec = () => {
   const [session, loading] = useSession();
   const navigate = useNavigate();
 
   if (loading) {
-    return (
-      <div className="flex justify-center min-h-screen items-center">
-        <div className="w-12 h-12 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-      </div>
-    );
+    return<Loading></Loading>;
   }
 
   if (session.length === 0) {

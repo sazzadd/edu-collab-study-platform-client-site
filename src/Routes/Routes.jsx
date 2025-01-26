@@ -21,7 +21,10 @@ import AllMaterialsStudent from "./../Pages/Dashboard/Student/AllMaterialsStuden
 import ManageNote from "./../Pages/Dashboard/Student/ManageNote";
 import ViewBookedSession from "./../Pages/Dashboard/Student/ViewBookedSession";
 import AllSession from "./../Pages/Dashboard/Tutor/AllSession/AllSession";
+import AdminRoute from "./AdminRoute";
 import PrivateRoute from "./PrivateRoute";
+import StudentRoute from "./StudentRoute";
+import TutorRoute from "./TutorRoute";
 
 export const router = createBrowserRouter([
   {
@@ -69,28 +72,49 @@ export const router = createBrowserRouter([
 
       {
         path: "viewAllUsers",
-        element: <ViewAllUsers></ViewAllUsers>,
+        element: (
+          <AdminRoute>
+            <ViewAllUsers></ViewAllUsers>
+          </AdminRoute>
+        ),
       },
       {
         path: "viewAllSession",
-        element: <ManageAllSession></ManageAllSession>,
+        element: (
+          <AdminRoute>
+            <ManageAllSession></ManageAllSession>
+          </AdminRoute>
+        ),
       },
       {
         path: "updateSession/:id",
-        element: <UpdateSession></UpdateSession>,
+        element: (
+          <AdminRoute>
+            <UpdateSession></UpdateSession>
+          </AdminRoute>
+        ),
         loader: ({ params }) =>
           fetch(`http://localhost:5000/session/${params.id}`),
       },
       {
         path: "viewAllMaterials",
-        element: <ViewAllMaterials></ViewAllMaterials>,
+        element: (
+          <AdminRoute>
+            <ViewAllMaterials></ViewAllMaterials>
+          </AdminRoute>
+        ),
       },
 
       // Tutor Routes
 
       {
         path: "addSession",
-        element: <AddSession></AddSession>,
+
+        element: (
+          <TutorRoute>
+            <AddSession></AddSession>
+          </TutorRoute>
+        ),
       },
       {
         path: "allSessions",
@@ -98,28 +122,52 @@ export const router = createBrowserRouter([
       },
       {
         path: "UploadMaterials",
-        element: <UploadMeterials></UploadMeterials>,
+        element: (
+          <TutorRoute>
+            <UploadMeterials></UploadMeterials>
+          </TutorRoute>
+        ),
       },
       {
         path: "viewAllTutorMaterials",
-        element: <ViewAllTutorMaterials></ViewAllTutorMaterials>,
+        element: (
+          <TutorRoute>
+            <ViewAllTutorMaterials></ViewAllTutorMaterials>
+          </TutorRoute>
+        ),
       },
       // student
       {
         path: "CreateNote",
-        element: <CreateNote></CreateNote>,
+        element: (
+          <StudentRoute>
+            <CreateNote></CreateNote>
+          </StudentRoute>
+        ),
       },
       {
         path: "viewBookedSession",
-        element: <ViewBookedSession></ViewBookedSession>,
+        element: (
+          <StudentRoute>
+            <ViewBookedSession></ViewBookedSession>
+          </StudentRoute>
+        ),
       },
       {
         path: "manageNote",
-        element: <ManageNote></ManageNote>,
+        element: (
+          <StudentRoute>
+            <ManageNote></ManageNote>
+          </StudentRoute>
+        ),
       },
       {
         path: "StudentAllMaterials",
-        element: <AllMaterialsStudent></AllMaterialsStudent>,
+        element: (
+          <StudentRoute>
+            <AllMaterialsStudent></AllMaterialsStudent>
+          </StudentRoute>
+        ),
       },
       // common can visit all user
     ],

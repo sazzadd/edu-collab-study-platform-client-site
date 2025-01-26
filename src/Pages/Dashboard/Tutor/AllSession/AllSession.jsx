@@ -18,6 +18,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { FaInfo, FaReact, FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
+import Loading from "../../../../component/Loading";
 import useAxiosSecure from "../../../../hook/useAxiosSecure";
 import { AuthContext } from "../../../../provider/AuthProvider";
 const AllSession = () => {
@@ -76,11 +77,7 @@ const AllSession = () => {
     setOpenDialog(!openDialog);
   };
   if (loading) {
-    return (
-      <div className="flex justify-center items-center">
-        <div className="w-12 h-12 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-      </div>
-    );
+    return <Loading></Loading>;
   }
 
   const statusCounts = {
