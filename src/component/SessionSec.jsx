@@ -6,17 +6,16 @@ import SessionCard from "./SessionCard";
 
 const SessionSec = () => {
   const [session, loading] = useSession();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center min-h-screen items-center">
         <div className="w-12 h-12 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
       </div>
     );
   }
 
- 
   if (session.length === 0) {
     return <div className="text-center text-lg">No sessions available.</div>;
   }

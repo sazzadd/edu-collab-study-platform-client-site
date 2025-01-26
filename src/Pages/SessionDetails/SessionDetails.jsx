@@ -13,9 +13,11 @@ import {
 } from "react-icons/fa";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import useAxiosPublic from "../../hook/useAxiosPublic";
 import useAxiosSecure from "../../hook/useAxiosSecure";
 import useRole from "../../hook/useRole";
 import { AuthContext } from "../../provider/AuthProvider";
+import Loading from "../../component/Loading";
 const SessionDetails = () => {
   const { id } = useParams();
   const [sessionData, setSessionData] = useState(null);
@@ -25,10 +27,13 @@ const SessionDetails = () => {
   const navigate = useNavigate();
   const [userData, userLoading] = useRole();
   const [isBooked, setIsBooked] = useState(false);
-  console.log(userData.role);
+
   const location = useLocation();
   const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxiosPublic();
   const [reviews, setReviews] = useState([]);
+  const [avgRating, setAvgRating] = useState([]);
+  console.log(avgRating);
   // rating value state
   const [ratingValue, setRatingValue] = useState(0);
   //check booked
@@ -73,6 +78,23 @@ const SessionDetails = () => {
     // For durations less than an hour, just show minutes
     return `${remainingMinutes} minute${remainingMinutes > 1 ? "s" : ""}`;
   };
+  // avg rating
+  useEffect(() => {
+    console.log("useEffect triggered");
+    const fetchAvgRating = async () => {
+      try {
+        console.log("Fetching average rating...");
+        const response = await axiosPublic.get(`/get-average-review/${id}`);
+        setAvgRating(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching material:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchAvgRating();
+  }, []);
 
   useEffect(() => {
     const fetchSessionDetails = async () => {
@@ -104,7 +126,6 @@ const SessionDetails = () => {
     status,
     _id,
   } = sessionData || {};
-  console.log(registrationFee);
 
   const handleAddToBook = (session) => {
     if (user && user?.email) {
@@ -131,7 +152,7 @@ const SessionDetails = () => {
             showConfirmButton: false,
             timer: 1500,
           });
-          navigate()
+          navigate("/dashboard/viewBookedSession");
         } else {
           Swal.fire({
             position: "top-end",
@@ -154,31 +175,6 @@ const SessionDetails = () => {
     formState: { errors },
   } = useForm();
 
-  // const onSubmit = (data) => {
-  //   // User Data
-  //   const userData = {
-  //     ...data, // Form data (e.g., review, rating)
-  //     userEmail: user?.email,
-  //     userName: user?.displayName,
-  //     userImage: user?.photoURL,
-  //     sessionId: _id,
-  //   };
-
-  //   console.log("Data to send:", userData);
-
-  //   // Send data to the database
-  //   axios
-  //     .post("http://localhost:5000/review", userData)
-  //     .then((response) => {
-  //       console.log("Data sent successfully:", response.data);
-  //       alert("Review submitted successfully!");
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error sending data:", error);
-  //       alert("Failed to submit review.");
-  //     });
-  // };
-
   const onSubmit = (data) => {
     const userData = {
       ...data,
@@ -192,8 +188,8 @@ const SessionDetails = () => {
     axios
       .post("http://localhost:5000/review", userData)
       .then((response) => {
-        console.log("Data sent successfully:", response.data);
-
+        // console.log("Data sent successfully:", response.data);
+        fetchReviewsForSession();
         // Success Alert
         Swal.fire({
           icon: "success",
@@ -223,35 +219,25 @@ const SessionDetails = () => {
         }
       });
   };
-  // useEffect(() => {
-  //   const fetchReviews = async () => {
-  //     try {
-  //       const response = await axios.get(`http://localhost:5000/reviews`);
-  //       setReviews(response.data); // সব রিভিউ স্টেটে সেট করুন
-  //     } catch (error) {
-  //       console.error("Error fetching reviews:", error);
-  //     }
-  //   };
 
-  //   fetchReviews();
-  // }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fetchReviewsForSession = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/reviews?sessionId=${id}`
+      );
+      setReviews(response.data);
+    } catch (error) {
+      console.error("Error fetching reviews for session:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchReviewsForSession = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/reviews?sessionId=${id}`
-        );
-        setReviews(response.data);
-      } catch (error) {
-        console.error("Error fetching reviews for session:", error);
-      }
-    };
-
     if (id) {
       fetchReviewsForSession();
     }
-  }, [id]);
-  console.log(reviews);
+  }, [fetchReviewsForSession, id]);
+
   // Watch rating
   const rating = watch("rating", 0);
   const closePopup = () => {
@@ -264,7 +250,7 @@ const SessionDetails = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading></Loading>;
   }
 
   if (!sessionData) {
@@ -301,9 +287,30 @@ const SessionDetails = () => {
       {/* Card Section */}
       <div className="relative -mt-16 flex justify-center">
         <div className="bg-white rounded-3xl p-6 md:p-8 border border-green-300 w-full max-w-3xl shadow-lg">
-          <h1 className="text-3xl md:text-4xl font-bold mb-6 md:mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">
             {sessionTitle || "Session Title"}
           </h1>
+
+          {/* Average Rating Section */}
+          <div className="flex items-center mb-6">
+            <span className="text-yellow-500 w-[110px]">
+              <Rating
+                value={avgRating?.averageRating || 0}
+                // onChange={setRatingValue} //
+                size={12} //
+                color="#f8e71c"
+              />
+            </span>
+            <span className="text-gray-700 text-sm font-medium ml-2">
+              <span className="text-gray-700 text-sm font-medium ml-2">
+                {avgRating?.averageRating
+                  ? `${avgRating.averageRating.toFixed(1)} / 5 `
+                  : "No rating yet"}
+              </span>
+              (Average Rating)
+            </span>
+          </div>
+
           <p className="text-gray-600 mb-6">
             {sessionDescription || "No description available."}
           </p>
@@ -368,18 +375,6 @@ const SessionDetails = () => {
                 `৳ ${registrationFee}`
               )}
             </div>
-            {/* <button
-              onClick={() => handleAddToBook(sessionData)}
-              disabled={userData.role !== "student"}
-              className={`${
-                userData.role === "student"
-                  ? "bg-[#10B981] hover:bg-[#059669]"
-                  : "bg-gray-400 cursor-not-allowed"
-              } text-white px-6 md:px-8 py-3 rounded-full font-semibold transition-colors transform hover:scale-105 flex items-center gap-2`}
-            >
-              <FaShoppingCart />
-              Book Now
-            </button> */}
             <button
               onClick={() => handleAddToBook(sessionData)}
               disabled={
@@ -393,6 +388,7 @@ const SessionDetails = () => {
           </div>
         </div>
       </div>
+
       {/* Review Section */}
       {/* <Review></Review> */}
       <div>
@@ -424,10 +420,10 @@ const SessionDetails = () => {
                 <div className="flex items-center space-x-1">
                   <span className="w-[180px] h-12 ">
                     <Rating
-                      value={ratingValue} // রেটিং ভ্যালু প্রদর্শন করবে
-                      onChange={setRatingValue} // রেটিং পরিবর্তন হলে সেটিকে আপডেট করবে
-                      size={12} // রেটিং সাইজ
-                      color="#f8e71c" // রেটিং এর রঙ
+                      value={ratingValue}
+                      onChange={setRatingValue}
+                      size={12}
+                      color="#f8e71c"
                     />
                   </span>
                 </div>

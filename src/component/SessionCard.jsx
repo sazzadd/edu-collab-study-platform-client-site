@@ -1,6 +1,15 @@
-import { isAfter, isBefore, isWithinInterval, parseISO, format } from "date-fns";
+import { Rating } from "@smastrom/react-rating";
+import {
+  format,
+  isAfter,
+  isBefore,
+  isWithinInterval,
+  parseISO,
+} from "date-fns";
+import { useEffect, useState } from "react";
 import { BiCalendar } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import useAxiosPublic from "../hook/useAxiosPublic";
 
 const SessionCard = ({ item }) => {
   const {
@@ -14,14 +23,34 @@ const SessionCard = ({ item }) => {
     image,
     registrationFee,
   } = item;
+  const [avgRating, setAvgRating] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const axiosPublic = useAxiosPublic();
+  console.log(avgRating)
+  // avg rating
+  useEffect(() => {
+    console.log("useEffect triggered");
+    const fetchAvgRating = async () => {
+      try {
+        console.log("Fetching average rating...");
+        const response = await axiosPublic.get(`/get-average-review/${_id}`);
+        setAvgRating(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching material:", error);
+        setLoading(false);
+      }
+    };
 
+    fetchAvgRating();
+  }, []);
   const startDate = parseISO(registrationStartDate);
   const endDate = parseISO(registrationEndDate);
   const currentDate = new Date();
 
   // Format the start and end date to dd-MM-yyyy
-  const formattedStartDate = format(startDate, 'dd-MM-yyyy');
-  const formattedEndDate = format(endDate, 'dd-MM-yyyy');
+  const formattedStartDate = format(startDate, "dd-MM-yyyy");
+  const formattedEndDate = format(endDate, "dd-MM-yyyy");
 
   let sessionStatus = "";
   if (isWithinInterval(currentDate, { start: startDate, end: endDate })) {
@@ -43,12 +72,35 @@ const SessionCard = ({ item }) => {
         <img
           src={image}
           alt="Session Illustration"
-          className="h-56 w-full object-cover  rounded-t-xl"
+          className="h-56 w-full object-cover rounded-t-xl"
         />
       </div>
 
       {/* Card Content */}
       <div className="p-6 space-y-4">
+        {/* Average Rating Section */}
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center text-yellow-400">
+            {/* Fake star icons for average rating */}
+            <span className="text-yellow-500 w-[110px]">
+              <Rating
+                value={avgRating?.averageRating || 0}
+                // onChange={setRatingValue} //
+                size={12} //
+                color="#f8e71c"
+              />
+            </span>
+          </div>
+          <span className="text-gray-500">
+            {" "}
+            <span className="text-gray-700 text-sm font-medium ml-2">
+              {avgRating?.averageRating
+                ? `${avgRating.averageRating.toFixed(1)} / 5 `
+                : "No rating yet"}
+            </span>
+          </span>
+        </div>
+
         <div className="flex items-start justify-between">
           <h2 className="text-2xl font-semibold text-gray-800">
             {sessionTitle}
@@ -60,7 +112,7 @@ const SessionCard = ({ item }) => {
             </span>
           ) : (
             <span className="text-lg font-bold text-[#10b981]">
-             ৳ {registrationFee}
+              ৳ {registrationFee}
             </span>
           )}
         </div>

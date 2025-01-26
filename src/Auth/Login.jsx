@@ -20,7 +20,7 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from || "/";
 
-  console.log("state location",location.state)
+  console.log("state location", location.state);
   const [captchaValidated, setCaptchaValidated] = useState(false);
   useEffect(() => {
     try {

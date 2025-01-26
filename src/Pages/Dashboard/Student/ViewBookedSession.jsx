@@ -1,7 +1,9 @@
 import { Card, CardBody } from "@material-tailwind/react";
 import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import useAxiosPublic from "../../../hook/useAxiosPublic";
 import { AuthContext } from "../../../provider/AuthProvider";
+import Loading from "../../../component/Loading";
 
 const ViewBookedSession = () => {
   const [bookedData, setBookedData] = useState([]);
@@ -10,7 +12,7 @@ const ViewBookedSession = () => {
   const { user } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
   const email = user.email;
-
+  
   useEffect(() => {
     const fetchBookedData = async () => {
       try {
@@ -28,9 +30,7 @@ const ViewBookedSession = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p>Loading...</p>
-      </div>
+      <Loading></Loading>
     );
   }
 
@@ -65,9 +65,12 @@ const ViewBookedSession = () => {
                 </p>
               )}
               <div className="flex justify-between mt-4">
-                <button className="text-sm text-black border border-black bg-gray-100 hover:text-white hover:bg-gray-600 hover:scale-105 transform transition-all duration-300 px-3 py-1 rounded">
-                  View Details
-                </button>
+                <Link to={`/SessionDetails/${session.sessionId}`}>
+                  <button className="text-sm text-black border border-black bg-gray-100 hover:text-white hover:bg-gray-600 hover:scale-105 transform transition-all duration-300 px-3 py-1 rounded">
+                    View Details
+                  </button>
+                </Link>
+
                 {session.registrationFee > 0 && (
                   <button className="text-sm text-white bg-indigo-600 hover:bg-indigo-700 hover:scale-105 transform transition-all duration-300 px-3 py-1 rounded">
                     Pay Now
