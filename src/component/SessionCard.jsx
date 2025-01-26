@@ -26,7 +26,7 @@ const SessionCard = ({ item }) => {
   const [avgRating, setAvgRating] = useState([]);
   const [loading, setLoading] = useState(true);
   const axiosPublic = useAxiosPublic();
-  console.log(avgRating)
+  console.log(avgRating);
   // avg rating
   useEffect(() => {
     console.log("useEffect triggered");
@@ -88,6 +88,7 @@ const SessionCard = ({ item }) => {
                 // onChange={setRatingValue} //
                 size={12} //
                 color="#f8e71c"
+                readOnly
               />
             </span>
           </div>

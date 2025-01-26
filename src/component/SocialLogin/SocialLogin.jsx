@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import useAxiosPublic from "./../../hook/useAxiosPublic";
 import { AuthContext } from "./../../provider/AuthProvider";
@@ -8,7 +8,10 @@ import { AuthContext } from "./../../provider/AuthProvider";
 const SocialLogin = () => {
   const { userLogin, user, setUser, googleSignIn } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || "/";
   const handleGoogleSignIn = () => {
     googleSignIn().then((result) => {
       console.log(result.user);
@@ -20,7 +23,7 @@ const SocialLogin = () => {
       };
       axiosPublic.post("/users", userInfo).then((res) => {
         console.log(res.data);
-        navigate("/");
+        navigate(from, { replace: true });
       });
     });
   };

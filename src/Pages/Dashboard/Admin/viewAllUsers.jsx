@@ -21,7 +21,7 @@ const ViewAllUsers = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useContext(AuthContext);
   const userEmail = user.email;
-
+   
   useEffect(() => {
     const fetchUsers = async () => {
       try {

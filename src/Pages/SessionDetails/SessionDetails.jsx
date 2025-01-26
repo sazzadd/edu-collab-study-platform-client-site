@@ -13,11 +13,11 @@ import {
 } from "react-icons/fa";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import Loading from "../../component/Loading";
 import useAxiosPublic from "../../hook/useAxiosPublic";
 import useAxiosSecure from "../../hook/useAxiosSecure";
 import useRole from "../../hook/useRole";
 import { AuthContext } from "../../provider/AuthProvider";
-import Loading from "../../component/Loading";
 const SessionDetails = () => {
   const { id } = useParams();
   const [sessionData, setSessionData] = useState(null);
@@ -299,6 +299,7 @@ const SessionDetails = () => {
                 // onChange={setRatingValue} //
                 size={12} //
                 color="#f8e71c"
+                readOnly
               />
             </span>
             <span className="text-gray-700 text-sm font-medium ml-2">

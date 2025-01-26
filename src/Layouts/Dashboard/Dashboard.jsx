@@ -18,78 +18,10 @@ import {
 import { TbShoppingCartHeart, TbUsers } from "react-icons/tb";
 import { NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
-// const sidebarItems = {
-//   admin: [
-//     {
-//       icon: TbShoppingCartHeart,
-//       text: "View all users",
-//       path: "/dashboard/viewAllUsers",
-//     },
-//     {
-//       icon: GiNotebook,
-//       text: "View all study session",
-//       path: "/dashboard/viewAllSession",
-//     },
-//     {
-//       icon: GiNotebook,
-//       text: "View all materials",
-//       path: "/dashboard/viewAllMaterials",
-//     },
-//   ],
-//   student: [
-//     { icon: TbShoppingCartHeart, text: "View booked session", path: "/" },
-//     { icon: GiNotebook, text: "Create note", path: "/dashboard/CreateNote" },
-//     { icon: BiCalendarEdit, text: "Manage personal notes", path: "/analytics" },
-//     { icon: FiBook, text: "View all study materials ", path: "/messages" },
-//   ],
-//   tutor: [
-//     {
-//       icon: GiNotebook,
-//       text: "Create study session",
-//       path: "/dashboard/addSession",
-//     },
-//     {
-//       icon: GiNotebook,
-//       text: "View all sessions",
-//       path: "/dashboard/allSessions",
-//     },
-//     {
-//       icon: GiNotebook,
-//       text: "Upload materials ",
-//       path: "/dashboard/UploadMaterials",
-//     },
-//     {
-//       icon: GiNotebook,
-//       text: "View all Upload materials",
-//       path: "/dashboard/allMaterials",
-//     },
-//   ],
-//   // tutor: [
-//   //   {
-//   //     icon: GiNotebook,
-//   //     text: "Create study session",
-//   //     path: "/dashboard/addSession",
-//   //   },
-//   //   {
-//   //     icon: GiNotebook,
-//   //     text: "View all sessions",
-//   //     path: "/dashboard/allSessions",
-//   //   },
-//   //   {
-//   //     icon: GiNotebook,
-//   //     text: "Upload materials ",
-//   //     path: "/dashboard/UploadMaterials",
-//   //   },
-//   //   {
-//   //     icon: GiNotebook,
-//   //     text: "View all Upload materials",
-//   //     path: "/dashboard/allMaterials",
-//   //   },
-//   // ],
-//   common: [{ icon: MdOutlineHome, text: "Home", path: "/" }],
-// };
+import useAdmin from "../../hook/useAdmin";
 
 const sidebarItems = {
+
   admin: [
     { icon: TbUsers, text: "View all users", path: "/dashboard/viewAllUsers" },
     {
@@ -147,6 +79,7 @@ const sidebarItems = {
 };
 
 const Dashboard = () => {
+  const [isAdmin] = useAdmin()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const { user, logOut } = useContext(AuthContext);
