@@ -17,6 +17,7 @@ import ManageAllSession from "./../Pages/Dashboard/Admin/ManageAllSession";
 import UpdateSession from "./../Pages/Dashboard/Admin/UpdateSession";
 import ViewAllMaterials from "./../Pages/Dashboard/Admin/ViewAllMaterials";
 import ViewAllUsers from "./../Pages/Dashboard/Admin/ViewAllUsers";
+import Payment from "./../Pages/Dashboard/Payment/Payment";
 import AllMaterialsStudent from "./../Pages/Dashboard/Student/AllMaterialsStudent";
 import ManageNote from "./../Pages/Dashboard/Student/ManageNote";
 import ViewBookedSession from "./../Pages/Dashboard/Student/ViewBookedSession";
@@ -69,7 +70,10 @@ export const router = createBrowserRouter([
     ),
     children: [
       // admin routes
-
+      {
+        index: true, // Default route for /dashboard
+        element: <div>Welcome to the Dashboard</div>,
+      },
       {
         path: "viewAllUsers",
         element: (
@@ -137,6 +141,12 @@ export const router = createBrowserRouter([
         ),
       },
       // student
+      {
+        path: "payment/:id",
+        element: <Payment></Payment>,
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/booked/${params.id}`),
+      },
       {
         path: "CreateNote",
         element: (

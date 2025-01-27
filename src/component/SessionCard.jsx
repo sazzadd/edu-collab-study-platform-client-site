@@ -112,8 +112,8 @@ const SessionCard = ({ item }) => {
               Free
             </span>
           ) : (
-            <span className="text-lg font-bold text-[#10b981]">
-              ৳ {registrationFee}
+            <span className="text-lg flex font-bold text-[#10b981]">
+              <span>৳ </span> {registrationFee}
             </span>
           )}
         </div>

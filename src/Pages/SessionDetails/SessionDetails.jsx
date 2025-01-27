@@ -39,7 +39,7 @@ const SessionDetails = () => {
   //check booked
   useEffect(() => {
     if (user && user?.email) {
-      axiosSecure
+      axiosPublic
         .get(`/booked/check?sessionId=${id}&userEmail=${user?.email}`)
         .then((res) => setIsBooked(res.data.isBooked));
     }
@@ -143,7 +143,7 @@ const SessionDetails = () => {
         registrationFee,
       };
 
-      axiosSecure.post("/booked", sessionItem).then((res) => {
+      axiosPublic.post("/booked", sessionItem).then((res) => {
         if (res.data.success) {
           Swal.fire({
             position: "top-end",

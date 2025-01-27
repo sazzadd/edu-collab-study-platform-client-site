@@ -10,9 +10,9 @@ const Footer = () => {
       <div className="max-w-screen-xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center">
         {/* Left Section: Logo and Company Name */}
         <div className="flex items-center gap-4 mb-8 md:mb-0">
-          <img src="/logo.png" alt="Company Logo" className="w-16 h-16" />
+          <img src="https://i.ibb.co.com/McPGBp5/10321676-removebg-preview-1.png" alt="Company Logo" className="w-16 h-16" />
           <Typography variant="h5" className="font-bold text-xl text-gray-900">
-            CompanyName
+          <span className="text-[#0f766e] font-bold">Edu</span>Collab
           </Typography>
         </div>
 
