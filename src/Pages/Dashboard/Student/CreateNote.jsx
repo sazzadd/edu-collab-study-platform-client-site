@@ -39,7 +39,7 @@ export default function CreateNote() {
     const fetchNotes = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/notes/${email}`
+          `https://study-platform-server-eta.vercel.app/notes/${email}`
         );
         setNotes(response.data);
       } catch (error) {
@@ -57,7 +57,7 @@ export default function CreateNote() {
       // Update note
       try {
         const response = await axios.put(
-          `http://localhost:5000/notes/${currentNote._id}`,
+          `https://study-platform-server-eta.vercel.app/notes/${currentNote._id}`,
           {
             ...currentNote,
             title: newNote.title,
@@ -102,7 +102,7 @@ export default function CreateNote() {
         };
 
         const response = await axios.post(
-          "http://localhost:5000/notes",
+          "https://study-platform-server-eta.vercel.app/notes",
           noteData
         );
         if (response.data.insertedId) {
@@ -146,7 +146,7 @@ export default function CreateNote() {
     if (result.isConfirmed) {
       try {
         const response = await axios.delete(
-          `http://localhost:5000/notes/${id}`
+          `https://study-platform-server-eta.vercel.app/notes/${id}`
         );
 
         if (response.status === 200) {

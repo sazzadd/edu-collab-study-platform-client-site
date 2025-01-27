@@ -73,7 +73,10 @@ const UploadMaterials = () => {
           };
 
           axios
-            .post("http://localhost:5000/material", material)
+            .post(
+              "https://study-platform-server-eta.vercel.app/material",
+              material
+            )
             .then((materialRes) => {
               if (materialRes.data.insertedId) {
                 Swal.fire({
@@ -109,7 +112,9 @@ const UploadMaterials = () => {
   useEffect(() => {
     if (tutorEmail) {
       axios
-        .get(`http://localhost:5000/session?tutorEmail=${tutorEmail}`)
+        .get(
+          `https://study-platform-server-eta.vercel.app/session?tutorEmail=${tutorEmail}`
+        )
         .then((res) => {
           setSessions(res.data || []);
         })
@@ -117,7 +122,7 @@ const UploadMaterials = () => {
           console.error("Error fetching sessions:", error);
         });
     }
-  }, [tutorEmail,sessions]);
+  }, [tutorEmail, sessions]);
 
   return (
     <>

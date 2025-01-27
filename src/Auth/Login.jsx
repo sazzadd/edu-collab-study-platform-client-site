@@ -20,7 +20,7 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from || "/";
 
-  console.log("state location", location.state);
+ 
   const [captchaValidated, setCaptchaValidated] = useState(false);
   useEffect(() => {
     try {
@@ -46,7 +46,7 @@ const Login = () => {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
+
     userLogin(data.email, data.password)
       .then((result) => {
         const user = result.user;

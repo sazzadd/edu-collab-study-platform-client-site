@@ -33,7 +33,7 @@ const SessionDetails = () => {
   const axiosPublic = useAxiosPublic();
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState([]);
-  console.log(avgRating);
+ 
   // rating value state
   const [ratingValue, setRatingValue] = useState(0);
   //check booked
@@ -83,7 +83,7 @@ const SessionDetails = () => {
     console.log("useEffect triggered");
     const fetchAvgRating = async () => {
       try {
-        console.log("Fetching average rating...");
+     
         const response = await axiosPublic.get(`/get-average-review/${id}`);
         setAvgRating(response.data);
         setLoading(false);
@@ -99,7 +99,9 @@ const SessionDetails = () => {
   useEffect(() => {
     const fetchSessionDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/session/${id}`);
+        const response = await axios.get(
+          `https://study-platform-server-eta.vercel.app/session/${id}`
+        );
         setSessionData(response.data);
         setLoading(false);
       } catch (error) {
@@ -186,9 +188,9 @@ const SessionDetails = () => {
     };
 
     axios
-      .post("http://localhost:5000/review", userData)
+      .post("https://study-platform-server-eta.vercel.app/review", userData)
       .then((response) => {
-        // console.log("Data sent successfully:", response.data);
+    
         fetchReviewsForSession();
         // Success Alert
         Swal.fire({
@@ -224,7 +226,7 @@ const SessionDetails = () => {
   const fetchReviewsForSession = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/reviews?sessionId=${id}`
+        `https://study-platform-server-eta.vercel.app/reviews?sessionId=${id}`
       );
       setReviews(response.data);
     } catch (error) {

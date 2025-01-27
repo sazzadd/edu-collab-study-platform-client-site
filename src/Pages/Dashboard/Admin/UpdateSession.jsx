@@ -61,7 +61,7 @@ const UpdateSession = () => {
       }
     }
   };
-  //   console.log(session);
+
   return (
     <div>
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl mx-auto">

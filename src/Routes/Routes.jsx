@@ -98,7 +98,9 @@ export const router = createBrowserRouter([
           </AdminRoute>
         ),
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/session/${params.id}`),
+          fetch(
+            `https://study-platform-server-eta.vercel.app/session/${params.id}`
+          ),
       },
       {
         path: "viewAllMaterials",
@@ -145,7 +147,9 @@ export const router = createBrowserRouter([
         path: "payment/:id",
         element: <Payment></Payment>,
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/booked/${params.id}`),
+          fetch(
+            `https://study-platform-server-eta.vercel.app/booked/${params.id}`
+          ),
       },
       {
         path: "CreateNote",

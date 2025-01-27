@@ -10,8 +10,7 @@ const AllMaterialsStudent = () => {
   const axiosPublic = useAxiosPublic();
   const { user } = useContext(AuthContext);
   const email = user?.email;
-  console.log(email);
-  console.log(materialData);
+
   useEffect(() => {
     const fetchMaterialData = async () => {
       try {

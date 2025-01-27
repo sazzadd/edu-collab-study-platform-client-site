@@ -27,7 +27,7 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     const imageFile = { image: data.photoURL[0] };
-    console.log(data, imageFile, image_hosting_api);
+  
 
     try {
       const res = await axios.post(image_hosting_api, imageFile, {
@@ -36,7 +36,7 @@ const Register = () => {
         },
       });
 
-      console.log(res.data);
+      
 
       // Try to create a new user in Firebase
       createNewUser(data.email, data.password)

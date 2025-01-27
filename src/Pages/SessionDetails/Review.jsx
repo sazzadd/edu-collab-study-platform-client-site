@@ -12,7 +12,7 @@ const Review = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log("Form Data:", data);
+    
   };
 
   // Watch rating for dynamic UI updates

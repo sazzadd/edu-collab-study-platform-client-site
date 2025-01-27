@@ -111,7 +111,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (user?.email) {
       axios
-        .get(`http://localhost:5000/users/${user.email}`)
+        .get(`https://study-platform-server-eta.vercel.app/users/${user.email}`)
         .then((response) => {
           setUserRole(response.data.role);
         })

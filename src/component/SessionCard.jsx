@@ -26,13 +26,11 @@ const SessionCard = ({ item }) => {
   const [avgRating, setAvgRating] = useState([]);
   const [loading, setLoading] = useState(true);
   const axiosPublic = useAxiosPublic();
-  console.log(avgRating);
+
   // avg rating
   useEffect(() => {
-    console.log("useEffect triggered");
     const fetchAvgRating = async () => {
       try {
-        console.log("Fetching average rating...");
         const response = await axiosPublic.get(`/get-average-review/${_id}`);
         setAvgRating(response.data);
         setLoading(false);

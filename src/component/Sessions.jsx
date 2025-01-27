@@ -13,7 +13,7 @@ const Sessions = () => {
     const fetchSessions = async () => {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:5000/session?page=${currentPage}`
+        `https://study-platform-server-eta.vercel.app/session?page=${currentPage}`
       );
       const data = await response.json();
       setSessions(data.sessions);

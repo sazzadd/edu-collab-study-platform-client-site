@@ -55,7 +55,7 @@ const AllSession = () => {
   const handleStatusChange = async (sessionId, status) => {
     try {
       const response = await axios.patch(
-        `http://localhost:5000/session/${sessionId}`,
+        `https://study-platform-server-eta.vercel.app/session/${sessionId}`,
         { status }
       );
 

@@ -14,7 +14,7 @@ const SocialLogin = () => {
   const from = location.state?.from || "/";
   const handleGoogleSignIn = () => {
     googleSignIn().then((result) => {
-      console.log(result.user);
+  
       const userInfo = {
         email: result.user?.email,
         name: result.user?.displayName,
@@ -22,7 +22,7 @@ const SocialLogin = () => {
         role: "student",
       };
       axiosPublic.post("/users", userInfo).then((res) => {
-        console.log(res.data);
+    
         navigate(from, { replace: true });
       });
     });
