@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { FaEnvelope } from "react-icons/fa";
 import useAxiosPublic from "../../hook/useAxiosPublic";
 
-const TutorList = () => {
+const AllTutor = () => {
   const [tutors, setTutors] = useState([]);
   const [loading, setLoading] = useState(true);
   const axiosPublic = useAxiosPublic();
@@ -71,4 +71,4 @@ const TutorList = () => {
   );
 };
 
-export default TutorList;
+export default AllTutor;

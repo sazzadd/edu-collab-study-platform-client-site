@@ -20,7 +20,6 @@ import { NavLink, Outlet } from "react-router-dom";
 import useAdmin from "../../hook/useAdmin";
 import useTutor from "../../hook/useTutor";
 import { AuthContext } from "../../provider/AuthProvider";
-import { Helmet } from "react-helmet";
 
 const sidebarItems = {
   admin: [
@@ -42,10 +41,10 @@ const sidebarItems = {
       text: "View booked session",
       path: "/dashboard/viewBookedSession",
     },
-    { icon: GiNotebook, text: "Create note", path: "/dashboard/CreateNote" },
+
     {
       icon: BiCalendarEdit,
-      text: "Manage personal notes",
+      text: "Create & Manage personal notes",
       path: "/dashboard/CreateNote",
     },
     {
