@@ -47,13 +47,13 @@ const Navbar = () => {
         <div className="hidden md:flex gap-8 mx-auto">
           <Link
             to="/"
-            className="text-gray-700 hover:text-green-600 transition font-medium"
+            className="text-gray-700 p-[5px] font-medium relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[3px] after:bg-[#0f766e] hover:after:w-full transition-all duration-500 ease-in-out"
           >
             Home
           </Link>
           <Link
             to="/dashboard"
-            className="text-gray-700 hover:text-green-600 transition font-medium"
+            className="text-gray-700 p-[5px] font-medium relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[3px] after:bg-[#0f766e] hover:after:w-full transition-all duration-500 ease-in-out"
           >
             Dashboard
           </Link>

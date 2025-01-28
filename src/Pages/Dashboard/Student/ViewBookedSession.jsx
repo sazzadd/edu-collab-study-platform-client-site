@@ -70,7 +70,7 @@ const ViewBookedSession = () => {
                 </Link>
 
                 {session.registrationFee > 0 && (
-                  <Link to={`/dashboard/payment/${session._id}`}>
+                  <Link to={`/dashboard/payment/${session._id}`} state={{session}}>
                     <button className="text-sm text-white bg-indigo-600 hover:bg-indigo-700 hover:scale-105 transform transition-all duration-300 px-3 py-1 rounded">
                       Pay Now
                     </button>

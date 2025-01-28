@@ -78,6 +78,10 @@ const SessionDetails = () => {
     // For durations less than an hour, just show minutes
     return `${remainingMinutes} minute${remainingMinutes > 1 ? "s" : ""}`;
   };
+  useEffect(() => {
+    // Scroll to the top when the component is loaded
+    window.scrollTo(1, 0);
+  }, []); 
   // avg rating
   useEffect(() => {
     console.log("useEffect triggered");
