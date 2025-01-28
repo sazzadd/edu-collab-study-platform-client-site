@@ -4,7 +4,7 @@ A web-based platform designed to enable students and educators to collaborate ef
 
 ## **Live URL** 🌐🔥
 
-🔗 [https://study-paltform.firebaseapp.com/](https://study-paltform.firebaseapp.com/)
+🔗 [EduCollab](https://study-paltform.firebaseapp.com/)
 
 ---
 
