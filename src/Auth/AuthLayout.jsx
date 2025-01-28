@@ -5,7 +5,7 @@ import Navbar from "../Pages/Shared/Navbar";
 const AuthLayout = () => {
   return (
     <div>
-      <Navbar></Navbar>
+      {/* <Navbar></Navbar> */}
       <Outlet></Outlet>
     </div>
   );

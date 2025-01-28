@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { FaEyeSlash, FaHome } from "react-icons/fa";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LoadCanvasTemplate,
   loadCaptchaEnginge,
@@ -10,7 +11,6 @@ import {
 import { toast } from "react-toastify";
 import SocialLogin from "../component/SocialLogin/SocialLogin";
 import { AuthContext } from "../provider/AuthProvider";
-import { FaEyeSlash } from "react-icons/fa";
 const Login = () => {
   const { setUser, userLogin } = useContext(AuthContext);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -21,7 +21,6 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from || "/";
 
- 
   const [captchaValidated, setCaptchaValidated] = useState(false);
   useEffect(() => {
     try {
@@ -47,7 +46,6 @@ const Login = () => {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-
     userLogin(data.email, data.password)
       .then((result) => {
         const user = result.user;
@@ -65,9 +63,15 @@ const Login = () => {
       });
   };
   return (
-    <div className="min-h-screen flex justify-center items-center bg-white">
+    <div className=" min-h-screen relative flex justify-center items-center bg-white">
+      <div className="absolute top-8 left-10 flex items-center gap-2 px-4 py-2 bg-[#10b981] text-white rounded-lg shadow-md hover:bg-[#0e9b76] transition">
+        <Link to="/">
+          <FaHome />
+        </Link>
+      </div>
+
       <Helmet>
-        <title>Edu Platform | Login</title>
+        <title>EduCollab | Login</title>
       </Helmet>
       <div className="bg-white shadow-lg rounded-lg flex flex-col-reverse md:flex-row w-[90%] max-w-4xl">
         {/* Image Section */}

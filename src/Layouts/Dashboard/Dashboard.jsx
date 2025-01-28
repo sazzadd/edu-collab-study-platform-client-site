@@ -20,6 +20,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import useAdmin from "../../hook/useAdmin";
 import useTutor from "../../hook/useTutor";
 import { AuthContext } from "../../provider/AuthProvider";
+import { Helmet } from "react-helmet";
 
 const sidebarItems = {
   admin: [
@@ -242,6 +243,9 @@ const Dashboard = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
+      {/* <Helmet>
+        <title>Dashboard | EduCollab</title>
+      </Helmet> */}
       {/* Sidebar for large screens */}
       <aside className="hidden lg:block w-64 h-screen">
         <Sidebar />

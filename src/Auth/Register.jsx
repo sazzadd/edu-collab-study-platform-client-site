@@ -3,7 +3,7 @@ import Lottie from "lottie-react";
 import React, { useContext, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import { FaEyeSlash } from "react-icons/fa";
+import { FaEyeSlash, FaHome } from "react-icons/fa";
 import { FiUpload } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -101,7 +101,12 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-white">
+    <div className="min-h-screen  flex justify-center items-center bg-white">
+      <div className="absolute top-8 left-10 flex items-center gap-2 px-4 py-2 bg-[#10b981] text-white rounded-lg shadow-md hover:bg-[#0e9b76] transition">
+              <Link to="/">
+                <FaHome />
+              </Link>
+            </div>
       <div className="bg-white pt-16 pb-10 shadow-lg rounded-lg flex flex-col md:flex-row w-[90%] max-w-4xl">
         {/* Form Section */}
         <Helmet>

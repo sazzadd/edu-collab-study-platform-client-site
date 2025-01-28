@@ -26,6 +26,7 @@ import AdminRoute from "./AdminRoute";
 import PrivateRoute from "./PrivateRoute";
 import StudentRoute from "./StudentRoute";
 import TutorRoute from "./TutorRoute";
+import WelcomeDashboard from "../Pages/Dashboard/common/WelcomeDashboard";
 
 export const router = createBrowserRouter([
   {
@@ -71,8 +72,8 @@ export const router = createBrowserRouter([
     children: [
       // admin routes
       {
-        index: true, // Default route for /dashboard
-        element: <div>Welcome to the Dashboard</div>,
+        index: true, 
+        element:<WelcomeDashboard></WelcomeDashboard>,
       },
       {
         path: "viewAllUsers",

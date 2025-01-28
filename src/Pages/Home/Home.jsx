@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import SessionSec from "../../component/SessionSec";
 import Banner from "../Shared/Banner";
 import TutorList from "./TutorList";
@@ -5,8 +6,8 @@ import TutorList from "./TutorList";
 const Home = () => {
   return (
     <div>
-       <Helmet>
-        <title>Edu Platform | Login</title>
+      <Helmet>
+        <title>Edu Colab |home </title>
       </Helmet>
       <Banner></Banner>
 

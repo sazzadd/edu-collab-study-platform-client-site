@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { FaEnvelope } from "react-icons/fa";
 import useAxiosPublic from "../../hook/useAxiosPublic";
 
@@ -26,7 +27,9 @@ const TutorList = () => {
 
   return (
     <div className="w-11/12 mx-auto py-16">
-      
+      <Helmet>
+        <title>EduCollab | Home</title>
+      </Helmet>
       <div className="relative py-6 w-full mb-8 flex justify-center">
         <div className="relative">
           <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-2 h-[40px] bg-[#0f766e]"></div>
@@ -36,12 +39,12 @@ const TutorList = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 py-1 gap-8">
         {tutors.map((tutor, index) => (
           <div
             key={index}
             data-aos="flip-left"
-            className="relative group bg-white p-8 rounded-lg shadow-xl transition-all duration-500 transform hover:scale-110"
+            className="relative group mb-20 bg-white p-8 rounded-lg shadow-xl transition-all duration-500 transform hover:scale-110"
           >
             <div className="absolute -top-8">
               <img
