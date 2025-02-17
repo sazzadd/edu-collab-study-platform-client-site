@@ -14,7 +14,7 @@ import { FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 
-const Navbar = () => {
+const NavBar1 = () => {
   const { user, logOut } = useContext(AuthContext);
   const [openMenu, setOpenMenu] = useState(false);
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
@@ -81,11 +81,13 @@ const Navbar = () => {
             </Menu>
           ) : (
             <div className="flex gap-3">
-              <Link to="/login">
-                <Button className="bg-[#0f766e] text-white">Login</Button>
+              <Link to="/auth/login">
+                <Button className="bg-green-200 text-gray-800 hover:bg-green-300 transition">
+                  Login
+                </Button>
               </Link>
-              <Link to="/register">
-                <Button variant="gradient" color="teal">
+              <Link to="/auth/register">
+                <Button className="bg-yellow-300 text-gray-800 hover:bg-yellow-400 transition">
                   Register
                 </Button>
               </Link>
@@ -115,7 +117,9 @@ const Navbar = () => {
           <div className="pt-4 border-t">
             {user ? (
               <>
-                <Typography className="font-bold">{user.displayName}</Typography>
+                <Typography className="font-bold">
+                  {user.displayName}
+                </Typography>
                 <Button
                   onClick={handleLogout}
                   fullWidth
@@ -128,12 +132,21 @@ const Navbar = () => {
             ) : (
               <div className="space-y-2">
                 <Link to="/login">
-                  <Button fullWidth color="teal">
+                  <Button
+                    fullWidth
+                    color="teal"
+                    className="bg-green-200 mb-3 text-gray-800 hover:bg-green-300 transition"
+                  >
                     Login
                   </Button>
                 </Link>
                 <Link to="/register">
-                  <Button fullWidth variant="gradient" color="teal">
+                  <Button
+                    fullWidth
+                
+                    color="teal"
+                    className="bg-yellow-300 text-gray-800 hover:bg-yellow-400 transition"
+                  >
                     Register
                   </Button>
                 </Link>
@@ -146,4 +159,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavBar1;

@@ -1,11 +1,12 @@
 import { Outlet } from "react-router-dom";
 import Footer from "../Pages/Shared/Footer";
-import Navbar from "../Pages/Shared/Navbar";
+import NavBar1 from "../Pages/Shared/NavBar1";
 
 const MainLayout = () => {
   return (
     <div>
-      <Navbar></Navbar>
+      <NavBar1></NavBar1>
+      {/* <Navbar></Navbar> */}
       <section className="min-h-screen">
         <Outlet></Outlet>
       </section>

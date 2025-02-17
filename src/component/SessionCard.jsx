@@ -41,7 +41,7 @@ const SessionCard = ({ item }) => {
     };
 
     fetchAvgRating();
-  }, []);
+  }, [_id, axiosPublic]);
   const startDate = parseISO(registrationStartDate);
   const endDate = parseISO(registrationEndDate);
   const currentDate = new Date();
@@ -141,49 +141,48 @@ const SessionCard = ({ item }) => {
         </div>
       </div>
 
-{/* Card Footer */}
-<div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#f0fdf4] p-4 rounded-b-xl">
-  {/* Status */}
-  <div className="flex items-center sm:justify-start justify-between sm:mb-0 mb-2">
-    {sessionStatus === "ongoing" && (
-      <span className="relative flex h-3 w-3 text-green-500 text-[10px] sm:text-base">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-        <span className="ml-2 animate-bounce font-semibold">Ongoing</span>
-      </span>
-    )}
-    {sessionStatus === "upcoming" && (
-      <span className="relative flex h-3 w-3 text-blue-500 text-[10px] sm:text-base">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-        <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
-        <span className="ml-2 font-semibold">Upcoming...</span>
-      </span>
-    )}
-    {sessionStatus === "closed" && (
-      <span className="ml-2 font-semibold bg-red-100 px-2 py-1 sm:py-2 rounded text-red-500 text-[10px] sm:text-base">
-        Closed
-      </span>
-    )}
-  </div>
+      {/* Card Footer */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#f0fdf4] p-4 rounded-b-xl">
+        {/* Status */}
+        <div className="flex items-center sm:justify-start justify-between sm:mb-0 mb-2">
+          {sessionStatus === "ongoing" && (
+            <span className="relative flex h-3 w-3 text-green-500 text-[10px] sm:text-base">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              <span className="ml-2 animate-bounce font-semibold">Ongoing</span>
+            </span>
+          )}
+          {sessionStatus === "upcoming" && (
+            <span className="relative flex h-3 w-3 text-blue-500 text-[10px] sm:text-base">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+              <span className="ml-2 font-semibold">Upcoming...</span>
+            </span>
+          )}
+          {sessionStatus === "closed" && (
+            <span className="ml-2 font-semibold bg-red-100 px-2 py-1 sm:py-2 rounded text-red-500 text-[10px] sm:text-base">
+              Closed
+            </span>
+          )}
+        </div>
 
-  {/* View details Button */}
-  {sessionStatus === "ongoing" && (
-    <Link to={`/SessionDetails/${_id}`}>
-      <button className="text-[#10b981] hover:text-[#3e4543] border border-[#10b981] hover:bg-[#10b9815c] focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-transform duration-300 ease-in-out transform hover:scale-105 w-full sm:w-auto">
-        View details
-      </button>
-    </Link>
-  )}
-  {sessionStatus === "upcoming" && (
-    <button
-      disabled
-      className="px-6 py-2 border border-gray-300 text-gray-400 bg-gray-100 rounded cursor-not-allowed w-full sm:w-auto"
-    >
-      View details
-    </button>
-  )}
-</div>
-
+        {/* View details Button */}
+        {sessionStatus === "ongoing" && (
+          <Link to={`/SessionDetails/${_id}`}>
+            <button className="text-[#10b981] hover:text-[#3e4543] border border-[#10b981] hover:bg-[#10b9815c] focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-transform duration-300 ease-in-out transform hover:scale-105 w-full sm:w-auto">
+              View details
+            </button>
+          </Link>
+        )}
+        {sessionStatus === "upcoming" && (
+          <button
+            disabled
+            className="px-6 py-2 border border-gray-300 text-gray-400 bg-gray-100 rounded cursor-not-allowed w-full sm:w-auto"
+          >
+            View details
+          </button>
+        )}
+      </div>
     </div>
   );
 };
