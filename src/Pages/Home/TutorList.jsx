@@ -40,7 +40,7 @@ const TutorList = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 py-1 gap-8">
-        {tutors.map((tutor, index) => (
+        {tutors.slice(0, 8).map((tutor, index) => (
           <div
             key={index}
             data-aos="flip-left"
