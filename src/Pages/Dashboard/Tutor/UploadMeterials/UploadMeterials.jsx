@@ -1,155 +1,113 @@
-import { useContext, useEffect, useState } from "react"
-import { Card, Dialog, Input, Select, Option, Button, Typography } from "@material-tailwind/react"
-import { FaTimes, FaPlus } from "react-icons/fa"
-import ViewMaterialsDialog from "./ViewMaterialsDialog"
-import axios from "axios"
-import { AuthContext } from "../../../../provider/AuthProvider"
-import { useForm } from "react-hook-form"
-import Swal from "sweetalert2"
-
-const fakeSessions = [
-  {
-    _id: "1",
-    sessionTitle: "Mastering Time Management",
-    image: "https://via.placeholder.com/150",
-    tutorEmail: "tutor1@example.com",
-    registrationFee: "$49",
-    status: "Active",
-  },
-  {
-    _id: "2",
-    sessionTitle: "Ethical Hacking",
-    image: "https://via.placeholder.com/150",
-    tutorEmail: "tutor2@example.com",
-    registrationFee: "$99",
-    status: "Active",
-  },
-]
+import {
+  Button,
+  Card,
+  Dialog,
+  Input,
+  Option,
+  Select,
+  Typography,
+} from "@material-tailwind/react";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaPlus, FaTimes } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { AuthContext } from "../../../../provider/AuthProvider";
 
 const UploadMaterials = () => {
-  // const [sessions] = useState(fakeSessions)
-  const [materials, setMaterials] = useState([])
-  const [selectedSession, setSelectedSession] = useState(null)
-  const [openUploadModal, setOpenUploadModal] = useState(false)
-  const [openViewModal, setOpenViewModal] = useState(false)
-  const [currentMaterial, setCurrentMaterial] = useState(null)
+  const [materials, setMaterials] = useState([]);
   const [sessions, setSessions] = useState([]);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [openUploadModal, setOpenUploadModal] = useState(false);
+  const navigate = useNavigate();
+
   const { user } = useContext(AuthContext);
+
   const tutorEmail = user?.email;
-    // imgg bb api and key
-    const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
-    const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
-  
-    const {
-      register,
-      handleSubmit,
-      reset,
-      formState: { errors },
-    } = useForm();
-    // modal open  func
-    const onSubmit = (data) => {
-      console.log("Uploading data:", data);
-  
-      const formData = new FormData();
-      formData.append("image", data.image[0]);
-  
-      // Upload the image to imgBB
-      axios
-        .post(image_hosting_api, formData, {
-          headers: { "content-type": "multipart/form-data" },
-        })
-        .then((imageRes) => {
-          if (imageRes.data.success) {
-            const material = {
-              sessionTitle: data.sessionTitle,
-              sessionId: data._id,
-              tutorEmail: data.tutorEmail,
-              image: imageRes.data.data.display_url,
-              link: data.link,
-              materialTitle: data.materialTitle,
-            };
-  
-            axios
-              .post(
-                "https://study-platform-server-eta.vercel.app/material",
-                material
-              )
-              .then((materialRes) => {
-                if (materialRes.data.insertedId) {
-                  Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Material uploaded successfully",
-                    showConfirmButton: false,
-                    timer: 1500,
-                  });
-                  handleClose();
-                }
-              })
-              .catch((err) => {
-                console.error("Error uploading material to backend:", err);
-                Swal.fire({
-                  icon: "error",
-                  title: "Upload failed",
-                  text: "Failed to save material to the database.",
-                });
-              });
-          }
-        })
-        .catch((err) => {
-          console.error("Error uploading image to imgBB:", err);
-          Swal.fire({
-            icon: "error",
-            title: "Image Upload Failed",
-            text: "Please try uploading a different image.",
-          });
-        });
+
+  const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
+  const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const uploadImageToImgBB = async (imageFile) => {
+    const formData = new FormData();
+    formData.append("image", imageFile);
+
+    try {
+      const response = await axios.post(image_hosting_api, formData, {
+        headers: { "content-type": "multipart/form-data" },
+      });
+      return response.data.success ? response.data.data.display_url : null;
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Image Upload Failed",
+        text: "Please try uploading a different image.",
+      });
+      return null;
+    }
+  };
+
+  const onSubmit = async (data) => {
+    if (!selectedSession) {
+      Swal.fire("Error", "Please select a session", "warning");
+      return;
+    }
+
+    Swal.fire({
+      title: "Uploading...",
+      text: "Please wait while your material is being uploaded.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    const imageUrl = await uploadImageToImgBB(data.image[0]);
+    if (!imageUrl) return;
+
+    const material = {
+      sessionTitle: selectedSession.sessionTitle,
+      sessionId: selectedSession._id,
+      tutorEmail: tutorEmail,
+      image: imageUrl,
+      link: data.link,
+      materialTitle: data.materialTitle,
     };
 
+    axios
+      .post("https://study-platform-server-eta.vercel.app/material", material)
+      .then((res) => {
+        if (res.data.insertedId) {
+          setMaterials([...materials, material]);
+          Swal.fire({
+            icon: "success",
+            title: "Material uploaded successfully!",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+          handleClose();
+          // navigate("/dashboard/viewAllTutorMaterials")
+        }
+      })
+      .catch((err) => {
+        console.error("Error saving material to database:", err);
+        Swal.fire(
+          "Upload Failed",
+          "Failed to save material to the database.",
+          "error"
+        );
+      });
+  };
 
-
-
-
-
-
-
-
-
-
-
-
-
-  const [formData, setFormData] = useState({
-    materialTitle: "",
-    image: null,
-    shareLink: "",
-  })
-
-  const handleUpload = () => {
-    const newMaterial = {
-      materialId: Date.now(),
-      sessionId: selectedSession._id,
-      ...formData,
-      imageUrl: URL.createObjectURL(formData.image),
-    }
-    setMaterials([...materials, newMaterial])
-    setOpenUploadModal(false)
-    setFormData({ materialTitle: "", image: null, shareLink: "" })
-  }
-
-  const handleDelete = (materialId) => {
-    setMaterials(materials.filter((m) => m.materialId !== materialId))
-  }
-
-  // Filter sessions that have materials uploaded
-  const sessionsWithMaterials = sessions.filter((session) =>
-    materials.some((material) => material.sessionId === session._id)
-  )
-
-
-
-
-  // fetch session
   useEffect(() => {
     if (tutorEmail) {
       axios
@@ -163,11 +121,19 @@ const UploadMaterials = () => {
           console.error("Error fetching sessions:", error);
         });
     }
-  }, [tutorEmail, sessions]);
+  }, [tutorEmail]);
+
+  const handleClose = () => {
+    setOpenUploadModal(false);
+    reset();
+  };
 
   return (
     <div className="p-8">
-      <Card className="p-6 mb-8 cursor-pointer bg-blue-50 hover:bg-blue-100" onClick={() => setOpenUploadModal(true)}>
+      <Card
+        className="p-6 mb-8 cursor-pointer bg-blue-50 hover:bg-indigo-100"
+        onClick={() => setOpenUploadModal(true)}
+      >
         <div className="flex items-center justify-center gap-2">
           <FaPlus className="w-5 h-5" />
           <Typography variant="h6">Upload Material</Typography>
@@ -175,30 +141,22 @@ const UploadMaterials = () => {
       </Card>
 
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Display only sessions that have materials uploaded */}
-        {sessionsWithMaterials.map((session) => (
-          <Card key={session._id} className="p-6">
+        {materials.map((material, index) => (
+          <Card key={index} className="p-6">
             <img
-              src={session.image || "/placeholder.svg"}
-              alt={session.sessionTitle}
+              src={material.image}
+              alt={material.sessionTitle}
               className="h-48 object-cover rounded-lg mb-4"
             />
-            <Typography variant="h5">{session.sessionTitle}</Typography>
-            <Button
-              variant="outlined"
-              className="mt-4"
-              onClick={() => {
-                setCurrentMaterial(session)
-                setOpenViewModal(true)
-              }}
-            >
+            <Typography variant="h5">{material.sessionTitle}</Typography>
+            <Button variant="outlined" className="mt-4">
               View Details
             </Button>
           </Card>
         ))}
       </div>
 
-      <Dialog open={openUploadModal} handler={() => setOpenUploadModal(false)}>
+      <Dialog open={openUploadModal} handler={handleClose}>
         <div className="p-8">
           <div className="flex justify-between items-center mb-6">
             <Typography variant="h4" className="text-xl font-bold">
@@ -206,42 +164,36 @@ const UploadMaterials = () => {
             </Typography>
             <FaTimes
               className="w-6 h-6 cursor-pointer text-gray-600 hover:text-gray-800 transition-colors"
-              onClick={() => setOpenUploadModal(false)}
+              onClick={handleClose}
             />
           </div>
 
-          <div className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Select Session */}
-            <div className="mb-8">
-              <Select
-                label="Select Session"
-                onChange={(value) => setSelectedSession(sessions.find((s) => s._id === value))}
-                className="text-gray-700"
-                labelProps={{ className: "text-sm" }}
-              >
-                {sessions.map((session) => (
-                  <Option key={session._id} value={session._id} className="text-sm">
-                    {session.sessionTitle}
-                  </Option>
-                ))}
-              </Select>
-            </div>
+            <Select
+              label="Select Session"
+              onChange={(value) =>
+                setSelectedSession(sessions.find((s) => s._id === value))
+              }
+              className="text-gray-700"
+            >
+              {sessions.map((session) => (
+                <Option key={session._id} value={session._id}>
+                  {session.sessionTitle}
+                </Option>
+              ))}
+            </Select>
 
             {/* Session ID & Tutor Email */}
             <div className="grid gap-6 md:grid-cols-2">
               <Input
                 label="Session ID"
                 value={selectedSession?._id || ""}
-                className="text-sm"
-                containerProps={{ className: "min-w-[200px]" }}
                 readOnly
               />
-
               <Input
                 label="Tutor Email"
                 value={selectedSession?.tutorEmail || ""}
-                className="text-sm"
-                containerProps={{ className: "min-w-[200px]" }}
                 readOnly
               />
             </div>
@@ -249,52 +201,44 @@ const UploadMaterials = () => {
             {/* Material Title */}
             <Input
               label="Material Title"
-              value={formData.materialTitle}
-              onChange={(e) => setFormData({ ...formData, materialTitle: e.target.value })}
-              className="text-sm"
-              labelProps={{ className: "text-sm" }}
+              {...register("materialTitle", { required: true })}
             />
+            {errors.materialTitle && (
+              <p className="text-red-500 text-sm">Material title is required</p>
+            )}
 
             {/* File Upload */}
-            <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
-                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-              />
-            </div>
+            <input
+              type="file"
+              accept="image/*"
+              {...register("image", { required: true })}
+              className="w-full text-sm text-gray-500 file:bg-blue-50 file:text-indigo-600 hover:file:bg-indigo-100"
+            />
+            {errors.image && (
+              <p className="text-red-500 text-sm">Image is required</p>
+            )}
 
             {/* Share Link */}
             <Input
               label="Share Link"
-              value={formData.shareLink}
-              onChange={(e) => setFormData({ ...formData, shareLink: e.target.value })}
-              className="text-sm"
-              labelProps={{ className: "text-sm" }}
+              {...register("link", { required: true })}
             />
+            {errors.link && (
+              <p className="text-red-500 text-sm">Share link is required</p>
+            )}
 
-            {/* Upload Button */}
+            {/* Submit Button */}
             <Button
-              className="mt-8 py-3 text-sm font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors"
-              onClick={handleUpload}
-              fullWidth
+              type="submit"
+              className="w-full bg-indigo-500 hover:bg-indigo-600 text-white"
             >
-              Upload Material
+              Upload
             </Button>
-          </div>
+          </form>
         </div>
       </Dialog>
-
-      <ViewMaterialsDialog
-        open={openViewModal}
-        handleClose={() => setOpenViewModal(false)}
-        currentMaterial={currentMaterial}
-        materials={materials}
-        handleDelete={handleDelete}
-      />
     </div>
-  )
-}
+  );
+};
 
-export default UploadMaterials
+export default UploadMaterials;

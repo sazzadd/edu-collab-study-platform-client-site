@@ -1,35 +1,55 @@
+import Lottie from "lottie-react";
 import React, { useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // React Icons
+import { Helmet } from "react-helmet";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import loadingAnimation from "../assets/lottie/loading.json";
 import useSession from "../hook/useSession";
 import SessionCard from "./SessionCard";
-
 const ViewAll = () => {
-  const [session, loading] = useSession();
+  const [session, loading] = useSession("/session");
   const [currentPage, setCurrentPage] = useState(1);
+  const [filter, setFilter] = useState("all"); // Default: Show all sessions
   const itemsPerPage = 6;
 
   if (loading) {
     return (
       <div className="flex justify-center items-center">
-        <div className="w-12 h-12 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+        <div className="w-4/12 mx-auto flex justify-center items-center h-screen">
+          <Lottie animationData={loadingAnimation} />
+        </div>
       </div>
     );
   }
 
-  // If session array is empty, display a message
   if (session.length === 0) {
     return <div className="text-center text-lg">No sessions available.</div>;
   }
 
-  // Calculate total pages
-  const totalPages = Math.ceil(session.length / itemsPerPage);
+  // **Filter Logic**
+  const filteredSessions = session.filter((item) => {
+    const currentDate = new Date();
+    const startDate = new Date(item.registrationStartDate);
+    const endDate = new Date(item.registrationEndDate);
 
-  // Ensure the current page is valid
+    if (filter === "ongoing") {
+      return currentDate >= startDate && currentDate <= endDate;
+    } else if (filter === "upcoming") {
+      return currentDate < startDate;
+    } else if (filter === "closed") {
+      return currentDate > endDate;
+    }
+    return true; // Show all if filter is "all"
+  });
+
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredSessions.length / itemsPerPage);
   const adjustedPage = Math.min(currentPage, totalPages);
   const startIndex = (adjustedPage - 1) * itemsPerPage;
-  const currentItems = session.slice(startIndex, startIndex + itemsPerPage);
+  const currentItems = filteredSessions.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
-  // Handle page change
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
@@ -37,58 +57,80 @@ const ViewAll = () => {
   };
 
   return (
-    <div>
-      {/* Stylish Heading */}
-      <div className="relative  w-full mt-8 mb-8">
-        <h1 className="text-4xl font-bold text-center text-gray-900 relative z-10">
-          <span className="text-[#0f766e]"> All</span> Sessions
+    <div className="w-11/12 mx-auto">
+      <Helmet>
+        <title>View All |Edu Platform </title>
+      </Helmet>
+      {/* Heading */}
+      <div className="relative w-full mt-8 mb-8">
+        <h1 className="text-4xl font-bold text-center text-gray-900">
+          <span className="text-[#0f766e]">All</span> Sessions
         </h1>
-        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-2 h-full bg-[#0f766e]"></div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 p-6">
-        {currentItems.map((item) => (
-          <SessionCard key={item._id} item={item} />
-        ))}
+
+      {/* **Filter Dropdown** */}
+      <div className="flex justify-end mb-6">
+        <select
+          className="px-4 py-3 border border-[#10b981] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#10b981] bg-white text-gray-900 transition duration-300"
+          value={filter}
+          onChange={(e) => {
+            setFilter(e.target.value);
+            setCurrentPage(1); // Reset pagination
+          }}
+        >
+          <option value="all">All Sessions</option>
+          <option value="ongoing">Ongoing Sessions</option>
+          <option value="upcoming">Upcoming Sessions</option>
+          <option value="closed">Closed Sessions</option>
+        </select>
+      </div>
+
+      {/* Sessions Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 ">
+        {currentItems.length > 0 ? (
+          currentItems.map((item) => <SessionCard key={item._id} item={item} />)
+        ) : (
+          <p className="text-center text-lg col-span-3">No sessions found.</p>
+        )}
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center items-center mt-6 gap-2">
-        {/* Previous Button */}
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          className="px-4 py-2 rounded-lg bg-green-100 text-black hover:bg-green-200 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={currentPage === 1}
-        >
-          <FaChevronLeft className="inline mr-2" />
-        </button>
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center mt-6 gap-2">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            className="px-4 py-2 rounded-lg text-black bg-[#10b9812a] hover:bg-[#10b9815c] transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={currentPage === 1}
+          >
+            <FaChevronLeft className="inline mr-2" />
+          </button>
 
-        {/* Page Numbers */}
-        <ul className="flex gap-2">
-          {Array.from({ length: totalPages }, (_, index) => (
-            <li key={index} className="cursor-pointer">
-              <button
-                onClick={() => handlePageChange(index + 1)}
-                className={`px-4 py-2 rounded-lg border ${
-                  currentPage === index + 1
-                    ? "bg-green-300 text-white" // Active page button
-                    : "bg-green-100 text-black hover:bg-green-200" // Default button
-                } transition duration-300`}
-              >
-                {index + 1}
-              </button>
-            </li>
-          ))}
-        </ul>
+          <ul className="flex gap-2">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <li key={index} className="cursor-pointer">
+                <button
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`px-4 py-2 rounded-lg border ${
+                    currentPage === index + 1
+                      ? "bg-[#10b981] text-white"
+                      : "bg-[#10b9815c] text-black hover:bg-[#10b98175]"
+                  } transition duration-300`}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            ))}
+          </ul>
 
-        {/* Next Button */}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          className="px-4 py-2 rounded-lg bg-green-100 text-black hover:bg-green-200 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={currentPage === totalPages}
-        >
-          <FaChevronRight className="inline ml-2" />
-        </button>
-      </div>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            className="px-4 py-2 rounded-lg bg-[#10b9812a] hover:bg-[#10b9815c]  text-black transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={currentPage === totalPages}
+          >
+            <FaChevronRight className="inline ml-2" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

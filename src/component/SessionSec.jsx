@@ -1,16 +1,22 @@
+import Lottie from "lottie-react";
 import React from "react";
 import { FaArrowRight } from "react-icons/fa"; // React Icon import
 import { useNavigate } from "react-router-dom"; // useNavigate import
+import loadingAnimation from "../assets/lottie/loading.json";
 import useSession from "../hook/useSession";
 import SessionCard from "./SessionCard";
-import Loading from "./Loading";
-
 const SessionSec = () => {
   const [session, loading] = useSession();
   const navigate = useNavigate();
 
   if (loading) {
-    return<Loading></Loading>;
+    return (
+      <div className="flex justify-center items-center">
+        <div className=" w-4/12 lg:w-40 mx-auto flex justify-center items-center h-screen">
+          <Lottie animationData={loadingAnimation} />
+        </div>
+      </div>
+    );
   }
 
   if (session.length === 0) {
