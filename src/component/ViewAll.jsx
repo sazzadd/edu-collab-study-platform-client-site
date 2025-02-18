@@ -1,14 +1,16 @@
 import Lottie from "lottie-react";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
 import loadingAnimation from "../assets/lottie/loading.json";
 import useSession from "../hook/useSession";
 import SessionCard from "./SessionCard";
+
 const ViewAll = () => {
   const [session, loading] = useSession("/session");
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState("all"); // Default: Show all sessions
+  const [searchQuery, setSearchQuery] = useState(""); // Search Query State
   const itemsPerPage = 6;
 
   if (loading) {
@@ -31,14 +33,21 @@ const ViewAll = () => {
     const startDate = new Date(item.registrationStartDate);
     const endDate = new Date(item.registrationEndDate);
 
+    let matchesFilter = true;
     if (filter === "ongoing") {
-      return currentDate >= startDate && currentDate <= endDate;
+      matchesFilter = currentDate >= startDate && currentDate <= endDate;
     } else if (filter === "upcoming") {
-      return currentDate < startDate;
+      matchesFilter = currentDate < startDate;
     } else if (filter === "closed") {
-      return currentDate > endDate;
+      matchesFilter = currentDate > endDate;
     }
-    return true; // Show all if filter is "all"
+
+    // **Search Logic** (Check if sessionTitle includes the search query)
+    const matchesSearch = item.sessionTitle
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    return matchesFilter && matchesSearch;
   });
 
   // Pagination Logic
@@ -59,8 +68,9 @@ const ViewAll = () => {
   return (
     <div className="w-11/12 mx-auto">
       <Helmet>
-        <title>View All |Edu Platform </title>
+        <title>View All | Edu Platform </title>
       </Helmet>
+
       {/* Heading */}
       <div className="relative w-full mt-8 mb-8">
         <h1 className="text-4xl font-bold text-center text-gray-900">
@@ -68,8 +78,25 @@ const ViewAll = () => {
         </h1>
       </div>
 
-      {/* **Filter Dropdown** */}
-      <div className="flex justify-end mb-6">
+      {/* **Search & Filter Section** */}
+      {/* **Search & Filter Section** */}
+      <div className="flex flex-col sm:flex-row justify-between mb-12 gap-4">
+        {/* Search Input with Icon */}
+        <div className="relative w-full sm:w-1/3">
+          <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
+          <input
+            type="text"
+            placeholder="Search by session title..."
+            className="w-full pl-10 pr-4 py-3 border border-[#10b981]  rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#10b981]"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1); // Reset pagination
+            }}
+          />
+        </div>
+
+        {/* Filter Dropdown */}
         <select
           className="px-4 py-3 border border-[#10b981] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#10b981] bg-white text-gray-900 transition duration-300"
           value={filter}
@@ -86,7 +113,7 @@ const ViewAll = () => {
       </div>
 
       {/* Sessions Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {currentItems.length > 0 ? (
           currentItems.map((item) => <SessionCard key={item._id} item={item} />)
         ) : (
@@ -124,7 +151,7 @@ const ViewAll = () => {
 
           <button
             onClick={() => handlePageChange(currentPage + 1)}
-            className="px-4 py-2 rounded-lg bg-[#10b9812a] hover:bg-[#10b9815c]  text-black transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 rounded-lg bg-[#10b9812a] hover:bg-[#10b9815c] text-black transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={currentPage === totalPages}
           >
             <FaChevronRight className="inline ml-2" />
