@@ -7,6 +7,7 @@ import {
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { BiCalendarEdit } from "react-icons/bi";
+import { FaRegUserCircle } from "react-icons/fa";
 import { FiBook, FiMenu, FiX } from "react-icons/fi";
 import { GiBookshelf, GiNotebook } from "react-icons/gi";
 import {
@@ -75,7 +76,10 @@ const sidebarItems = {
       path: "/dashboard/viewAllTutorMaterials",
     },
   ],
-  common: [{ icon: MdOutlineHome, text: "Home", path: "/" }],
+  common: [
+    { icon: MdOutlineHome, text: "Home", path: "/" },
+    { icon: FaRegUserCircle, text: "My Profile", path: "/dashboard/myProfile" },
+  ],
 };
 
 const Dashboard = () => {
@@ -219,7 +223,7 @@ const Dashboard = () => {
                 `flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 ${
                   isActive
                     ? "bg-white bg-opacity-10 text-white"
-                    : "text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white"
+                    : "text-gray-300 mb-1 hover:bg-white hover:bg-opacity-10 hover:text-white"
                 }`
               }
               onClick={() => setIsSidebarOpen(false)}
@@ -230,7 +234,7 @@ const Dashboard = () => {
           ))}
           <button
             onClick={logOut}
-            className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white"
+            className="flex items-center mt-1 space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white"
           >
             <MdOutlineLogout />
             <span>LogOut</span>

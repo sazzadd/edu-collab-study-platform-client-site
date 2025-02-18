@@ -10,6 +10,8 @@ import SessionDetails from "../Pages/SessionDetails/SessionDetails";
 import AuthLayout from "./../Auth/AuthLayout";
 import Login from "./../Auth/Login";
 
+import MyProfile from "../Pages/Dashboard/common/MyProfile";
+import WelcomeDashboard from "../Pages/Dashboard/common/WelcomeDashboard";
 import CreateNote from "../Pages/Dashboard/Student/CreateNote";
 import ViewAllTutorMaterials from "../Pages/Dashboard/Tutor/ViewAllTutorMaterials/ViewAllTutorMaterials";
 import ViewAll from "./../component/ViewAll";
@@ -26,8 +28,6 @@ import AdminRoute from "./AdminRoute";
 import PrivateRoute from "./PrivateRoute";
 import StudentRoute from "./StudentRoute";
 import TutorRoute from "./TutorRoute";
-import WelcomeDashboard from "../Pages/Dashboard/common/WelcomeDashboard";
-
 
 export const router = createBrowserRouter([
   {
@@ -73,8 +73,8 @@ export const router = createBrowserRouter([
     children: [
       // admin routes
       {
-        index: true, 
-        element:<WelcomeDashboard></WelcomeDashboard>,
+        index: true,
+        element: <WelcomeDashboard></WelcomeDashboard>,
       },
       {
         path: "viewAllUsers",
@@ -83,6 +83,10 @@ export const router = createBrowserRouter([
             <ViewAllUsers></ViewAllUsers>
           </AdminRoute>
         ),
+      },
+      {
+        path: "myProfile",
+        element: <MyProfile></MyProfile>,
       },
       {
         path: "viewAllSession",
