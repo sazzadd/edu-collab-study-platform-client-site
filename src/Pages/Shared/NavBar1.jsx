@@ -82,7 +82,7 @@ const NavBar1 = () => {
           ) : (
             <div className="flex gap-3">
               <Link to="/auth/login">
-                <Button className="bg-green-200 text-gray-800 hover:bg-green-300 transition">
+                <Button className="bg-[#10b981a6] text-gray-800 hover:bg-[#10b981] transition">
                   Login
                 </Button>
               </Link>
@@ -143,7 +143,6 @@ const NavBar1 = () => {
                 <Link to="/register">
                   <Button
                     fullWidth
-                
                     color="teal"
                     className="bg-yellow-300 text-gray-800 hover:bg-yellow-400 transition"
                   >

@@ -38,7 +38,7 @@ export default function CounterSection() {
   }, [axiosPublic, session]);
 
   return (
-    <div className="bg-gray-100 py-20 px-4">
+    <div className="bg-[#EDFBFF] py-20 px-4">
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4 max-w-3xl mx-auto leading-tight">
           Empower Your Learning with <span className="text-[#10b981]">Great Mentors</span>

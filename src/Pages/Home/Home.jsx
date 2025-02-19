@@ -6,6 +6,7 @@ import FAQ from "./components/FAQ";
 import Feedback from "./components/Feedback";
 import ServicesSection from "./components/ServicesSection";
 import CounterSection from "./components/CounterSection";
+import NewsletterSection from "./components/NewsletterSection";
 
 const Home = () => {
   return (
@@ -24,6 +25,7 @@ const Home = () => {
       <ServicesSection></ServicesSection>
       <CounterSection></CounterSection>
       <FAQ></FAQ>
+      <NewsletterSection></NewsletterSection>
     </div>
   );
 };
