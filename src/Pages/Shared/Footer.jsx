@@ -1,18 +1,22 @@
-import React from "react";
-import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
 import { Typography } from "@material-tailwind/react";
+import React from "react";
+import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer className="bg-white text-gray-800 py-12 shadow-lg">
       {/* Footer Container */}
-      <div className="max-w-screen-xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center">
+      <div className=" mx-auto w-11/12 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center">
         {/* Left Section: Logo and Company Name */}
         <div className="flex items-center gap-4 mb-8 md:mb-0">
-          <img src="https://i.ibb.co.com/McPGBp5/10321676-removebg-preview-1.png" alt="Company Logo" className="w-16 h-16" />
+          <img
+            src="https://i.ibb.co.com/McPGBp5/10321676-removebg-preview-1.png"
+            alt="Company Logo"
+            className="w-16 h-16"
+          />
           <Typography variant="h5" className="font-bold text-xl text-gray-900">
-          <span className="text-[#0f766e] font-bold">Edu</span>Collab
+            <span className="text-[#0f766e] font-bold">Edu</span>Collab
           </Typography>
         </div>
 

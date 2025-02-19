@@ -44,6 +44,10 @@ const services = [
 const ServicesSection = () => {
   return (
     <section className="w-11/12 mx-auto px-6 py-16">
+      {/* Section Heading */}
+      <h1 className="text-4xl py-7 font-bold text-center text-gray-900 relative z-10 pl-4">
+        Our Core <span className="text-[#10b981]">Features</span>
+      </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
         {services.map((service) => (
           <div

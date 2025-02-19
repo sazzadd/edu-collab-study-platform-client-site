@@ -3,7 +3,9 @@ import SessionSec from "../../component/SessionSec";
 import Banner from "../Shared/Banner";
 import TutorList from "./TutorList";
 import FAQ from "./components/FAQ";
+import Feedback from "./components/Feedback";
 import ServicesSection from "./components/ServicesSection";
+import CounterSection from "./components/CounterSection";
 
 const Home = () => {
   return (
@@ -18,7 +20,9 @@ const Home = () => {
       {/* <Sessions></Sessions> */}
       {/* Tutor */}
       <TutorList></TutorList>
+      <Feedback></Feedback>
       <ServicesSection></ServicesSection>
+      <CounterSection></CounterSection>
       <FAQ></FAQ>
     </div>
   );

@@ -33,7 +33,7 @@ const SessionSec = () => {
       {/* Stylish Heading */}
       <div className="relative w-full mb-8">
         <h1 className="text-4xl font-bold text-center text-gray-900 relative z-10">
-          <span className="text-[#0f766e]">Tredding</span> Sessions
+          <span className="text-[#10b981]">Tredding</span> Sessions
         </h1>
         <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-2 h-full bg-[#0f766e]"></div>
         <p className="text-center text-gray-600 mt-2">
@@ -53,7 +53,7 @@ const SessionSec = () => {
         <div className="flex justify-center mt-4">
           <button
             onClick={handleExploreMore}
-            className="px-6 py-3 bg-green-100 text-black rounded-full flex items-center justify-center gap-2 hover:bg-green-200 transition duration-300"
+            className="px-6 py-3 bg-[#10b98149] text-black rounded-full flex items-center justify-center gap-2 hover:bg-[#10b981c3] transition duration-300"
           >
             Explore More
             <FaArrowRight /> {/* React Icon */}
