@@ -141,7 +141,7 @@ const AllSession = () => {
                         <h3 className="text-lg font-semibold mb-2">
                           {session.sessionTitle}
                         </h3>
-                        <p className="text-sm text-gray-600 mb-2">
+                        <p className="text-sm text-gray-600 overflow-hidden mb-2">
                           {session.sessionDescription}
                         </p>
 

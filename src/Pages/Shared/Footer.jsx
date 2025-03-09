@@ -1,6 +1,6 @@
 import { Typography } from "@material-tailwind/react";
 import React from "react";
-import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -58,14 +58,7 @@ const Footer = () => {
           >
             <FaFacebook size={28} />
           </a>
-          <a
-            href="https://www.instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-600 hover:text-pink-600 transition duration-300 ease-in-out transform hover:scale-110"
-          >
-            <FaInstagram size={28} />
-          </a>
+
           <a
             href="https://www.twitter.com"
             target="_blank"

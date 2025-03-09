@@ -24,7 +24,7 @@ const MyProfile = () => {
 
       <div className="relative w-full h-60 md:h-60 lg:h-70 overflow-hidden rounded-t-lg">
         <img
-          src="https://i.ibb.co/NgFgRT7F/79a7439cd871b9facf9fa93359913b7e.jpg"
+          src="https://dynamic.brandcrowd.com/template/preview/design/7dc6a13c-9083-4ba1-b4ef-a57276cc48f9?v=4&designTemplateVersion=1&size=design-preview-standalone-1x"
           alt="Cover"
           className="w-full object-cover object-center"
         />

@@ -1,9 +1,15 @@
 import { Collapse } from "@material-tailwind/react";
-import React, { useState } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import React, { useEffect, useState } from "react";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
+
+  useEffect(() => {
+    AOS.init({ duration: 1000, easing: "ease-in-out" });
+  }, []);
 
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -38,13 +44,16 @@ const FAQ = () => {
   ];
 
   return (
-    <div className="w-11/12 mx-auto my-10 px-6 md:flex md:items-start md:gap-10">
-      {/* Left Side Image (Fixed Height) */}
+    <div
+      className="w-11/12 mx-auto my-10 px-6 md:flex md:items-start md:gap-10"
+      data-aos="fade-up"
+    >
+      {/* Left Side Image */}
       <div className="w-full hidden md:block md:w-1/3 flex justify-center">
         <img
           src="https://i.ibb.co.com/yFDjm70P/3757762-removebg-preview.png"
           alt="FAQ Illustration"
-          className="w-80 h-auto object-cover"
+          className="w-80 h-auto object-cover animate-fade-in"
         />
       </div>
 
@@ -57,14 +66,15 @@ const FAQ = () => {
         {faqData.map((item, index) => (
           <div
             key={index}
-            className="border border-gray-300 rounded-lg p-4 shadow-sm bg-white"
+            className="border border-gray-300 rounded-lg p-4 shadow-md bg-white transition-all duration-300 hover:shadow-lg"
+            data-aos="zoom-in"
           >
             <div
               onClick={() => toggleFAQ(index)}
               className="flex justify-between items-center cursor-pointer"
             >
               {/* Question */}
-              <h3 className="text-lg font-semibold text-gray-800">
+              <h3 className="text-lg font-semibold text-gray-800 transition-all hover:text-[#10b981]">
                 {item.question}
               </h3>
               {/* Expand/Collapse Icon */}
@@ -76,7 +86,9 @@ const FAQ = () => {
             </div>
             {/* Answer Section */}
             <Collapse open={openIndex === index}>
-              <p className="text-gray-600 mt-3">{item.answer}</p>
+              <p className="text-gray-600 mt-3 pl-4 border-l-4 border-[#10b981] transition-all duration-300">
+                {item.answer}
+              </p>
             </Collapse>
           </div>
         ))}
