@@ -1,5 +1,5 @@
 import Lottie from "lottie-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
 import loadingAnimation from "../assets/lottie/loading.json";
@@ -8,11 +8,16 @@ import SessionCard from "./SessionCard";
 
 const ViewAll = () => {
   const [session, loading] = useSession("/session");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(
+    Number(localStorage.getItem("currentPage")) || 1
+  );
   const [filter, setFilter] = useState("all"); // Default: Show all sessions
   const [searchQuery, setSearchQuery] = useState(""); // Search Query State
   const itemsPerPage = 6;
-
+  useEffect(() => {
+    localStorage.setItem("currentPage", currentPage);
+    window.scrollTo(0, 0);
+  }, [currentPage]);
   if (loading) {
     return (
       <div className="flex justify-center items-center">
@@ -78,7 +83,6 @@ const ViewAll = () => {
         </h1>
       </div>
 
-      {/* **Search & Filter Section** */}
       {/* **Search & Filter Section** */}
       <div className="flex flex-col sm:flex-row justify-between mb-12 gap-4">
         {/* Search Input with Icon */}
