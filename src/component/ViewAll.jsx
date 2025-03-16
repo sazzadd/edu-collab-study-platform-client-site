@@ -1,7 +1,7 @@
 import Lottie from "lottie-react";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
+import { FaAngleDown, FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
 import loadingAnimation from "../assets/lottie/loading.json";
 import useSession from "../hook/useSession";
 import SessionCard from "./SessionCard";
@@ -101,19 +101,25 @@ const ViewAll = () => {
         </div>
 
         {/* Filter Dropdown */}
-        <select
-          className="px-4 py-3 border border-[#10b981] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#10b981] bg-white text-gray-900 transition duration-300"
-          value={filter}
-          onChange={(e) => {
-            setFilter(e.target.value);
-            setCurrentPage(1); // Reset pagination
-          }}
-        >
-          <option value="all">All Sessions</option>
-          <option value="ongoing">Ongoing Sessions</option>
-          <option value="upcoming">Upcoming Sessions</option>
-          <option value="closed">Closed Sessions</option>
-        </select>
+        <div className="relative">
+  <select
+    className="appearance-none px-4 py-3 border border-[#10b981] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#10b981] bg-white text-gray-900 transition duration-300 w-full"
+    value={filter}
+    onChange={(e) => {
+      setFilter(e.target.value);
+      setCurrentPage(1);
+    }}
+  >
+    <option value="all">All Sessions</option>
+    <option value="ongoing">Ongoing Sessions</option>
+    <option value="upcoming">Upcoming Sessions</option>
+    <option value="closed">Closed Sessions</option>
+  </select>
+  {/* Custom Arrow Icon */}
+  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+  <FaAngleDown />
+  </div>
+</div>
       </div>
 
       {/* Sessions Grid */}
