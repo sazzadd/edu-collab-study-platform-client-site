@@ -7,6 +7,7 @@ import Feedback from "./components/Feedback";
 import ServicesSection from "./components/ServicesSection";
 import CounterSection from "./components/CounterSection";
 import NewsletterSection from "./components/NewsletterSection";
+import MeetOurTutor from "./MeetOurTutor";
 
 const Home = () => {
   return (
@@ -20,7 +21,8 @@ const Home = () => {
       <SessionSec></SessionSec>
       {/* <Sessions></Sessions> */}
       {/* Tutor */}
-      <TutorList></TutorList>
+      {/* <TutorList></TutorList> */}
+      <MeetOurTutor></MeetOurTutor>
       <Feedback></Feedback>
       <ServicesSection></ServicesSection>
       <CounterSection></CounterSection>

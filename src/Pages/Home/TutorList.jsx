@@ -11,8 +11,8 @@ const TutorList = () => {
     axiosPublic
       .get("/tutor")
       .then((res) => {
-        console.log(res);
         setTutors(res.data);
+        console.log(res.data);
         setLoading(false);
       })
       .catch((error) => {
