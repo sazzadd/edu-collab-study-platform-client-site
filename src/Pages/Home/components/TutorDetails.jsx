@@ -1,5 +1,9 @@
+import { Button } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
+import { MdOutlineEmail } from "react-icons/md";
 import { useParams } from "react-router-dom";
+
+import SessionCard from "../../../component/SessionCard";
 import useAxiosPublic from "../../../hook/useAxiosPublic";
 
 const TutorDetails = () => {
@@ -8,7 +12,7 @@ const TutorDetails = () => {
   const [tutor, setTutor] = useState([]);
   const [loading, setLoading] = useState(true);
   const axiosPublic = useAxiosPublic();
-
+  const [session, setSession] = useState([]);
   useEffect(() => {
     axiosPublic
       .get(`/users/${email}`)
@@ -21,18 +25,50 @@ const TutorDetails = () => {
         console.log("Facing an error ", error);
         setLoading(false);
       });
-  }, [axiosPublic]);
-
+  }, [axiosPublic, email]);
+  useEffect(() => {
+    axiosPublic
+      .get(`/session?tutorEmail=${email}`)
+      .then((res) => {
+        console.log(res);
+        setSession(res.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log("Facing an error ", error);
+        setLoading(false);
+      });
+  }, [axiosPublic, email]);
+  console.log(session);
   return (
-    <div>
+    <div className="w-11/12 mx-auto">
       <h1>TutorDetails</h1>
-      {tutor?.name || "Unknown"}
-      <div>
-        <div className="flex">
-          <div>
-            <img src="" className="w-20 h-20 border border-red rounded-full"  alt="" />
-          </div>
+      <h1> sessions:{session.length}</h1>
 
+      <div>
+        <div className="flex flex-col md:flex-row justify-between border items-center border-[#eae8e8] p-6 rounded-lg shadow-md">
+          <div className="flex flex-col md:flex-row gap-3 items-center">
+            <img
+              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
+              className="w-20 h-20 border border-red rounded-full"
+              alt=""
+            />
+            <div className="text-center  md:text-left">
+              <h1 className="text-lg"> {tutor?.name || "Unknown"}</h1>
+              <p className="text-sm"> {tutor?.email || "Unknown"}</p>
+            </div>
+          </div>
+          <div className="pt-3 md:pt-0">
+            <Button className="flex items-center" variant="outlined">
+              <MdOutlineEmail className="mr-1" size={15} /> Contact
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+         {
+          session.map(item => <SessionCard key={item._id} item={item}></SessionCard>)
+         }
         </div>
       </div>
     </div>

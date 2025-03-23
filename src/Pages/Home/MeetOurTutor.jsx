@@ -6,8 +6,10 @@ import useAxiosPublic from "../../hook/useAxiosPublic";
 const MeetOurTutor = () => {
   const [tutors, setTutor] = useState([]);
   const [loading, setLoading] = useState(true);
-  const axiosPublic = useAxiosPublic();
 
+
+  const axiosPublic = useAxiosPublic();
+  
   useEffect(() => {
     axiosPublic
       .get("/tutor")
@@ -45,6 +47,7 @@ const MeetOurTutor = () => {
               </h6>
             </div>
           </Link>
+          
         ))}
       </Marquee>
     </div>
