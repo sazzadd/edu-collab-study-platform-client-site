@@ -14,6 +14,7 @@ import MyProfile from "../Pages/Dashboard/common/MyProfile";
 import WelcomeDashboard from "../Pages/Dashboard/common/WelcomeDashboard";
 import CreateNote from "../Pages/Dashboard/Student/CreateNote";
 import ViewAllTutorMaterials from "../Pages/Dashboard/Tutor/ViewAllTutorMaterials/ViewAllTutorMaterials";
+import TutorDetails from "../Pages/Home/components/TutorDetails";
 import ViewAll from "./../component/ViewAll";
 import ManageAllSession from "./../Pages/Dashboard/Admin/ManageAllSession";
 import UpdateSession from "./../Pages/Dashboard/Admin/UpdateSession";
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
       {
         path: "/SessionDetails/:id",
         element: <SessionDetails></SessionDetails>,
+      },
+      {
+        path: "/TutorDetails/:id",
+        element: <TutorDetails></TutorDetails>,
       },
       {
         path: "sessions",
