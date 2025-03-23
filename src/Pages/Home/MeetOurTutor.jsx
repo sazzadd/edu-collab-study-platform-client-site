@@ -30,7 +30,7 @@ const MeetOurTutor = () => {
 
       <Marquee pauseOnHover={true} speed={50}>
         {tutors.map((item, index) => (
-          <Link  key={index} to={`/TutorDetails/${item._id}`}>
+          <Link  key={index} to={`/TutorDetails/${item.email}`}>
             <div
              
               className="bg-gray-100 overflow-hidden shadow p-6 w-40 h-40 rounded-xl border border-[#a0f0d5] mx-3"

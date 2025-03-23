@@ -45,7 +45,7 @@ export const router = createBrowserRouter([
         element: <SessionDetails></SessionDetails>,
       },
       {
-        path: "/TutorDetails/:id",
+        path: "/TutorDetails/:email",
         element: <TutorDetails></TutorDetails>,
       },
       {
