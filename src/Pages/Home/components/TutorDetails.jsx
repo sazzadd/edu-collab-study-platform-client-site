@@ -8,7 +8,7 @@ import useAxiosPublic from "../../../hook/useAxiosPublic";
 
 const TutorDetails = () => {
   const { email } = useParams();
-  console.log(email);
+  // console.log(email);
   const [tutor, setTutor] = useState([]);
   const [loading, setLoading] = useState(true);
   const axiosPublic = useAxiosPublic();
@@ -30,7 +30,7 @@ const TutorDetails = () => {
     axiosPublic
       .get(`/session?tutorEmail=${email}`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setSession(res.data);
         setLoading(false);
       })
@@ -49,7 +49,7 @@ const TutorDetails = () => {
         <div className="flex flex-col md:flex-row justify-between border items-center border-[#eae8e8] p-6 rounded-lg shadow-md">
           <div className="flex flex-col md:flex-row gap-3 items-center">
             <img
-              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
+              src={tutor.userImg}
               className="w-20 h-20 border border-red rounded-full"
               alt=""
             />
@@ -64,12 +64,11 @@ const TutorDetails = () => {
             </Button>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-         {
-          session.map(item => <SessionCard key={item._id} item={item}></SessionCard>)
-         }
-        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+        {session.map((item) => (
+          <SessionCard key={item._id} item={item} />
+        ))}
       </div>
     </div>
   );

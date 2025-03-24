@@ -44,7 +44,8 @@ const SessionSec = () => {
       <div className="w-11/12 mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
           {session.slice(0, 6).map((item) => (
-            <SessionCard key={item._id} item={item} />
+          
+              <SessionCard key={item._id} item={item} />
           ))}
         </div>
       </div>
@@ -53,7 +54,7 @@ const SessionSec = () => {
         <div className="flex justify-center mt-4">
           <button
             onClick={handleExploreMore}
-            className="px-6 py-3 bg-[#10b98149] text-black rounded-full flex items-center justify-center gap-2 hover:bg-[#10b981c3] transition duration-300"
+            className="px-6 py-3 bg-[#10b98149] text-black rounded-full flex items-center justify-center gap-2 hover:bg-[rgba(16,185,129,0.77)] transition duration-300"
           >
             Explore More
             <FaArrowRight /> {/* React Icon */}
