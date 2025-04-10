@@ -1,6 +1,7 @@
 # ✨ Collaborative Study Platform
 
-A web-based platform designed to enable students and educators to collaborate effectively on study materials, projects, and discussions. 📚💻
+A web-based platform designed to enable students and educators to collaborate effectively on study materials, projects, and discussions. 
+The platform offers **role-based dashboards** tailored for different user types — **Students**, **Tutors**, and **Admins** — each with customized tools and interfaces to enhance their unique experience and responsibilities.
 
 ## **Live URL** 🌐🔥
 
