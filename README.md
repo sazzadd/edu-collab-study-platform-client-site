@@ -42,8 +42,15 @@ A web-based platform designed to enable students and educators to collaborate ef
 
 - Node.js (>= 16.x)
 - MongoDB (>= 6.x)
-- npm or yarn package manager
+- npm package manager
+  
+## 🧪 Admin Credentials
 
+> Use these credentials to log in as an admin and access administrative features:
+
+- **Admin Email**: `admin@gmail.com`  
+- **Admin Password**: `Ador123`
+  
 ### ⚡ Installation
 
 1. Clone the repository:
