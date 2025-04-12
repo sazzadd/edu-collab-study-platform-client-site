@@ -35,7 +35,7 @@ The platform offers **role-based dashboards** tailored for different user types 
 
 - 🔗 **Socket.IO**: For real-time collaboration.
 - ☁️ **Cloudinary/S3**: For file storage (if applicable).
-- 🔐 **JWT**: For secure user authentication.
+- 🔐 **JWT**: For secure user authentication..
 
 ## 🏁 Getting Started
 
