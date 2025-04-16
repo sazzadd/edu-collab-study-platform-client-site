@@ -1,3 +1,8 @@
+import {
+  Popover,
+  PopoverContent,
+  PopoverHandler,
+} from "@material-tailwind/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
@@ -29,6 +34,16 @@ const Login = () => {
       console.error("Captcha Engine Error:", err);
     }
   }, []);
+  const copyToClipboard = (text) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        toast.success("Copied to clipboard!");
+      })
+      .catch((err) => {
+        toast.error("Failed to copy: " + err);
+      });
+  };
   const handleValidateCaptcha = () => {
     const user_captcha_value = captchaRef.current.value;
     if (validateCaptcha(user_captcha_value)) {
@@ -83,20 +98,42 @@ const Login = () => {
           />
         </div>
         {/* Form Section */}
-        <div className="flex-1 py-8 px-6 md:px-10">
-          <h2 className="text-2xl font-semibold text-[#10b981] mb-6">
+        <div className="flex-1 py-8 px-6  md:px-10">
+          <h2 className="text-2xl font-semibold mb-4 text-[#10b981] ">
             Login to Your Account
           </h2>
-          <p className="text-gray-600 mb-6">
-            Don't have an account?{" "}
-            <a
-              href="/auth/register"
-              className="text-[#10b981] font-semibold underline"
-            >
-              Register here
-            </a>
-          </p>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Sign in as Admin Popover */}
+          <Popover>
+  <PopoverHandler>
+    <button className="text-sm text-gray-600 font-semibold hover:text-blue-600 transition-all duration-200">
+      👉 Sign in as <span className="text-blue-500">ADMIN</span> 👈
+    </button>
+  </PopoverHandler>
+  <PopoverContent className="w-64 p-4 shadow-lg rounded-xl bg-white space-y-3">
+    <p className="text-sm text-gray-500 text-center">Copy credentials</p>
+
+    <div className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded-md">
+      <span className="text-sm text-gray-700">admin@gmail.com</span>
+      <button
+        onClick={() => copyToClipboard("admin@gmail.com")}
+        className="text-xs text-blue-500 hover:underline"
+      >
+        Copy
+      </button>
+    </div>
+
+    <div className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded-md">
+      <span className="text-sm text-gray-700">Ador123</span>
+      <button
+        onClick={() => copyToClipboard("Ador123")}
+        className="text-xs text-blue-500 hover:underline"
+      >
+        Copy
+      </button>
+    </div>
+  </PopoverContent>
+</Popover>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
             {/* Email */}
             <div>
               <label className="block text-gray-700 text-sm font-medium">
@@ -181,6 +218,15 @@ const Login = () => {
           <div>
             <SocialLogin></SocialLogin>
           </div>
+          <p className="text-gray-600 mt-5 text-center">
+            Don't have an account?{" "}
+            <a
+              href="/auth/register"
+              className="text-[#10b981] font-semibold underline"
+            >
+              Register here
+            </a>
+          </p>
         </div>
       </div>
     </div>
