@@ -1,6 +1,7 @@
 # ✨ Collaborative Study Platform
 
-A web-based platform designed to enable students and educators to collaborate effectively on study materials, projects, and discussions. 📚💻
+A web-based platform designed to enable students and educators to collaborate effectively on study materials, projects, and discussions. 
+The platform offers **role-based dashboards** tailored for different user types — **Students**, **Tutors**, and **Admins** — each with customized tools and interfaces to enhance their unique experience and responsibilities....
 
 ## **Live URL** 🌐🔥
 
@@ -34,7 +35,7 @@ A web-based platform designed to enable students and educators to collaborate ef
 
 - 🔗 **Socket.IO**: For real-time collaboration.
 - ☁️ **Cloudinary/S3**: For file storage (if applicable).
-- 🔐 **JWT**: For secure user authentication.
+- 🔐 **JWT**: For secure user authentication..
 
 ## 🏁 Getting Started
 
@@ -42,8 +43,15 @@ A web-based platform designed to enable students and educators to collaborate ef
 
 - Node.js (>= 16.x)
 - MongoDB (>= 6.x)
-- npm or yarn package manager
+- npm package manager
+  
+## 🧪 Admin Credentials
 
+> Use these credentials to log in as an admin and access administrative features:
+
+- **Admin Email**: `admin@gmail.com`  
+- **Admin Password**: `Ador123`
+  
 ### ⚡ Installation
 
 1. Clone the repository:
